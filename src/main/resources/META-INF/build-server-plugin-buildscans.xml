@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-autowire="constructor">
+
+    <bean id="buildScanViewBuildTab"
+          class="nu.studer.teamcity.buildscan.BuildScanViewBuildTab">
+    </bean>
+
+    <bean id="buildScanBuildServerListener"
+          class="nu.studer.teamcity.buildscan.BuildScanBuildServerListener"
+          init-method="register">
+    </bean>
+
+    <bean id="buildScanCrumbSummaryExtension"
+          class="nu.studer.teamcity.buildscan.BuildScanCrumbSummaryExtension"
+          init-method="register"/>
+
+    <bean id="cachedBuildScanLookup" primary="true"
+          class="nu.studer.teamcity.buildscan.internal.CachedBuildScanLookup"
+          destroy-method="destroy"/>
+
+    <bean id="defaultBuildScanLookup"
+          class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanLookup"/>
+
+    <bean id="buildScanDisplayArbiter"
+          class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter"/>
+
+</beans>

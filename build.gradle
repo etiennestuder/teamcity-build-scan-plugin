@@ -1,0 +1,90 @@
+import java.text.SimpleDateFormat
+
+plugins {
+    id 'java'
+    id 'com.github.rodm.teamcity-server' version '0.9.1' // see https://github.com/rodm/gradle-teamcity-plugin
+    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.7.1'
+}
+
+ext {
+    CI = System.getenv().containsKey('CI') || project.properties.containsKey('CI')
+    RELEASE = project.properties.containsKey('RELEASE')
+    baseVersion = '0.1'
+    buildTime = new Date()
+}
+
+def buildTimestamp = CI ? timestamp(buildTime) : 'prerelease'
+def snapshotVersion = RELEASE ? '' : buildTimestamp
+
+group = 'nu.studer'
+version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
+
+dependencies {
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-2'
+}
+
+teamcity {
+    version = '9.1.6' // TeamCity API version
+
+    server {
+        downloadsDir = file('.teamcity/dists')
+        baseHomeDir = file('.teamcity/servers')
+        baseDataDir = file('.teamcity/data')
+
+        descriptor {
+            name = 'GradleBuildScanIntegration'
+            displayName = 'Gradle Build Scan Integration'
+            description = 'Provides easy navigation from TeamCity builds to Gradle Build Scans'
+            version = project.version
+            vendorName = 'Etienne Studer'
+
+            // optional properties
+            email = 'etienne@studer.nu'
+            downloadUrl = 'https://github.com/etiennestuder/teamcity-build-scan-plugin'
+            useSeparateClassloader = true
+        }
+
+        environments {
+            teamcity9 {
+                version = "9.1.7"
+            }
+            teamcity10 {
+                version = "10.0.2"
+            }
+        }
+    }
+}
+
+publishing.publications {
+    PluginPublication(MavenPublication) {
+        artifact serverPlugin
+    }
+}
+
+bintray {
+    user = findProperty('bintrayUser')
+    key = findProperty('bintrayKey')
+    publications = ['PluginPublication']
+
+    dryRun = true
+    publish = true
+    override = false
+
+    pkg {
+        repo = 'teamcity-plugins'
+        name = 'teamcity-build-scan-plugin'
+
+        version {
+            name = project.version
+            released = project.buildTime
+            vcsTag = project.version
+        }
+    }
+}
+
+static def timestamp(Date date) {
+    def timestampFormat = new SimpleDateFormat('yyyyMMddHHmmss')
+    timestampFormat.timeZone = TimeZone.getTimeZone('UTC')
+    timestampFormat.format(date)
+}

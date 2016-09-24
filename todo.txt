@@ -1,0 +1,2 @@
+Show scan id in 'build shortcuts'
+Add testing
