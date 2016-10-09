@@ -1,10 +1,17 @@
 import java.text.SimpleDateFormat
 
 plugins {
+    id 'com.gradle.build-scan' version '1.1.1'
     id 'java'
     id 'com.github.rodm.teamcity-server' version '0.9.1' // see https://github.com/rodm/gradle-teamcity-plugin
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.7.1'
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
+    publishAlways()
 }
 
 ext {
