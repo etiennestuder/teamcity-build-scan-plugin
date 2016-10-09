@@ -12,8 +12,8 @@ import java.util.stream.Collectors;
 
 final class DefaultBuildScanDisplayArbiter implements BuildScanDisplayArbiter {
 
-    private static final String GRADLE_RUNNER = "gradle-runner";
-    private static final String SIMPLE_RUNNER = "simpleRunner";
+    static final String GRADLE_RUNNER = "gradle-runner";
+    static final String SIMPLE_RUNNER = "simpleRunner";
 
     private final BuildScanLookup buildScanLookup;
 

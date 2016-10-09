@@ -70,13 +70,13 @@ class BuildScanReferencesTest extends Specification {
         thrown IndexOutOfBoundsException
     }
 
-    def "can get get first element"() {
+    def "can get first element"() {
         when:
         def first = new BuildScanReference("myId", "myUrl")
         def second = new BuildScanReference("myOtherId", "myOtherUrl")
+        def buildScanReferences = BuildScanReferences.of([first, second])
 
         then:
-        def buildScanReferences = BuildScanReferences.of([first, second])
         buildScanReferences.first() == first
 
         when:
@@ -85,6 +85,22 @@ class BuildScanReferencesTest extends Specification {
 
         then:
         thrown IndexOutOfBoundsException
+    }
+
+    def "can get all elements"() {
+        when:
+        def first = new BuildScanReference("myId", "myUrl")
+        def second = new BuildScanReference("myOtherId", "myOtherUrl")
+        def buildScanReferences = BuildScanReferences.of([first, second])
+
+        then:
+        buildScanReferences.all() == [first, second]
+
+        when:
+        buildScanReferences = BuildScanReferences.of()
+
+        then:
+        buildScanReferences.all() == []
     }
 
 }
