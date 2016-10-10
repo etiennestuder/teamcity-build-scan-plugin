@@ -3,7 +3,7 @@
 <%@ include file="/include.jsp" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <tr>
-          <td class="st">Build Scan:</td>
+          <td class="st">Build scan:</td>
           <td class="st">
                <c:choose>
                    <c:when test="${buildScans.size()>1}">
