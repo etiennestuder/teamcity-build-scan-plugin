@@ -64,9 +64,16 @@ teamcity {
     }
 }
 
+task sources(type: Jar) {
+    from sourceSets.main.allJava
+}
+
 publishing.publications {
     PluginPublication(MavenPublication) {
         artifact serverPlugin
+        artifact sources {
+            classifier 'sources'
+        }
     }
 }
 
