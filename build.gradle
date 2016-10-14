@@ -18,7 +18,7 @@ buildScan {
 ext {
     CI = System.getenv().containsKey('CI') || project.properties.containsKey('CI')
     RELEASE = project.properties.containsKey('RELEASE')
-    baseVersion = '0.1.1'
+    baseVersion = '0.2'
     buildTime = new Date()
 }
 
