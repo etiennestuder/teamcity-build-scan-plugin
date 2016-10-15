@@ -46,6 +46,7 @@ teamcity {
             description = 'Provides easy navigation from TeamCity builds to Gradle build scans'
             version = project.version
             vendorName = 'Etienne Studer'
+            vendorUrl= 'https://github.com/etiennestuder'
 
             // optional properties
             email = 'etienne@studer.nu'
