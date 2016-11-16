@@ -6,15 +6,15 @@ For each Gradle build that is run from TeamCity, this plugin exposes the link to
 
 # Installation
 
-Download the plugin .zip file from [https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin) (see _Downloads_ section at the bottom of the page).
+1. Download the plugin .zip file from [https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin) (see _Downloads_ section at the bottom of the page).
 
-Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the _Upload plugin zip_ link.
+1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the _Upload plugin zip_ link.
 
-Restart TeamCity.
+1. Restart TeamCity.
 
-Run your Gradle builds with build scans enabled.
+1. Run your Gradle builds with build scans enabled.
 
-Find the links of the published build scans in the _Overview_ section of each TeamCity build.
+1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
 # Feedback and Contributions
 
