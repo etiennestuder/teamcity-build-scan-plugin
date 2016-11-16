@@ -12,7 +12,7 @@ For each Gradle build that is run from TeamCity, this plugin exposes the link to
 
 1. Restart TeamCity.
 
-1. Run your Gradle builds with build scans enabled.
+1. Trigger your Gradle builds with build scans enabled.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
