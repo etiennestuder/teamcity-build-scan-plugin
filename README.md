@@ -8,7 +8,8 @@ For each Gradle build that is run from TeamCity, this plugin exposes the link to
 
 1. Download the plugin .zip file from [https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin) (see _Downloads_ section at the bottom of the page).
 
-1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the _Upload plugin zip_ link.
+1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the 
+previously downloaded plugin .zip file.
 
 1. Restart TeamCity.
 
