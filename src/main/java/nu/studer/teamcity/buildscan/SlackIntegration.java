@@ -40,20 +40,11 @@ final class SlackIntegration {
 
     private final URL webhookUrl;
 
-    SlackIntegration(@NotNull URL webhookUrl) {
+    private SlackIntegration(@NotNull URL webhookUrl) {
         this.webhookUrl = webhookUrl;
     }
 
-    void notify(BuildScanReferences buildScans) {
-        LOGGER.info("Invoking Slack webhook");
-        try {
-            doNotify();
-        } catch (Exception e) {
-            LOGGER.error("Invoking Slack webhook failed", e);
-        }
-    }
-
-    private void doNotify() throws IOException {
+    void notify(@NotNull BuildScanReferences buildScans) throws IOException {
         byte[] bytes = PAYLOAD.getBytes(StandardCharsets.UTF_8);
 
         URLConnection urlConnection = webhookUrl.openConnection();
@@ -80,8 +71,14 @@ final class SlackIntegration {
             Util.copy(is, os);
         }
 
+        // log response code
         int responseCode = con.getResponseCode();
-        LOGGER.info(String.format("Response code of invoking Slack webhook at %s :%d", webhookUrl.toString(), responseCode));
+        LOGGER.info("Invoking Slack webhook returned response code: " + responseCode);
+    }
+
+    @NotNull
+    static SlackIntegration forWebhook(@NotNull URL webhookUrl) {
+        return new SlackIntegration(webhookUrl);
     }
 
 }

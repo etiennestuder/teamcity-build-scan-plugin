@@ -44,9 +44,17 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
             // prepare the cache to be ready when queried by the UI
             BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
 
-            // notify Slack web hook, todo: do in parallel
-            URL webhookUrl = Util.toUrl("https://hooks.slack.com/services/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");
-            new SlackIntegration(webhookUrl).notify(buildScans);
+            // notify Slack web hook, if configured
+            String webhookUrlString = build.getBuildOwnParameters().get("BUILD_SCAN_SLACK_WEBHOOK_URL");
+            if (webhookUrlString != null) {
+                LOGGER.info("Invoking Slack webhook: " + webhookUrlString);
+                try {
+                    URL webhookUrl = new URL(webhookUrlString);
+                    SlackIntegration.forWebhook(webhookUrl).notify(buildScans);
+                } catch (Exception e) {
+                    LOGGER.error("Invoking Slack webhook failed", e);
+                }
+            }
         }
     }
 
