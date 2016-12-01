@@ -7,6 +7,8 @@ import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.URL;
+
 public final class BuildScanBuildServerListener extends BuildServerAdapter {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
@@ -40,7 +42,11 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
     public void buildFinished(@NotNull SRunningBuild build) {
         if (buildScanDisplayArbiter.showBuildScanInfo(build)) {
             // prepare the cache to be ready when queried by the UI
-            buildScanLookup.getBuildScansForBuild(build);
+            BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
+
+            // notify Slack web hook, todo: do in parallel
+            URL webhookUrl = Util.toUrl("https://hooks.slack.com/services/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");
+            new SlackIntegration(webhookUrl).notify(buildScans);
         }
     }
 
