@@ -7,9 +7,6 @@ import jetbrains.buildServer.web.openapi.PluginDescriptor;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URL;
-import java.util.Map;
-
 public final class BuildScanBuildServerListener extends BuildServerAdapter {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
@@ -45,17 +42,9 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
             // prepare the cache to be ready when queried by the UI
             BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
 
-            // notify Slack web hook, if configured
-            Map<String, String> params = build.getBuildOwnParameters();
-            String webhookUrlString = params.get("BUILD_SCAN_SLACK_WEBHOOK_URL");
-            if (webhookUrlString != null) {
-                LOGGER.info("Invoking Slack webhook: " + webhookUrlString);
-                try {
-                    URL webhookUrl = new URL(webhookUrlString);
-                    SlackIntegration.forWebhook(webhookUrl).notify(buildScans, params);
-                } catch (Exception e) {
-                    LOGGER.error("Invoking Slack webhook failed", e);
-                }
+            // notify Slack if scans are present
+            if (!buildScans.isEmpty()) {
+                SlackIntegration.handle(buildScans, build.getBuildOwnParameters());
             }
         }
     }

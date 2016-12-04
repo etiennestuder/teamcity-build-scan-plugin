@@ -22,8 +22,8 @@ public final class SlackInvocation {
             new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"),
             new BuildScanReference("myOtherId", "http://www.myOtherUrl.org/efghi")));
 
-        SlackIntegration slackIntegration = SlackIntegration.forWebhook(new URL(args[0]));
-        slackIntegration.notify(buildScanReferences, params);
+        SlackNotifier slackNotifier = SlackNotifier.forWebhook(new URL(args[0]));
+        slackNotifier.notify(buildScanReferences, params);
     }
 
 }
