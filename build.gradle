@@ -29,6 +29,7 @@ group = 'nu.studer'
 version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 
 dependencies {
+    compile 'com.google.code.gson:gson:2.8.0'
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-2'
 }
 
