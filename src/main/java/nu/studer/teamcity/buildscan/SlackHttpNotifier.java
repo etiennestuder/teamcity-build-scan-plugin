@@ -11,29 +11,25 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
-final class SlackNotifier {
+final class SlackHttpNotifier {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     private final URL webhookUrl;
-    private final SlackPayloadFactory payloadFactory;
     private final SlackPayloadSerializer payloadSerializer;
 
-    private SlackNotifier(@NotNull URL webhookUrl) {
+    private SlackHttpNotifier(@NotNull URL webhookUrl) {
         this.webhookUrl = webhookUrl;
-        this.payloadFactory = SlackPayloadFactory.create();
         this.payloadSerializer = SlackPayloadSerializer.create();
     }
 
     @NotNull
-    static SlackNotifier forWebhook(@NotNull URL webhookUrl) {
-        return new SlackNotifier(webhookUrl);
+    static SlackHttpNotifier forWebhook(@NotNull URL webhookUrl) {
+        return new SlackHttpNotifier(webhookUrl);
     }
 
-    void notify(@NotNull BuildScanReferences buildScans, Map<String, String> params) throws IOException {
-        SlackPayload payload = payloadFactory.from(buildScans, params);
+    void notify(SlackPayload payload) throws IOException {
         String json = payloadSerializer.toJson(payload);
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
 

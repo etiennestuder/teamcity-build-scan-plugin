@@ -14,6 +14,7 @@ final class SlackIntegration {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
+    private final SlackPayloadFactory payloadFactory = SlackPayloadFactory.create();
     private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
     private SlackIntegration() {
@@ -48,12 +49,13 @@ final class SlackIntegration {
         }
     }
 
-    private static void notifySlack(@NotNull BuildScanReferences buildScans, Map<String, String> params, URL webhookUrl) {
-        LOGGER.info("Invoking Slack webhook: " + webhookUrl);
+    private void notifySlack(@NotNull BuildScanReferences buildScans, Map<String, String> params, URL webhookUrl) {
+        LOGGER.info("Notifying Slack via webhook: " + webhookUrl);
         try {
-            SlackNotifier.forWebhook(webhookUrl).notify(buildScans, params);
+            SlackPayload payload = payloadFactory.from(buildScans, params);
+            SlackHttpNotifier.forWebhook(webhookUrl).notify(payload);
         } catch (Exception e) {
-            LOGGER.error("Invoking Slack webhook failed", e);
+            LOGGER.error("Notifying Slack via webhook failed", e);
         }
     }
 

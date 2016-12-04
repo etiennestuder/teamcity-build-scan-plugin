@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class SlackInvocation {
+public final class SlackTestInvocation {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -22,8 +22,11 @@ public final class SlackInvocation {
             new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"),
             new BuildScanReference("myOtherId", "http://www.myOtherUrl.org/efghi")));
 
-        SlackNotifier slackNotifier = SlackNotifier.forWebhook(new URL(args[0]));
-        slackNotifier.notify(buildScanReferences, params);
+        SlackPayloadFactory payloadFactory = SlackPayloadFactory.create();
+        SlackPayload payload = payloadFactory.from(buildScanReferences, params);
+
+        SlackHttpNotifier slackHttpNotifier = SlackHttpNotifier.forWebhook(new URL(args[0]));
+        slackHttpNotifier.notify(payload);
     }
 
 }
