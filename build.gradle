@@ -56,9 +56,9 @@ teamcity {
         }
 
         environments {
-            teamcity9 {
-                version = "9.1.7"
-            }
+//            teamcity9 {
+//                version = "9.1.7"
+//            }
             teamcity10 {
                 version = "10.0.2"
             }
