@@ -15,6 +15,7 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
     private final SBuildServer buildServer;
     private final BuildScanDisplayArbiter buildScanDisplayArbiter;
     private final BuildScanLookup buildScanLookup;
+    private final SlackIntegration slackIntegration;
 
     @SuppressWarnings("WeakerAccess")
     public BuildScanBuildServerListener(
@@ -27,6 +28,7 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
         this.buildServer = buildServer;
         this.buildScanDisplayArbiter = buildScanDisplayArbiter;
         this.buildScanLookup = buildScanLookup;
+        this.slackIntegration = SlackIntegration.create();
     }
 
     @SuppressWarnings({"WeakerAccess", "unused"})
@@ -42,11 +44,17 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
             // prepare the cache to be ready when queried by the UI
             BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
 
-            // notify Slack if scans were published
+            // possibly notify Slack that scans were published
             if (!buildScans.isEmpty()) {
-                SlackIntegration.handle(buildScans, build.getBuildOwnParameters());
+                slackIntegration.handle(buildScans, build.getBuildOwnParameters());
             }
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void shutdown() {
+        slackIntegration.shutdown();
+        LOGGER.info(String.format("Shut down %s. %s-%s", getClass().getSimpleName(), pluginDescriptor.getPluginName(), pluginDescriptor.getPluginVersion()));
     }
 
 }

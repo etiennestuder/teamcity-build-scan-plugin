@@ -8,21 +8,29 @@ import java.net.URL;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 final class SlackIntegration {
 
-    private static final ExecutorService EXECUTOR = Executors.newFixedThreadPool(2);
-
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
-    static void handle(@NotNull BuildScanReferences buildScans, Map<String, String> params) {
+    private final ExecutorService executor = Executors.newFixedThreadPool(2);
+
+    private SlackIntegration() {
+    }
+
+    static SlackIntegration create() {
+        return new SlackIntegration();
+    }
+
+    void handle(@NotNull BuildScanReferences buildScans, Map<String, String> params) {
         if (buildScans.isEmpty()) {
             return;
         }
 
         URL webhookUrlString = getWebhookURL(params);
         if (webhookUrlString != null) {
-            EXECUTOR.submit(() -> notifySlack(buildScans, params, webhookUrlString));
+            executor.submit(() -> notifySlack(buildScans, params, webhookUrlString));
         }
     }
 
@@ -46,6 +54,15 @@ final class SlackIntegration {
             SlackNotifier.forWebhook(webhookUrl).notify(buildScans, params);
         } catch (Exception e) {
             LOGGER.error("Invoking Slack webhook failed", e);
+        }
+    }
+
+    void shutdown() {
+        try {
+            executor.shutdown();
+            executor.awaitTermination(15, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            LOGGER.error("Error awaiting Slack executor termination", e);
         }
     }
 

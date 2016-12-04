@@ -10,7 +10,8 @@
 
     <bean id="buildScanBuildServerListener"
           class="nu.studer.teamcity.buildscan.BuildScanBuildServerListener"
-          init-method="register">
+          init-method="register"
+          destroy-method="shutdown">
     </bean>
 
     <bean id="buildScanCrumbSummaryExtension"
