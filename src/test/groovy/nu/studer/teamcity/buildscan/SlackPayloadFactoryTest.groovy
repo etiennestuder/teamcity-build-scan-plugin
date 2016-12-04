@@ -9,14 +9,19 @@ class SlackPayloadFactoryTest extends Specification {
     def "properly converts single build scan to payload"() {
         given:
         def buildScanReferences = BuildScanReferences.of(new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"))
+        def params = [
+            "teamcity.buildConfName": "My Configuration",
+            "teamcity.serverUrl"    : "http://tc.server.org",
+            "teamcity.build.id"     : "23"
+        ]
 
         when:
-        def payload = factory.from(buildScanReferences)
+        def payload = factory.from(buildScanReferences, params)
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
         json == """{
-  "text": "<http://www.myUrl.org/s/abcde|Build scan> published.",
+  "text": "<http://www.myUrl.org/s/abcde|Build scan> published in TeamCity configuration <My Configuration|http://tc.server.org/viewLog.html?buildId=23>.",
   "attachments": [
     {
       "fallback": "Build scan link http://www.myUrl.org/s/abcde",
@@ -39,14 +44,18 @@ class SlackPayloadFactoryTest extends Specification {
             new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"),
             new BuildScanReference("myOtherId", "http://www.myOtherUrl.org/efghi")
         ])
-
+        def params = [
+            "teamcity.buildConfName": "My Configuration",
+            "teamcity.serverUrl"    : "http://tc.server.org",
+            "teamcity.build.id"     : "23"
+        ]
         when:
-        def payload = factory.from(buildScanReferences)
+        def payload = factory.from(buildScanReferences, params)
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
         json == """{
-  "text": "2 build scans published.",
+  "text": "2 build scans published in TeamCity configuration <My Configuration|http://tc.server.org/viewLog.html?buildId=23>.",
   "attachments": [
     {
       "fallback": "Build scan link http://www.myUrl.org/s/abcde",

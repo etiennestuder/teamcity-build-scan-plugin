@@ -11,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 final class SlackIntegration {
 
@@ -31,8 +32,8 @@ final class SlackIntegration {
         return new SlackIntegration(webhookUrl);
     }
 
-    void notify(@NotNull BuildScanReferences buildScans) throws IOException {
-        SlackPayload payload = payloadFactory.from(buildScans);
+    void notify(@NotNull BuildScanReferences buildScans, Map<String, String> params) throws IOException {
+        SlackPayload payload = payloadFactory.from(buildScans, params);
         String json = payloadSerializer.toJson(payload);
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
 

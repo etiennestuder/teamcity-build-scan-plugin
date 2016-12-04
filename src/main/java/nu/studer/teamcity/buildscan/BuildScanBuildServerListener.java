@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
+import java.util.Map;
 
 public final class BuildScanBuildServerListener extends BuildServerAdapter {
 
@@ -45,12 +46,13 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
             BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
 
             // notify Slack web hook, if configured
-            String webhookUrlString = build.getBuildOwnParameters().get("BUILD_SCAN_SLACK_WEBHOOK_URL");
+            Map<String, String> params = build.getBuildOwnParameters();
+            String webhookUrlString = params.get("BUILD_SCAN_SLACK_WEBHOOK_URL");
             if (webhookUrlString != null) {
                 LOGGER.info("Invoking Slack webhook: " + webhookUrlString);
                 try {
                     URL webhookUrl = new URL(webhookUrlString);
-                    SlackIntegration.forWebhook(webhookUrl).notify(buildScans);
+                    SlackIntegration.forWebhook(webhookUrl).notify(buildScans, params);
                 } catch (Exception e) {
                     LOGGER.error("Invoking Slack webhook failed", e);
                 }
