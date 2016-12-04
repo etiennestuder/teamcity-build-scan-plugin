@@ -42,7 +42,7 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
             // prepare the cache to be ready when queried by the UI
             BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
 
-            // notify Slack if scans are present
+            // notify Slack if scans were published
             if (!buildScans.isEmpty()) {
                 SlackIntegration.handle(buildScans, build.getBuildOwnParameters());
             }
