@@ -18,11 +18,6 @@ final class SlackPayloadSerializer {
         this.gson = gson;
     }
 
-    @NotNull
-    String toJson(@NotNull SlackPayload payload) {
-        return gson.toJson(payload);
-    }
-
     static SlackPayloadSerializer create() {
         Map<Field, FieldNamingStrategy> customNamings = new HashMap<>();
         customNamings.put(declaredField(SlackPayload.Attachment.Field.class, "isShort"), f -> "short");
@@ -43,6 +38,11 @@ final class SlackPayloadSerializer {
         } catch (NoSuchFieldException e) {
             throw new IllegalStateException(String.format("Cannot reflectively get field '%s' on class %s", fieldName, clazz));
         }
+    }
+
+    @NotNull
+    String toJson(@NotNull SlackPayload payload) {
+        return gson.toJson(payload);
     }
 
     private static final class FieldNamingStrategyDelegate implements FieldNamingStrategy {

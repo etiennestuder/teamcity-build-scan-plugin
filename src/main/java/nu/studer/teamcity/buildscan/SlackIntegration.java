@@ -17,15 +17,22 @@ final class SlackIntegration {
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     private final URL webhookUrl;
+    private final SlackPayloadFactory payloadFactory;
     private final SlackPayloadSerializer payloadSerializer;
 
     private SlackIntegration(@NotNull URL webhookUrl) {
         this.webhookUrl = webhookUrl;
+        this.payloadFactory = SlackPayloadFactory.create();
         this.payloadSerializer = SlackPayloadSerializer.create();
     }
 
+    @NotNull
+    static SlackIntegration forWebhook(@NotNull URL webhookUrl) {
+        return new SlackIntegration(webhookUrl);
+    }
+
     void notify(@NotNull BuildScanReferences buildScans) throws IOException {
-        SlackPayload payload = createPayload(buildScans);
+        SlackPayload payload = payloadFactory.from(buildScans);
         String json = payloadSerializer.toJson(payload);
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
 
@@ -56,36 +63,6 @@ final class SlackIntegration {
         // log response code
         int responseCode = con.getResponseCode();
         LOGGER.info("Invoking Slack webhook returned response code: " + responseCode);
-    }
-
-    @NotNull
-    static SlackPayload createPayload(@NotNull BuildScanReferences buildScans) {
-        SlackPayload payload = new SlackPayload();
-
-        // main text, only hyper-linking to the build scan if there is only one build scan
-        if (buildScans.size() == 1) {
-            payload.text(String.format("<%s|Build scan> published.", buildScans.first().getUrl()));
-        } else {
-            payload.text(String.format("%d build scans published.", buildScans.size()));
-        }
-
-        // for each build scan, add a separate attachment
-        for (BuildScanReference buildScan : buildScans.all()) {
-            payload.attachment(new SlackPayload.Attachment()
-                .fallback(String.format("Build scan link %s", buildScan.getUrl()))
-                .color("#000000")
-                .field(new SlackPayload.Attachment.Field()
-                    .title("Build scan link")
-                    .value(buildScan.getUrl())
-                    .isShort(true)));
-        }
-
-        return payload;
-    }
-
-    @NotNull
-    static SlackIntegration forWebhook(@NotNull URL webhookUrl) {
-        return new SlackIntegration(webhookUrl);
     }
 
 }

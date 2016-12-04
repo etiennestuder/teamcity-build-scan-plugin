@@ -2,14 +2,16 @@ package nu.studer.teamcity.buildscan
 
 import spock.lang.Specification
 
-class SlackIntegrationTest extends Specification {
+class SlackPayloadFactoryTest extends Specification {
+
+    def factory = SlackPayloadFactory.create()
 
     def "properly converts single build scan to payload"() {
         given:
         def buildScanReferences = BuildScanReferences.of(new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"))
 
         when:
-        def payload = SlackIntegration.createPayload(buildScanReferences)
+        def payload = factory.from(buildScanReferences)
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
@@ -39,7 +41,7 @@ class SlackIntegrationTest extends Specification {
         ])
 
         when:
-        def payload = SlackIntegration.createPayload(buildScanReferences)
+        def payload = factory.from(buildScanReferences)
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
