@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan;
+package nu.studer.teamcity.buildscan.internal.integration.slack;
 
 import java.io.IOException;
 import java.io.InputStream;

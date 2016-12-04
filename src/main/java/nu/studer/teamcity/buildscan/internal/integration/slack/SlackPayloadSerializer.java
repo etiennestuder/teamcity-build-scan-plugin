@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan;
+package nu.studer.teamcity.buildscan.internal.integration.slack;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.FieldNamingStrategy;

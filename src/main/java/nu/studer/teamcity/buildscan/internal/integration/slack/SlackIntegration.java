@@ -1,5 +1,7 @@
-package nu.studer.teamcity.buildscan;
+package nu.studer.teamcity.buildscan.internal.integration.slack;
 
+import nu.studer.teamcity.buildscan.BuildScanReferences;
+import nu.studer.teamcity.buildscan.ExternalIntegration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,21 +12,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-final class SlackIntegration {
+public final class SlackIntegration implements ExternalIntegration {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     private final SlackPayloadFactory payloadFactory = SlackPayloadFactory.create();
     private final ExecutorService executor = Executors.newFixedThreadPool(2);
 
-    private SlackIntegration() {
-    }
-
-    static SlackIntegration create() {
-        return new SlackIntegration();
-    }
-
-    void handle(@NotNull BuildScanReferences buildScans, Map<String, String> params) {
+    @Override
+    public void handle(@NotNull BuildScanReferences buildScans, @NotNull Map<String, String> params) {
         if (buildScans.isEmpty()) {
             return;
         }
@@ -59,7 +55,8 @@ final class SlackIntegration {
         }
     }
 
-    void shutdown() {
+    @Override
+    public void shutdown() {
         try {
             executor.shutdown();
             executor.awaitTermination(15, TimeUnit.SECONDS);

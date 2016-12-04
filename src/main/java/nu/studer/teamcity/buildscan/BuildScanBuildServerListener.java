@@ -4,6 +4,7 @@ import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
+import nu.studer.teamcity.buildscan.internal.integration.slack.SlackIntegration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,7 +16,7 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
     private final SBuildServer buildServer;
     private final BuildScanDisplayArbiter buildScanDisplayArbiter;
     private final BuildScanLookup buildScanLookup;
-    private final SlackIntegration slackIntegration;
+    private final ExternalIntegration slackIntegration;
 
     @SuppressWarnings("WeakerAccess")
     public BuildScanBuildServerListener(
@@ -28,7 +29,7 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
         this.buildServer = buildServer;
         this.buildScanDisplayArbiter = buildScanDisplayArbiter;
         this.buildScanLookup = buildScanLookup;
-        this.slackIntegration = SlackIntegration.create();
+        this.slackIntegration = new SlackIntegration();
     }
 
     @SuppressWarnings({"WeakerAccess", "unused"})
