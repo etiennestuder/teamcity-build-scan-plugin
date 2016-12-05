@@ -34,10 +34,10 @@ final class SlackPayloadFactory {
         // for each build scan, add a separate attachment
         for (BuildScanReference buildScan : buildScans.all()) {
             payload.attachment(new SlackPayload.Attachment()
-                .fallback(String.format("Build scan link %s", buildScan.getUrl()))
+                .fallback(String.format("Build scan %s", buildScan.getUrl()))
                 .color("#000000")
                 .field(new SlackPayload.Attachment.Field()
-                    .title("Build scan link")
+                    .title("Build scan")
                     .value(buildScan.getUrl())
                     .isShort(true)));
         }

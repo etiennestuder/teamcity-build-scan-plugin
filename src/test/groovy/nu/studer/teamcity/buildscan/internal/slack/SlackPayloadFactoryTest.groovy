@@ -26,11 +26,11 @@ class SlackPayloadFactoryTest extends Specification {
   "text": "<http://www.myUrl.org/s/abcde|Build scan> published in TeamCity configuration <http://tc.server.org/viewLog.html?buildId=23|My Configuration>.",
   "attachments": [
     {
-      "fallback": "Build scan link http://www.myUrl.org/s/abcde",
+      "fallback": "Build scan http://www.myUrl.org/s/abcde",
       "color": "#000000",
       "fields": [
         {
-          "title": "Build scan link",
+          "title": "Build scan",
           "value": "http://www.myUrl.org/s/abcde",
           "short": true
         }
@@ -60,22 +60,22 @@ class SlackPayloadFactoryTest extends Specification {
   "text": "2 build scans published in TeamCity configuration <http://tc.server.org/viewLog.html?buildId=23|My Configuration>.",
   "attachments": [
     {
-      "fallback": "Build scan link http://www.myUrl.org/s/abcde",
+      "fallback": "Build scan http://www.myUrl.org/s/abcde",
       "color": "#000000",
       "fields": [
         {
-          "title": "Build scan link",
+          "title": "Build scan",
           "value": "http://www.myUrl.org/s/abcde",
           "short": true
         }
       ]
     },
     {
-      "fallback": "Build scan link http://www.myOtherUrl.org/efghi",
+      "fallback": "Build scan http://www.myOtherUrl.org/efghi",
       "color": "#000000",
       "fields": [
         {
-          "title": "Build scan link",
+          "title": "Build scan",
           "value": "http://www.myOtherUrl.org/efghi",
           "short": true
         }
