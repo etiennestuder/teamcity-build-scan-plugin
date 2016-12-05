@@ -30,6 +30,7 @@ version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 
 dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
+    compile 'com.google.guava:guava:20.0'
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-2'
 }
 
@@ -47,7 +48,7 @@ teamcity {
             description = 'Provides easy navigation from TeamCity builds to Gradle build scans'
             version = project.version
             vendorName = 'Etienne Studer'
-            vendorUrl= 'https://github.com/etiennestuder'
+            vendorUrl = 'https://github.com/etiennestuder'
 
             // optional properties
             email = 'etienne@studer.nu'
