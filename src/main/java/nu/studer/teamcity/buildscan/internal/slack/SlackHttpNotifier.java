@@ -35,7 +35,7 @@ final class SlackHttpNotifier {
 
         URLConnection urlConnection = webhookUrl.openConnection();
         if (!(urlConnection instanceof HttpURLConnection)) {
-            throw new IllegalArgumentException("Error");
+            throw new IllegalArgumentException("HttpURLConnection expected");
         }
 
         HttpURLConnection con = (HttpURLConnection) urlConnection;
