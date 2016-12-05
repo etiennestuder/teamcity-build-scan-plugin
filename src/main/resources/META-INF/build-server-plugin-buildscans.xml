@@ -10,8 +10,7 @@
 
     <bean id="buildScanBuildServerListener"
           class="nu.studer.teamcity.buildscan.BuildScanBuildServerListener"
-          init-method="register"
-          destroy-method="shutdown">
+          init-method="register">
     </bean>
 
     <bean id="buildScanCrumbSummaryExtension"
@@ -27,5 +26,9 @@
 
     <bean id="buildScanDisplayArbiter"
           class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter"/>
+
+    <bean id="slackIntegration"
+          class="nu.studer.teamcity.buildscan.internal.slack.SlackIntegration"
+          destroy-method="shutdown"/>
 
 </beans>

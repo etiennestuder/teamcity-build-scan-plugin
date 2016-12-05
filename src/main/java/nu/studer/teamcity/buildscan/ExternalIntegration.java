@@ -8,6 +8,4 @@ public interface ExternalIntegration {
 
     void handle(@NotNull BuildScanReferences buildScans, @NotNull Map<String, String> params);
 
-    void shutdown();
-
 }

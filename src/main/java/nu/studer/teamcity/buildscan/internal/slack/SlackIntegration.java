@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.internal.integration.slack;
+package nu.studer.teamcity.buildscan.internal.slack;
 
 import nu.studer.teamcity.buildscan.BuildScanReferences;
 import nu.studer.teamcity.buildscan.ExternalIntegration;
@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public final class SlackIntegration implements ExternalIntegration {
+final class SlackIntegration implements ExternalIntegration {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
@@ -55,8 +55,9 @@ public final class SlackIntegration implements ExternalIntegration {
         }
     }
 
-    @Override
-    public void shutdown() {
+    @SuppressWarnings("unused")
+    void shutdown() {
+        LOGGER.info("Terminating Slack executor");
         try {
             executor.shutdown();
             executor.awaitTermination(15, TimeUnit.SECONDS);

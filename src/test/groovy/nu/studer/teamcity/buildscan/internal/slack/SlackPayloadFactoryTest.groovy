@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.internal.integration.slack
+package nu.studer.teamcity.buildscan.internal.slack
 
 import nu.studer.teamcity.buildscan.BuildScanReference
 import nu.studer.teamcity.buildscan.BuildScanReferences

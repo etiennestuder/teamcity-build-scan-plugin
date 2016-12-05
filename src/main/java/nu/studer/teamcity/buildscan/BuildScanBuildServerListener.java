@@ -4,7 +4,6 @@ import jetbrains.buildServer.serverSide.BuildServerAdapter;
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SRunningBuild;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
-import nu.studer.teamcity.buildscan.internal.integration.slack.SlackIntegration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,20 +15,21 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
     private final SBuildServer buildServer;
     private final BuildScanDisplayArbiter buildScanDisplayArbiter;
     private final BuildScanLookup buildScanLookup;
-    private final ExternalIntegration slackIntegration;
+    private final ExternalIntegration externalIntegration;
 
     @SuppressWarnings("WeakerAccess")
     public BuildScanBuildServerListener(
         @NotNull PluginDescriptor pluginDescriptor,
         @NotNull SBuildServer buildServer,
         @NotNull BuildScanDisplayArbiter buildScanDisplayArbiter,
-        @NotNull BuildScanLookup buildScanLookup
+        @NotNull BuildScanLookup buildScanLookup,
+        @NotNull ExternalIntegration externalIntegration
     ) {
         this.pluginDescriptor = pluginDescriptor;
         this.buildServer = buildServer;
         this.buildScanDisplayArbiter = buildScanDisplayArbiter;
         this.buildScanLookup = buildScanLookup;
-        this.slackIntegration = new SlackIntegration();
+        this.externalIntegration = externalIntegration;
     }
 
     @SuppressWarnings({"WeakerAccess", "unused"})
@@ -45,17 +45,11 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
             // prepare the cache to be ready when queried by the UI
             BuildScanReferences buildScans = buildScanLookup.getBuildScansForBuild(build);
 
-            // possibly notify Slack that scans were published
+            // notify external integration points
             if (!buildScans.isEmpty()) {
-                slackIntegration.handle(buildScans, build.getBuildOwnParameters());
+                externalIntegration.handle(buildScans, build.getBuildOwnParameters());
             }
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void shutdown() {
-        slackIntegration.shutdown();
-        LOGGER.info(String.format("Shut down %s. %s-%s", getClass().getSimpleName(), pluginDescriptor.getPluginName(), pluginDescriptor.getPluginVersion()));
     }
 
 }
