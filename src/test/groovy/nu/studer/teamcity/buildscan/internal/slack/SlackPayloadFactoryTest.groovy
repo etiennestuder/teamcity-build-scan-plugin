@@ -12,9 +12,9 @@ class SlackPayloadFactoryTest extends Specification {
         given:
         def buildScanReferences = BuildScanReferences.of(new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"))
         def params = [
-            "teamcity.buildConfName": "My Configuration",
-            "teamcity.serverUrl"    : "http://tc.server.org",
-            "teamcity.build.id"     : "23"
+            "system.teamcity.buildConfName": "My Configuration",
+            "teamcity.serverUrl"           : "http://tc.server.org",
+            "teamcity.build.id"            : "23"
         ]
 
         when:
@@ -23,7 +23,7 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
-  "text": "<http://www.myUrl.org/s/abcde|Build scan> published in TeamCity configuration <My Configuration|http://tc.server.org/viewLog.html?buildId=23>.",
+  "text": "<http://www.myUrl.org/s/abcde|Build scan> published in TeamCity configuration <http://tc.server.org/viewLog.html?buildId=23|My Configuration>.",
   "attachments": [
     {
       "fallback": "Build scan link http://www.myUrl.org/s/abcde",
@@ -47,9 +47,9 @@ class SlackPayloadFactoryTest extends Specification {
             new BuildScanReference("myOtherId", "http://www.myOtherUrl.org/efghi")
         ])
         def params = [
-            "teamcity.buildConfName": "My Configuration",
-            "teamcity.serverUrl"    : "http://tc.server.org",
-            "teamcity.build.id"     : "23"
+            "system.teamcity.buildConfName": "My Configuration",
+            "teamcity.serverUrl"           : "http://tc.server.org",
+            "teamcity.build.id"            : "23"
         ]
         when:
         def payload = factory.from(buildScanReferences, params)
@@ -57,7 +57,7 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
-  "text": "2 build scans published in TeamCity configuration <My Configuration|http://tc.server.org/viewLog.html?buildId=23>.",
+  "text": "2 build scans published in TeamCity configuration <http://tc.server.org/viewLog.html?buildId=23|My Configuration>.",
   "attachments": [
     {
       "fallback": "Build scan link http://www.myUrl.org/s/abcde",
