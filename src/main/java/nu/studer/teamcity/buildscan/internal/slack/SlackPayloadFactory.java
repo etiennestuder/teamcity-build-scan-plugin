@@ -30,10 +30,9 @@ final class SlackPayloadFactory {
 
         // main text, only hyper-linking to the build scan if there is only one build scan
         if (buildScans.size() == 1) {
-            String buildScanUrl = buildScans.first().getUrl();
-            payload.text(String.format("<%s|Build scan> published in TeamCity configuration <%s|%s>.", buildScanUrl, buildUrl, buildConfigName));
+            payload.text(String.format("TeamCity <%s|[%s]> 1 build scan published:", buildUrl, buildConfigName));
         } else {
-            payload.text(String.format("%d build scans published in TeamCity configuration <%s|%s>.", buildScans.size(), buildUrl, buildConfigName));
+            payload.text(String.format("TeamCity <%s|[%s]> %d build scans published:", buildUrl, buildConfigName, buildScans.size()));
         }
 
         // for each build scan, add a separate attachment
