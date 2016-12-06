@@ -3,7 +3,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 import java.io.IOException;
 import java.net.URL;
 
-public final class BuildScanTestInvocation {
+public final class BuildScanRetrievalTestInvocation {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {

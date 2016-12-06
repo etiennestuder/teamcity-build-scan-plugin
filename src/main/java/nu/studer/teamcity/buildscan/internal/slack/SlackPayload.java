@@ -3,6 +3,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("WeakerAccess")
 final class SlackPayload {
 
     String text;

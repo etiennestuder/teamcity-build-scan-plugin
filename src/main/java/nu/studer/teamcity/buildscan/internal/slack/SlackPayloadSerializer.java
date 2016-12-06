@@ -18,6 +18,7 @@ final class SlackPayloadSerializer {
         this.gson = gson;
     }
 
+    @NotNull
     static SlackPayloadSerializer create() {
         Map<Field, FieldNamingStrategy> customNamings = new HashMap<>();
         customNamings.put(declaredField(SlackPayload.Attachment.Field.class, "isShort"), f -> "short");

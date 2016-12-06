@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class SlackTestInvocation {
+public final class SlackNotificationTestInvocation {
 
     public static void main(String[] args) throws IOException {
         if (args.length != 1) {
@@ -17,8 +17,8 @@ public final class SlackTestInvocation {
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("teamcity.buildConfName", "My Configuration");
-        params.put("teamcity.serverUrl", "http://ci.company.org");
+        params.put("system.teamcity.buildConfName", "My Configuration");
+        params.put("teamcity.serverUrl", "http://tc.server.org");
         params.put("teamcity.build.id", "23");
 
         BuildScanReferences buildScanReferences = BuildScanReferences.of(Arrays.asList(

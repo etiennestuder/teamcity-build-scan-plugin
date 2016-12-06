@@ -7,6 +7,7 @@ final class BuildScanPayload {
 
     static final class Data {
 
+        String publicId;
         Summary summary;
 
         static final class Summary {
@@ -48,7 +49,8 @@ final class BuildScanPayload {
         @Override
         public String toString() {
             return "Data{" +
-                "summary=" + summary +
+                "publicId='" + publicId + '\'' +
+                ", summary=" + summary +
                 '}';
         }
 

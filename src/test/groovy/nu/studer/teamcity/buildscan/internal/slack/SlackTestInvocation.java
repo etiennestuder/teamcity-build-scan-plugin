@@ -4,32 +4,38 @@ import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public final class SlackTestInvocation {
 
-    public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
-            throw new IllegalArgumentException("Webhook URL must be specified.");
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void main(String[] args) throws IOException, InterruptedException, TimeoutException, ExecutionException {
+        if (args.length != 3) {
+            throw new IllegalArgumentException("Build scan id, URL, and webhook URL must be specified.");
         }
 
         Map<String, String> params = new HashMap<>();
-        params.put("teamcity.buildConfName", "My Configuration");
-        params.put("teamcity.serverUrl", "http://ci.company.org");
+        params.put("BUILD_SCAN_SLACK_WEBHOOK_URL", args[2]);
+        params.put("system.teamcity.buildConfName", "My Configuration");
+        params.put("teamcity.serverUrl", "http://tc.server.org");
         params.put("teamcity.build.id", "23");
 
-        BuildScanReferences buildScanReferences = BuildScanReferences.of(Arrays.asList(
-            new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"),
-            new BuildScanReference("myOtherId", "http://www.myOtherUrl.org/efghi")));
+        BuildScanReferences buildScanReferences = BuildScanReferences.of(Collections.singletonList(
+            new BuildScanReference(args[0], args[1])
+        ));
 
-        SlackPayloadFactory payloadFactory = SlackPayloadFactory.create();
-        SlackPayload payload = payloadFactory.from(buildScanReferences, params);
+        SlackIntegration slackIntegration = new SlackIntegration();
+        Optional<Future> future = slackIntegration.handle(buildScanReferences, params);
+        future.get().get(20, TimeUnit.SECONDS);
 
-        SlackHttpNotifier slackHttpNotifier = SlackHttpNotifier.forWebhook(new URL(args[0]));
-        slackHttpNotifier.notify(payload);
+        slackIntegration.shutdown();
     }
 
 }

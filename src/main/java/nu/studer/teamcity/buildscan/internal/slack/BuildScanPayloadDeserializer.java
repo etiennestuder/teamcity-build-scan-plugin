@@ -14,6 +14,7 @@ final class BuildScanPayloadDeserializer {
         this.gson = gson;
     }
 
+    @NotNull
     static BuildScanPayloadDeserializer create() {
         Gson gson = new GsonBuilder()
             .disableHtmlEscaping()

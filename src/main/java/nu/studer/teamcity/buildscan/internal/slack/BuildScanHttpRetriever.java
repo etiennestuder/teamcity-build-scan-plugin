@@ -29,6 +29,7 @@ final class BuildScanHttpRetriever {
         return new BuildScanHttpRetriever(scanUrl);
     }
 
+    @NotNull
     BuildScanPayload retrieve() throws IOException {
         URLConnection urlConnection = scanUrl.openConnection();
         if (!(urlConnection instanceof HttpURLConnection)) {

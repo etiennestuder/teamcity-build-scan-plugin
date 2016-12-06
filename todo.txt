@@ -3,4 +3,3 @@ show build step
 link to test card if build had failing tests
 add build scan id to REST API payloads (http://svn.jetbrains.org/teamcity/plugins/rest-api/trunk/src/jetbrains/buildServer/server/rest/RESTControllerExtension.java)
 show build scan link in email notifications
-invoke slack in parallel

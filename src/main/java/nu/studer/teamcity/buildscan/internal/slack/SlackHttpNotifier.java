@@ -29,7 +29,7 @@ final class SlackHttpNotifier {
         return new SlackHttpNotifier(webhookUrl);
     }
 
-    void notify(SlackPayload payload) throws IOException {
+    void notify(@NotNull SlackPayload payload) throws IOException {
         String json = payloadSerializer.toJson(payload);
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
 
