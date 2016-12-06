@@ -5,10 +5,24 @@ final class BuildScanPayload {
     String state;
     Data data;
 
+    Data data() {
+        if (data == null) {
+            data = new Data();
+        }
+        return data;
+    }
+
     static final class Data {
 
         String publicId;
         Summary summary;
+
+        Summary summary() {
+            if (summary == null) {
+                summary = new Summary();
+            }
+            return summary;
+        }
 
         static final class Summary {
 
@@ -18,6 +32,12 @@ final class BuildScanPayload {
             String rootProjectName;
             Identity identity;
 
+            Identity identity() {
+                if (identity == null) {
+                    identity = new Identity();
+                }
+                return identity;
+            }
             static final class Identity {
 
                 String identityName;

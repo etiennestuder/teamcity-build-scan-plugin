@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.internal.slack
 
+import com.google.common.collect.ImmutableMap
 import nu.studer.teamcity.buildscan.BuildScanReference
 import nu.studer.teamcity.buildscan.BuildScanReferences
 import spock.lang.Specification
@@ -18,7 +19,7 @@ class SlackPayloadFactoryTest extends Specification {
         ]
 
         when:
-        def payload = factory.from(buildScanReferences, params)
+        def payload = factory.from(buildScanReferences, ImmutableMap.of(), params)
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
@@ -52,7 +53,7 @@ class SlackPayloadFactoryTest extends Specification {
             "teamcity.build.id"            : "23"
         ]
         when:
-        def payload = factory.from(buildScanReferences, params)
+        def payload = factory.from(buildScanReferences, ImmutableMap.of(), params)
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
