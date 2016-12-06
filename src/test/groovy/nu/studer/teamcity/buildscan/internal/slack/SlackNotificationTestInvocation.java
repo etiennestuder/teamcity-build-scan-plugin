@@ -31,8 +31,11 @@ public final class SlackNotificationTestInvocation {
         buildScanPayloadMyId.state = "complete";
         buildScanPayloadMyId.data().publicId = "myId";
         buildScanPayloadMyId.data().summary().failed = false;
+        buildScanPayloadMyId.data().summary().startTime = System.currentTimeMillis();
+        buildScanPayloadMyId.data().summary().rootProjectName = "sample-project";
         buildScanPayloadMyId.data().summary().rootProjectName = "sample-project";
         buildScanPayloadMyId.data().summary().identity().identityName = "etienne";
+        buildScanPayloadMyId.data().summary().identity().avatarChecksum = "dc0bedcea8ba69085791f75bf84f3af7";
 
         BuildScanPayload buildScanPayloadMyOtherId = new BuildScanPayload();
         buildScanPayloadMyOtherId.state = "complete";

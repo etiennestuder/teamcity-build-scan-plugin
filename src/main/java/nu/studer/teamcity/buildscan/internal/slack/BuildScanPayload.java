@@ -28,7 +28,6 @@ final class BuildScanPayload {
 
             boolean failed;
             long startTime;
-            long finishTime;
             String rootProjectName;
             Identity identity;
 
@@ -38,6 +37,7 @@ final class BuildScanPayload {
                 }
                 return identity;
             }
+
             static final class Identity {
 
                 String identityName;
@@ -58,7 +58,6 @@ final class BuildScanPayload {
                 return "Summary{" +
                     "failed=" + failed +
                     ", startTime=" + startTime +
-                    ", finishTime=" + finishTime +
                     ", rootProjectName='" + rootProjectName + '\'' +
                     ", identity=" + identity +
                     '}';

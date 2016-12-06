@@ -86,7 +86,7 @@ final class SlackIntegration implements ExternalIntegration {
     private Void notifySlack(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) throws IOException {
         LOGGER.info("Notifying Slack via webhook: " + webhookUrl);
         SlackHttpNotifier notifier = SlackHttpNotifier.forWebhook(webhookUrl);
-        notifier.notify(payloadFactory.from(buildScans, params));
+        notifier.notify(payloadFactory.from(buildScans, buildScanPayloads, params));
         return null;
     }
 

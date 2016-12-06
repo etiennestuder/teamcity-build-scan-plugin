@@ -40,27 +40,24 @@ final class SlackPayloadFactory {
         for (BuildScanReference buildScan : buildScans.all()) {
             SlackPayload.Attachment attachment = new SlackPayload.Attachment()
                 .fallback(String.format("Build scan %s", buildScan.getUrl()))
-                .field(new SlackPayload.Attachment.Field()
-                    .title("Build scan")
-                    .value(buildScan.getUrl())
-                    .isShort(true));
+                .text(String.format("Build scan %s", buildScan.getUrl()));
 
             BuildScanPayload buildScanPayload = buildScanPayloads.get(buildScan.getId());
 
             String color = color(buildScanPayload);
             attachment.color(color);
 
-            Optional<String> rootProjectName = rootProjectName(buildScanPayload);
-            rootProjectName.ifPresent(name -> attachment.field(new SlackPayload.Attachment.Field()
-                .title("Root project")
-                .value(name)
-                .isShort(true)));
-
             Optional<String> userName = userName(buildScanPayload);
-            userName.ifPresent(name -> attachment.field(new SlackPayload.Attachment.Field()
-                .title("User")
-                .value(name)
-                .isShort(true)));
+            userName.ifPresent(attachment::author_name);
+
+            Optional<String> gravatarLink = gravatarLink(buildScanPayload);
+            gravatarLink.ifPresent(attachment::author_icon);
+
+            Optional<String> rootProjectName = rootProjectName(buildScanPayload);
+            rootProjectName.ifPresent(attachment::title);
+
+            Optional<Long> buildStartTime = buildStartTime(buildScanPayload);
+            buildStartTime.ifPresent(attachment::ts);
 
             payload.attachment(attachment);
         }
@@ -105,6 +102,35 @@ final class SlackPayloadFactory {
             }
         }
         return Optional.ofNullable(userName);
+    }
+
+    @NotNull
+    private static Optional<String> gravatarLink(@Nullable BuildScanPayload buildScanPayload) {
+        String gravatarLink = null;
+        if (buildScanPayload != null) {
+            try {
+                String checksum = buildScanPayload.data.summary.identity.avatarChecksum;
+                if (checksum != null) {
+                    gravatarLink = String.format("https://www.gravatar.com/avatar/%s?s=16", checksum);
+                }
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return Optional.ofNullable(gravatarLink);
+    }
+
+    @NotNull
+    private static Optional<Long> buildStartTime(@Nullable BuildScanPayload buildScanPayload) {
+        Long buildStartTime = null;
+        if (buildScanPayload != null) {
+            try {
+                buildStartTime = buildScanPayload.data.summary.startTime;
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return Optional.ofNullable(buildStartTime);
     }
 
 }
