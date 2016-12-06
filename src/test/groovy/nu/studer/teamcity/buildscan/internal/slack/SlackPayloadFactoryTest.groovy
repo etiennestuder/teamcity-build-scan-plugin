@@ -24,18 +24,13 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
-  "text": "<http://www.myUrl.org/s/abcde|Build scan> published in TeamCity configuration <http://tc.server.org/viewLog.html?buildId=23|My Configuration>.",
+  "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 1 build scan published:",
   "attachments": [
     {
       "fallback": "Build scan http://www.myUrl.org/s/abcde",
       "color": "#000000",
-      "fields": [
-        {
-          "title": "Build scan",
-          "value": "http://www.myUrl.org/s/abcde",
-          "short": true
-        }
-      ]
+      "text": "Build scan http://www.myUrl.org/s/abcde",
+      "fields": []
     }
   ]
 }"""
@@ -58,29 +53,19 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
-  "text": "2 build scans published in TeamCity configuration <http://tc.server.org/viewLog.html?buildId=23|My Configuration>.",
+  "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 2 build scans published:",
   "attachments": [
     {
       "fallback": "Build scan http://www.myUrl.org/s/abcde",
       "color": "#000000",
-      "fields": [
-        {
-          "title": "Build scan",
-          "value": "http://www.myUrl.org/s/abcde",
-          "short": true
-        }
-      ]
+      "text": "Build scan http://www.myUrl.org/s/abcde",
+      "fields": []
     },
     {
       "fallback": "Build scan http://www.myOtherUrl.org/efghi",
       "color": "#000000",
-      "fields": [
-        {
-          "title": "Build scan",
-          "value": "http://www.myOtherUrl.org/efghi",
-          "short": true
-        }
-      ]
+      "text": "Build scan http://www.myOtherUrl.org/efghi",
+      "fields": []
     }
   ]
 }"""
