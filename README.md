@@ -17,6 +17,16 @@ previously downloaded plugin .zip file.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
+## Slack Integration
+
+1. In Slack, create a webhook.
+
+1. In TeamCity, on the build configuration for which you want to be notified about published build scans, create a configuration parameter with name `BUILD_SCAN_SLACK_WEBHOOK_URL` and the value being the URL of the webhook created in step #1.
+
+1. Trigger your Gradle builds with build scans enabled.
+
+1. Find a notification about the published build scans in the Slack channel configured in the webhook.
+
 # Feedback and Contributions
 
 Both feedback and contributions are very welcome.
