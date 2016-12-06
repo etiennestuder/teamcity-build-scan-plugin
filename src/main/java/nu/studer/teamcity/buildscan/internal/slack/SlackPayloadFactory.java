@@ -124,7 +124,7 @@ final class SlackPayloadFactory {
         Long buildStartTime = null;
         if (buildScanPayload != null) {
             try {
-                buildStartTime = buildScanPayload.data.summary.startTime;
+                buildStartTime = buildScanPayload.data.summary.startTime / 1000;
             } catch (Exception e) {
                 // ignore
             }
