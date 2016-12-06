@@ -60,17 +60,6 @@ final class SlackIntegration implements ExternalIntegration {
             notifySlackAsync(buildScans, params, payloadPerBuildScan, webhookUrlString)
         );
 
-        Futures.addCallback(notifySlackFuture, new FutureCallback<Void>() {
-            @Override
-            public void onSuccess(@Nullable Void result) {
-                LOGGER.info("Notifying Slack via webhook succeeded");
-            }
-
-            @Override
-            public void onFailure(@NotNull Throwable t) {
-                LOGGER.error("Notifying Slack via webhook failed", t);
-            }
-        });
         return Optional.of(notifySlackFuture);
     }
 
@@ -89,7 +78,9 @@ final class SlackIntegration implements ExternalIntegration {
     }
 
     private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) {
-        return executor.submit(() -> notifySlack(buildScans, params, buildScanPayloads, webhookUrl));
+        ListenableFuture<Void> future = executor.submit(() -> notifySlack(buildScans, params, buildScanPayloads, webhookUrl));
+        Futures.addCallback(future, new LoggingCallback("Notifying Slack via webhook"));
+        return future;
     }
 
     private Void notifySlack(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) throws IOException {
@@ -100,18 +91,18 @@ final class SlackIntegration implements ExternalIntegration {
     }
 
     private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(BuildScanReferences buildScans) {
-        return buildScans.all().stream().map(s -> executor.submit(() -> retrieveBuildScan(s))).collect(toList());
+        return buildScans.all().stream().map(s -> {
+            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s));
+            Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"));
+            return future;
+        }).collect(toList());
     }
 
-    private Optional<BuildScanPayload> retrieveBuildScan(BuildScanReference buildScan) {
+    private Optional<BuildScanPayload> retrieveBuildScan(BuildScanReference buildScan) throws IOException {
         LOGGER.info("Retrieving build scan data: " + buildScan.getUrl());
-        try {
-            BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan));
-            return Optional.of(retriever.retrieve()).filter(p -> p.state.equals("complete"));
-        } catch (Exception e) {
-            LOGGER.error("Retrieving build scan data failed", e);
-            return Optional.empty();
-        }
+        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan));
+        BuildScanPayload payload = retriever.retrieve();
+        return Optional.of(payload).filter(p -> p.state.equals("complete"));
     }
 
     @NotNull
@@ -128,6 +119,26 @@ final class SlackIntegration implements ExternalIntegration {
         } catch (Exception e) {
             LOGGER.error("Error awaiting Slack executor termination", e);
         }
+    }
+
+    private static final class LoggingCallback implements FutureCallback<Object> {
+
+        private final String action;
+
+        private LoggingCallback(String action) {
+            this.action = action;
+        }
+
+        @Override
+        public void onSuccess(@Nullable Object result) {
+            LOGGER.info(action + " succeeded");
+        }
+
+        @Override
+        public void onFailure(@NotNull Throwable t) {
+            LOGGER.error(action + " failed", t);
+        }
+
     }
 
 }
