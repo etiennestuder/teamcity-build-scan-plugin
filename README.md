@@ -19,7 +19,7 @@ previously downloaded plugin .zip file.
 
 ## Slack Integration
 
-1. In Slack, create a webhook.
+1. In Slack, create a webhook and keep track of the created URL.
 
 1. In TeamCity, on the build configuration for which you want to be notified about published build scans, create a configuration parameter with name `BUILD_SCAN_SLACK_WEBHOOK_URL` and the value being the URL of the webhook created in step #1.
 
