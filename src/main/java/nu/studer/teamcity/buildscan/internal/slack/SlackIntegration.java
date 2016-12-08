@@ -77,6 +77,26 @@ final class SlackIntegration implements ExternalIntegration {
         }
     }
 
+    private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(BuildScanReferences buildScans) {
+        return buildScans.all().stream().map(s -> {
+            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s));
+            Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"));
+            return future;
+        }).collect(toList());
+    }
+
+    private Optional<BuildScanPayload> retrieveBuildScan(BuildScanReference buildScan) throws IOException {
+        LOGGER.info("Retrieving build scan data: " + buildScan.getUrl());
+        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan), null);
+        BuildScanPayload payload = retriever.retrieve();
+        return Optional.of(payload).filter(p -> p.state.equals("complete"));
+    }
+
+    @NotNull
+    private static URL toScanDataUrl(BuildScanReference buildScan) throws MalformedURLException {
+        return new URL(buildScan.getUrl().replace("/s/", "/scan-data/"));
+    }
+
     private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) {
         ListenableFuture<Void> future = executor.submit(() -> notifySlack(buildScans, params, buildScanPayloads, webhookUrl));
         Futures.addCallback(future, new LoggingCallback("Notifying Slack via webhook"));
@@ -88,26 +108,6 @@ final class SlackIntegration implements ExternalIntegration {
         SlackHttpNotifier notifier = SlackHttpNotifier.forWebhook(webhookUrl);
         notifier.notify(payloadFactory.from(buildScans, buildScanPayloads, params));
         return null;
-    }
-
-    private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(BuildScanReferences buildScans) {
-        return buildScans.all().stream().map(s -> {
-            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s));
-            Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"));
-            return future;
-        }).collect(toList());
-    }
-
-    private Optional<BuildScanPayload> retrieveBuildScan(BuildScanReference buildScan) throws IOException {
-        LOGGER.info("Retrieving build scan data: " + buildScan.getUrl());
-        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan));
-        BuildScanPayload payload = retriever.retrieve();
-        return Optional.of(payload).filter(p -> p.state.equals("complete"));
-    }
-
-    @NotNull
-    private static URL toScanDataUrl(BuildScanReference buildScan) throws MalformedURLException {
-        return new URL(buildScan.getUrl().replace("/s/", "/scan-data/"));
     }
 
     @SuppressWarnings("unused")
