@@ -6,11 +6,16 @@ import java.net.URL;
 public final class BuildScanRetrievalTestInvocation {
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 1) {
+        if (args.length < 1) {
             throw new IllegalArgumentException("Webhook URL must be specified.");
         }
 
-        BuildScanHttpRetriever buildScanHttpRetriever = BuildScanHttpRetriever.forUrl(new URL(args[0]));
+        PasswordCredentials passwordCredentials = null;
+        if (args.length > 2) {
+            passwordCredentials = new PasswordCredentials(args[1], args[2]);
+        }
+
+        BuildScanHttpRetriever buildScanHttpRetriever = BuildScanHttpRetriever.forUrl(new URL(args[0]), passwordCredentials);
         BuildScanPayload payload = buildScanHttpRetriever.retrieve();
         System.out.println("payload = " + payload);
     }

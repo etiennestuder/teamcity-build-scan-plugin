@@ -17,7 +17,7 @@ public final class SlackTestInvocation {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void main(String[] args) throws IOException, InterruptedException, TimeoutException, ExecutionException {
-        if (args.length != 3) {
+        if (args.length < 3) {
             throw new IllegalArgumentException("Build scan id, URL, and webhook URL must be specified.");
         }
 
@@ -26,6 +26,13 @@ public final class SlackTestInvocation {
         params.put("system.teamcity.buildConfName", "My Configuration");
         params.put("teamcity.serverUrl", "http://tc.server.org");
         params.put("teamcity.build.id", "23");
+
+        if (args.length > 3) {
+            params.put("BUILD_SCAN_SERVER_AUTH", args[3]);
+        }
+        if (args.length > 4) {
+            params.put("BUILD_SCAN_SERVER_AUTH_2", args[4]);
+        }
 
         BuildScanReferences buildScanReferences = BuildScanReferences.of(Collections.singletonList(
             new BuildScanReference(args[0], args[1])

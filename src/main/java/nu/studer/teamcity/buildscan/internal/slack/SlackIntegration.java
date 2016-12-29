@@ -10,8 +10,8 @@ import nu.studer.teamcity.buildscan.BuildScanReferences;
 import nu.studer.teamcity.buildscan.ExternalIntegration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,7 +47,7 @@ final class SlackIntegration implements ExternalIntegration {
             return Optional.empty();
         }
 
-        List<ListenableFuture<Optional<BuildScanPayload>>> payloadAllFutures = retrieveBuildScansAsync(buildScans);
+        List<ListenableFuture<Optional<BuildScanPayload>>> payloadAllFutures = retrieveBuildScansAsync(buildScans, params);
         ListenableFuture<List<Optional<BuildScanPayload>>> payloadSucFutures = Futures.successfulAsList(payloadAllFutures);
         ListenableFuture<Map<String, BuildScanPayload>> payloadPerBuildScanFutures = Futures.transform(payloadSucFutures, ps -> ps
             .stream()
@@ -63,7 +63,8 @@ final class SlackIntegration implements ExternalIntegration {
         return Optional.of(notifySlackFuture);
     }
 
-    private static URL getWebhookURL(Map<String, String> params) {
+    @Nullable
+    private static URL getWebhookURL(@NotNull Map<String, String> params) {
         String webhookUrlString = params.get("BUILD_SCAN_SLACK_WEBHOOK_URL");
         if (webhookUrlString == null) {
             return null;
@@ -77,24 +78,37 @@ final class SlackIntegration implements ExternalIntegration {
         }
     }
 
-    private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(BuildScanReferences buildScans) {
+    private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(@NotNull BuildScanReferences buildScans, @NotNull Map<String, String> params) {
         return buildScans.all().stream().map(s -> {
-            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s));
+            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s, params));
             Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"));
             return future;
         }).collect(toList());
     }
 
-    private Optional<BuildScanPayload> retrieveBuildScan(BuildScanReference buildScan) throws IOException {
+    private Optional<BuildScanPayload> retrieveBuildScan(@NotNull BuildScanReference buildScan, @NotNull Map<String, String> params) throws IOException {
         LOGGER.info("Retrieving build scan data: " + buildScan.getUrl());
-        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan), null);
+        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan), getCredentials(buildScan, params));
         BuildScanPayload payload = retriever.retrieve();
         return Optional.of(payload).filter(p -> p.state.equals("complete"));
     }
 
     @NotNull
-    private static URL toScanDataUrl(BuildScanReference buildScan) throws MalformedURLException {
+    private static URL toScanDataUrl(@NotNull BuildScanReference buildScan) throws MalformedURLException {
         return new URL(buildScan.getUrl().replace("/s/", "/scan-data/"));
+    }
+
+    @Nullable
+    private static PasswordCredentials getCredentials(@NotNull BuildScanReference buildScan, Map<String, String> params) {
+        return params.entrySet().stream()
+            .filter(e -> e.getKey().equals("BUILD_SCAN_SERVER_AUTH") || e.getKey().matches("BUILD_SCAN_SERVER_AUTH_.+"))
+            .map(e -> ServerAuth.fromConfig(e.getValue()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .filter(v -> buildScan.getUrl().startsWith(v.server))
+            .map(v -> v.credentials)
+            .findFirst()
+            .orElse(null);
     }
 
     private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) {
@@ -119,6 +133,38 @@ final class SlackIntegration implements ExternalIntegration {
         } catch (Exception e) {
             LOGGER.error("Error awaiting Slack executor termination", e);
         }
+    }
+
+    private static final class ServerAuth {
+
+        private final String server;
+        private final PasswordCredentials credentials;
+
+        private ServerAuth(String server, PasswordCredentials credentials) {
+            this.server = server;
+            this.credentials = credentials;
+        }
+
+        private static Optional<ServerAuth> fromConfig(@NotNull String s) {
+            ServerAuth serverAuth = null;
+            try {
+                serverAuth = doFromConfig(s);
+            } catch (Exception e) {
+                LOGGER.error("Invalid server authentication configuration", e);
+            }
+            return Optional.ofNullable(serverAuth);
+        }
+
+        @NotNull
+        private static ServerAuth doFromConfig(@NotNull String s) {
+            String[] serverAndCredentials = s.split("=>", 2);
+            String server = serverAndCredentials[0];
+            String credentials = serverAndCredentials[1];
+            String[] usernameAndPassword = credentials.split(":", 2);
+            PasswordCredentials passwordCredentials = new PasswordCredentials(usernameAndPassword[0], usernameAndPassword[1]);
+            return new ServerAuth(server, passwordCredentials);
+        }
+
     }
 
     private static final class LoggingCallback implements FutureCallback<Object> {

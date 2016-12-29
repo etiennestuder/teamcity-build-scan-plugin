@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,16 +18,18 @@ final class BuildScanHttpRetriever {
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     private final URL scanUrl;
+    private final PasswordCredentials credentials;
     private final BuildScanPayloadDeserializer payloadDeserializer;
 
-    private BuildScanHttpRetriever(@NotNull URL scanUrl) {
+    private BuildScanHttpRetriever(@NotNull URL scanUrl, @Nullable PasswordCredentials credentials) {
         this.scanUrl = scanUrl;
+        this.credentials = credentials;
         this.payloadDeserializer = BuildScanPayloadDeserializer.create();
     }
 
     @NotNull
-    static BuildScanHttpRetriever forUrl(@NotNull URL scanUrl) {
-        return new BuildScanHttpRetriever(scanUrl);
+    static BuildScanHttpRetriever forUrl(@NotNull URL scanUrl, @Nullable PasswordCredentials credentials) {
+        return new BuildScanHttpRetriever(scanUrl, credentials);
     }
 
     @NotNull
@@ -42,6 +45,11 @@ final class BuildScanHttpRetriever {
         con.setConnectTimeout(10000);
         con.setReadTimeout(10000);
         con.setUseCaches(false);
+
+        if (credentials != null) {
+            String basicAuth = "Basic " + credentials.toBase64();
+            con.addRequestProperty("Authorization", basicAuth);
+        }
 
         // connect
         con.connect();
