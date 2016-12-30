@@ -1,5 +1,8 @@
 package nu.studer.teamcity.buildscan.internal.slack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 final class BuildScanPayload {
 
     String state;
@@ -12,16 +15,41 @@ final class BuildScanPayload {
         return data;
     }
 
+    @Override
+    public String toString() {
+        return "BuildScanPayload{" +
+            "state='" + state + '\'' +
+            ", data=" + data +
+            '}';
+    }
+
     static final class Data {
 
         String publicId;
         Summary summary;
+        Tests tests;
 
         Summary summary() {
             if (summary == null) {
                 summary = new Summary();
             }
             return summary;
+        }
+
+        Tests tests() {
+            if (tests == null) {
+                tests = new Tests();
+            }
+            return tests;
+        }
+
+        @Override
+        public String toString() {
+            return "Data{" +
+                "publicId='" + publicId + '\'' +
+                ", summary=" + summary +
+                ", tests=" + tests +
+                '}';
         }
 
         static final class Summary {
@@ -36,6 +64,16 @@ final class BuildScanPayload {
                     identity = new Identity();
                 }
                 return identity;
+            }
+
+            @Override
+            public String toString() {
+                return "Summary{" +
+                    "failed=" + failed +
+                    ", startTime=" + startTime +
+                    ", rootProjectName='" + rootProjectName + '\'' +
+                    ", identity=" + identity +
+                    '}';
             }
 
             static final class Identity {
@@ -53,34 +91,45 @@ final class BuildScanPayload {
 
             }
 
+        }
+
+        static final class Tests {
+
+            int numFailed;
+            List<Row> rows;
+
+            List<Row> rows() {
+                if (rows == null) {
+                    rows = new ArrayList<>();
+                }
+                return rows;
+            }
+
             @Override
             public String toString() {
-                return "Summary{" +
-                    "failed=" + failed +
-                    ", startTime=" + startTime +
-                    ", rootProjectName='" + rootProjectName + '\'' +
-                    ", identity=" + identity +
+                return "Tests{" +
+                    "numFailed=" + numFailed +
+                    ", rows=" + rows +
                     '}';
+            }
+
+            static final class Row {
+
+                String name;
+                String result;
+
+                @Override
+                public String toString() {
+                    return "Row{" +
+                        "name='" + name + '\'' +
+                        ", result='" + result + '\'' +
+                        '}';
+                }
+
             }
 
         }
 
-        @Override
-        public String toString() {
-            return "Data{" +
-                "publicId='" + publicId + '\'' +
-                ", summary=" + summary +
-                '}';
-        }
-
-    }
-
-    @Override
-    public String toString() {
-        return "BuildScanPayload{" +
-            "state='" + state + '\'' +
-            ", data=" + data +
-            '}';
     }
 
 }
