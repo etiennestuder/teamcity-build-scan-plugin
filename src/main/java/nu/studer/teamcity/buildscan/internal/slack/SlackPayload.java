@@ -1,9 +1,10 @@
 package nu.studer.teamcity.buildscan.internal.slack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("WeakerAccess")
+@SuppressWarnings({"WeakerAccess", "MismatchedQueryAndUpdateOfCollection"})
 final class SlackPayload {
 
     String text;
@@ -21,22 +22,39 @@ final class SlackPayload {
 
     static final class Attachment {
 
-        String fallback;
         String color;
-        String author_name;
-        String author_icon;
         String title;
         String text;
+        String pretext;
+        String fallback;
+        String author_name;
+        String author_icon;
         Long ts;
+        private final List<String> mrkdwn_in = new ArrayList<>();
         private final List<Field> fields = new ArrayList<>();
-
-        Attachment fallback(String fallback) {
-            this.fallback = fallback;
-            return this;
-        }
 
         Attachment color(String color) {
             this.color = color;
+            return this;
+        }
+
+        Attachment title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        Attachment text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        Attachment pretext(String text) {
+            this.pretext = text;
+            return this;
+        }
+
+        Attachment fallback(String fallback) {
+            this.fallback = fallback;
             return this;
         }
 
@@ -50,18 +68,13 @@ final class SlackPayload {
             return this;
         }
 
-        public Attachment title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Attachment text(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public Attachment ts(Long ts) {
+        Attachment ts(Long ts) {
             this.ts = ts;
+            return this;
+        }
+
+        Attachment mrkdwn_in(String... mrkdwn) {
+            this.mrkdwn_in.addAll(Arrays.asList(mrkdwn));
             return this;
         }
 

@@ -115,13 +115,15 @@ final class BuildScanPayload {
 
             static final class Row {
 
+                String id;
                 String name;
                 String result;
 
                 @Override
                 public String toString() {
                     return "Row{" +
-                        "name='" + name + '\'' +
+                        "id='" + id + '\'' +
+                        ", name='" + name + '\'' +
                         ", result='" + result + '\'' +
                         '}';
                 }

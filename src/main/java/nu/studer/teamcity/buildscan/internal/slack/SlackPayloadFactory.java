@@ -5,8 +5,11 @@ import nu.studer.teamcity.buildscan.BuildScanReferences;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 final class SlackPayloadFactory {
 
@@ -37,11 +40,15 @@ final class SlackPayloadFactory {
 
         // for each build scan, add a separate attachment
         for (BuildScanReference buildScan : buildScans.all()) {
-            SlackPayload.Attachment attachment = new SlackPayload.Attachment()
-                .fallback(String.format("Build scan %s", buildScan.getUrl()))
-                .text(String.format("Build scan %s", buildScan.getUrl()));
+            String buildScanId = buildScan.getId();
+            String buildScanUrl = buildScan.getUrl();
 
-            BuildScanPayload buildScanPayload = buildScanPayloads.get(buildScan.getId());
+            SlackPayload.Attachment attachment = new SlackPayload.Attachment()
+                .fallback(String.format("Build scan %s", buildScanUrl))
+                .pretext(String.format("Build scan %s", buildScanUrl))
+                .mrkdwn_in("text", "pretext", "fields");
+
+            BuildScanPayload buildScanPayload = buildScanPayloads.get(buildScanId);
 
             String color = color(buildScanPayload);
             attachment.color(color);
@@ -52,11 +59,28 @@ final class SlackPayloadFactory {
             Optional<String> gravatarLink = gravatarLink(buildScanPayload);
             gravatarLink.ifPresent(attachment::author_icon);
 
-            Optional<String> rootProjectName = rootProjectName(buildScanPayload);
-            rootProjectName.ifPresent(attachment::title);
-
             Optional<Long> buildStartTime = buildStartTime(buildScanPayload);
             buildStartTime.ifPresent(attachment::ts);
+
+            Optional<String> rootProjectName = rootProjectName(buildScanPayload);
+            rootProjectName.ifPresent(p -> {
+                SlackPayload.Attachment.Field field = new SlackPayload.Attachment.Field();
+                field.title("Project");
+                field.isShort(true);
+                field.value(p);
+
+                attachment.field(field);
+            });
+
+            List<String> failedTests = failedTests(buildScanPayload, buildScanUrl);
+            if (!failedTests.isEmpty()) {
+                SlackPayload.Attachment.Field field = new SlackPayload.Attachment.Field();
+                field.title(String.format("%d failed %s", buildScanPayload.data.tests.numFailed, buildScanPayload.data.tests.numFailed > 1 ? "tests" : "test"));
+                field.isShort(false);
+                field.value(failedTests.stream().collect(Collectors.joining("\n")));
+
+                attachment.field(field);
+            }
 
             payload.attachment(attachment);
         }
@@ -75,19 +99,6 @@ final class SlackPayloadFactory {
             }
         }
         return color;
-    }
-
-    @NotNull
-    private static Optional<String> rootProjectName(@Nullable BuildScanPayload buildScanPayload) {
-        String rootProjectName = null;
-        if (buildScanPayload != null) {
-            try {
-                rootProjectName = buildScanPayload.data.summary.rootProjectName;
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-        return Optional.ofNullable(rootProjectName);
     }
 
     @NotNull
@@ -130,6 +141,34 @@ final class SlackPayloadFactory {
             }
         }
         return Optional.ofNullable(buildStartTime);
+    }
+
+    @NotNull
+    private static Optional<String> rootProjectName(@Nullable BuildScanPayload buildScanPayload) {
+        String rootProjectName = null;
+        if (buildScanPayload != null) {
+            try {
+                rootProjectName = buildScanPayload.data.summary.rootProjectName;
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return Optional.ofNullable(rootProjectName);
+    }
+
+    private List<String> failedTests(@Nullable BuildScanPayload buildScanPayload, String buildScanUrl) {
+        List<String> failedTests = Collections.emptyList();
+        if (buildScanPayload != null) {
+            try {
+                failedTests = buildScanPayload.data.tests.rows()
+                    .stream()
+                    .filter(r -> r.result.equals("failed"))
+                    .map(r -> String.format("• <%s|%s>", String.format("%s/tests/%s", buildScanUrl, r.id), r.name)).collect(Collectors.toList());
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return failedTests;
     }
 
 }
