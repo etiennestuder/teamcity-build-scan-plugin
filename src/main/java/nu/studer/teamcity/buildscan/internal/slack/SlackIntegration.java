@@ -102,13 +102,23 @@ final class SlackIntegration implements ExternalIntegration {
     private static PasswordCredentials getCredentials(@NotNull BuildScanReference buildScan, Map<String, String> params) {
         return params.entrySet().stream()
             .filter(e -> e.getKey().equals("BUILD_SCAN_SERVER_AUTH") || e.getKey().matches("BUILD_SCAN_SERVER_AUTH_.+"))
-            .map(e -> ServerAuth.fromConfig(e.getValue()))
+            .map(e -> getServerAuth(e.getValue()))
             .filter(Optional::isPresent)
             .map(Optional::get)
             .filter(v -> buildScan.getUrl().startsWith(v.server))
             .map(v -> v.credentials)
             .findFirst()
             .orElse(null);
+    }
+
+    private static Optional<ServerAuth> getServerAuth(String value) {
+        ServerAuth serverAuth = null;
+        try {
+            serverAuth = ServerAuth.fromConfigString(value);
+        } catch (Exception e) {
+            LOGGER.error("Invalid server authentication configuration", e);
+        }
+        return Optional.ofNullable(serverAuth);
     }
 
     private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) {
@@ -133,38 +143,6 @@ final class SlackIntegration implements ExternalIntegration {
         } catch (Exception e) {
             LOGGER.error("Error awaiting Slack executor termination", e);
         }
-    }
-
-    private static final class ServerAuth {
-
-        private final String server;
-        private final PasswordCredentials credentials;
-
-        private ServerAuth(String server, PasswordCredentials credentials) {
-            this.server = server;
-            this.credentials = credentials;
-        }
-
-        private static Optional<ServerAuth> fromConfig(@NotNull String s) {
-            ServerAuth serverAuth = null;
-            try {
-                serverAuth = doFromConfig(s);
-            } catch (Exception e) {
-                LOGGER.error("Invalid server authentication configuration", e);
-            }
-            return Optional.ofNullable(serverAuth);
-        }
-
-        @NotNull
-        private static ServerAuth doFromConfig(@NotNull String s) {
-            String[] serverAndCredentials = s.split("=>", 2);
-            String server = serverAndCredentials[0];
-            String credentials = serverAndCredentials[1];
-            String[] usernameAndPassword = credentials.split(":", 2);
-            PasswordCredentials passwordCredentials = new PasswordCredentials(usernameAndPassword[0], usernameAndPassword[1]);
-            return new ServerAuth(server, passwordCredentials);
-        }
-
     }
 
     private static final class LoggingCallback implements FutureCallback<Object> {

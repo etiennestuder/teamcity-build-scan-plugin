@@ -5,8 +5,8 @@ import java.util.Base64;
 
 final class PasswordCredentials {
 
-    private final String username;
-    private final String password;
+    final String username;
+    final String password;
 
     PasswordCredentials(String username, String password) {
         this.username = username;
