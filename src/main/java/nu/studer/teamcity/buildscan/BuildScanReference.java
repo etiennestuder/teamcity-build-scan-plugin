@@ -30,6 +30,17 @@ public final class BuildScanReference implements Serializable {
         return url;
     }
 
+    @SuppressWarnings("unused")
+    public String getUrlWithoutProtocol() {
+        if (url.startsWith("http://")) {
+            return url.substring("http://" .length());
+        } else if (url.startsWith("https://")) {
+            return url.substring("https://" .length());
+        } else {
+            return url;
+        }
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

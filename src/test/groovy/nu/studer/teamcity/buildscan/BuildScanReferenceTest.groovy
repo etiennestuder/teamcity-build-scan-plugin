@@ -20,4 +20,18 @@ class BuildScanReferenceTest extends Specification {
         result == buildScanReference
     }
 
+    def "can get url without protocol"() {
+        given:
+        def buildScanReference = new BuildScanReference("myId", url)
+
+        when:
+        def urlWithoutProtocol = buildScanReference.getUrlWithoutProtocol()
+
+        then:
+        urlWithoutProtocol == "scans.gradle.com/s/htyg3re5"
+
+        where:
+        url << ["http://scans.gradle.com/s/htyg3re5", "https://scans.gradle.com/s/htyg3re5"]
+    }
+
 }

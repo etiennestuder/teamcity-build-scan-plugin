@@ -1,16 +1,14 @@
-<%@ page import="nu.studer.teamcity.buildscan.BuildScanReferences" %>
-<%@ page import="nu.studer.teamcity.buildscan.BuildScanReference" %>
 <%@ include file="/include.jsp" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <tr>
-          <td class="st">Build scan:</td>
+    <td class="st"><c:choose><c:when test="${buildScans.size()>1}">Build scans:</c:when><c:otherwise>Build scan:</c:otherwise></c:choose></td>
           <td class="st">
                <c:choose>
                    <c:when test="${buildScans.size()>1}">
-                     <a href="${buildScans.first().url}" target="_blank">${buildScans.first().id}</a><c:forEach items="${buildScans.all()}" var="buildScan" begin="1">, <a href="${buildScan.url}" target="_blank">${buildScan.id}</a></c:forEach>
+                       <a href="${buildScans.first().url}" target="_blank">${buildScans.first().urlWithoutProtocol}</a><c:forEach items="${buildScans.all()}" var="buildScan" begin="1"><br><a href="${buildScan.url}" target="_blank">${buildScan.urlWithoutProtocol}</a></c:forEach>
                    </c:when>
                    <c:when test="${!buildScans.isEmpty()}">
-                     <a href="${buildScans.first().url}" target="_blank">${buildScans.first().id}</a>
+                       <a href="${buildScans.first().url}" target="_blank">${buildScans.first().urlWithoutProtocol}</a>
                    </c:when>
                    <c:otherwise>
                      ---

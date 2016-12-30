@@ -4,11 +4,13 @@
 <c:choose>
     <c:when test="${buildScans.size()>1}">
         <div>
-            Build scans <a href="${buildScans.first().url}" target="_blank">${buildScans.first().id}</a><c:forEach items="${buildScans.all()}" var="buildScan" begin="1">, <a href="${buildScan.url}" target="_blank">${buildScan.id}</a></c:forEach> have been published.
+            Build scans
+            <a href="${buildScans.first().url}" target="_blank">${buildScans.first().urlWithoutProtocol}</a><c:forEach items="${buildScans.all()}" var="buildScan" begin="1">,
+            <a href="${buildScan.url}" target="_blank">${buildScan.urlWithoutProtocol}</a></c:forEach> have been published.
         </div>
     </c:when>
     <c:when test="${!buildScans.isEmpty()}">
-        <div>Build scan <a href="${buildScans.first().url}" target="_blank">${buildScans.first().id}</a> has been published.</div>
+        <div>Build scan <a href="${buildScans.first().url}" target="_blank">${buildScans.first().urlWithoutProtocol}</a> has been published.</div>
     </c:when>
     <c:otherwise>
         <div>
