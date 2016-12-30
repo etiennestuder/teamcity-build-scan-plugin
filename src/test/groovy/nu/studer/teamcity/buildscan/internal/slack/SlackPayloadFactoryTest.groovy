@@ -27,9 +27,14 @@ class SlackPayloadFactoryTest extends Specification {
   "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 1 build scan published:",
   "attachments": [
     {
-      "fallback": "Build scan http://www.myUrl.org/s/abcde",
       "color": "#000000",
-      "text": "Build scan http://www.myUrl.org/s/abcde",
+      "pretext": "Build scan http://www.myUrl.org/s/abcde",
+      "fallback": "Build scan http://www.myUrl.org/s/abcde",
+      "mrkdwn_in": [
+        "text",
+        "pretext",
+        "fields"
+      ],
       "fields": []
     }
   ]
@@ -56,15 +61,25 @@ class SlackPayloadFactoryTest extends Specification {
   "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 2 build scans published:",
   "attachments": [
     {
-      "fallback": "Build scan http://www.myUrl.org/s/abcde",
       "color": "#000000",
-      "text": "Build scan http://www.myUrl.org/s/abcde",
+      "pretext": "Build scan http://www.myUrl.org/s/abcde",
+      "fallback": "Build scan http://www.myUrl.org/s/abcde",
+      "mrkdwn_in": [
+        "text",
+        "pretext",
+        "fields"
+      ],
       "fields": []
     },
     {
-      "fallback": "Build scan http://www.myOtherUrl.org/efghi",
       "color": "#000000",
-      "text": "Build scan http://www.myOtherUrl.org/efghi",
+      "pretext": "Build scan http://www.myOtherUrl.org/efghi",
+      "fallback": "Build scan http://www.myOtherUrl.org/efghi",
+      "mrkdwn_in": [
+        "text",
+        "pretext",
+        "fields"
+      ],
       "fields": []
     }
   ]
