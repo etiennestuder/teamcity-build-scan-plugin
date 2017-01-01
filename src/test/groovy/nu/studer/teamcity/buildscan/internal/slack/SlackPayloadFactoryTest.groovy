@@ -24,6 +24,7 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
+  "username": "Gradle Cloud Services",
   "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 1 build scan published:",
   "attachments": [
     {
@@ -58,6 +59,7 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
+  "username": "Gradle Cloud Services",
   "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 2 build scans published:",
   "attachments": [
     {

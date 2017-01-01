@@ -7,8 +7,14 @@ import java.util.List;
 @SuppressWarnings({"WeakerAccess", "MismatchedQueryAndUpdateOfCollection"})
 final class SlackPayload {
 
+    String username;
     String text;
     private final List<Attachment> attachments = new ArrayList<>();
+
+    SlackPayload username(String username) {
+        this.username = username;
+        return this;
+    }
 
     SlackPayload text(String text) {
         this.text = text;

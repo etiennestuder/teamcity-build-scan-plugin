@@ -31,6 +31,9 @@ final class SlackPayloadFactory {
         String buildId = params.get("teamcity.build.id");
         String buildUrl = String.format("%s/viewLog.html?buildId=%s", serverUrl, buildId);
 
+        // hard-code username
+        payload.username("Gradle Cloud Services");
+
         // main text, only hyper-linking to the build scan if there is only one build scan
         if (buildScans.size() == 1) {
             payload.text(String.format("TeamCity <%s|[%s]> 1 build scan published:", buildUrl, buildConfigName));
