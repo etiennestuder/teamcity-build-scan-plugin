@@ -14,13 +14,12 @@ class SlackPayloadFactoryTest extends Specification {
         given:
         def buildScanReferences = BuildScanReferences.of(new BuildScanReference("myId", "http://www.myUrl.org/s/abcde"))
         def params = [
-            "system.teamcity.buildConfName": "My Configuration",
             "teamcity.serverUrl"           : "http://tc.server.org",
             "teamcity.build.id"            : "23"
         ]
 
         when:
-        def payload = factory.from(buildScanReferences, ImmutableMap.of(), new TeamCityConfiguration(params))
+        def payload = factory.from(buildScanReferences, ImmutableMap.of(), new TeamCityConfiguration("My Configuration", params))
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
@@ -50,12 +49,11 @@ class SlackPayloadFactoryTest extends Specification {
             new BuildScanReference("myOtherId", "http://www.myOtherUrl.org/efghi")
         ])
         def params = [
-            "system.teamcity.buildConfName": "My Configuration",
             "teamcity.serverUrl"           : "http://tc.server.org",
             "teamcity.build.id"            : "23"
         ]
         when:
-        def payload = factory.from(buildScanReferences, ImmutableMap.of(), new TeamCityConfiguration(params))
+        def payload = factory.from(buildScanReferences, ImmutableMap.of(), new TeamCityConfiguration("My Configuration", params))
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:

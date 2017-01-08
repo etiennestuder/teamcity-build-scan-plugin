@@ -27,10 +27,9 @@ final class SlackPayloadFactory {
         SlackPayload payload = new SlackPayload();
 
         // extract TeamCity build info
-        Map<String, String> params = teamCityConfiguration.params;
-        String buildConfigName = params.get("system.teamcity.buildConfName");
-        String serverUrl = params.get("teamcity.serverUrl");
-        String buildId = params.get("teamcity.build.id");
+        String buildConfigName = teamCityConfiguration.fullBuildName;
+        String serverUrl = teamCityConfiguration.params.get("teamcity.serverUrl");
+        String buildId = teamCityConfiguration.params.get("teamcity.build.id");
         String buildUrl = String.format("%s/viewLog.html?buildId=%s", serverUrl, buildId);
 
         // hard-code username

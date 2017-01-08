@@ -18,8 +18,9 @@ public final class SlackNotificationTestInvocation {
             throw new IllegalArgumentException("Webhook URL must be specified.");
         }
 
+        String fullBuildName = "My Configuration";
+
         Map<String, String> params = new HashMap<>();
-        params.put("system.teamcity.buildConfName", "My Configuration");
         params.put("teamcity.serverUrl", "http://tc.server.org");
         params.put("teamcity.build.id", "23");
 
@@ -49,7 +50,7 @@ public final class SlackNotificationTestInvocation {
         );
 
         SlackPayloadFactory payloadFactory = SlackPayloadFactory.create();
-        TeamCityConfiguration teamCityConfiguration = new TeamCityConfiguration(params);
+        TeamCityConfiguration teamCityConfiguration = new TeamCityConfiguration(fullBuildName, params);
         SlackPayload payload = payloadFactory.from(buildScanReferences, buildScanPayloads, teamCityConfiguration);
 
         SlackHttpNotifier slackHttpNotifier = SlackHttpNotifier.forWebhook(new URL(args[0]));
