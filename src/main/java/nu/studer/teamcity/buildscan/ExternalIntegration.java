@@ -8,6 +8,6 @@ import java.util.concurrent.Future;
 public interface ExternalIntegration {
 
     @NotNull
-    Optional<Future> handle(@NotNull BuildScanReferences buildScans, @NotNull TeamCityConfiguration teamCityConfiguration);
+    Optional<Future> handle(@NotNull BuildScanReferences buildScans, @NotNull TeamCityBuildStatus teamCityBuildStatus, @NotNull TeamCityConfiguration teamCityConfiguration);
 
 }

@@ -3,6 +3,7 @@ package nu.studer.teamcity.buildscan.internal.slack
 import com.google.common.collect.ImmutableMap
 import nu.studer.teamcity.buildscan.BuildScanReference
 import nu.studer.teamcity.buildscan.BuildScanReferences
+import nu.studer.teamcity.buildscan.TeamCityBuildStatus
 import nu.studer.teamcity.buildscan.TeamCityConfiguration
 import spock.lang.Specification
 
@@ -19,13 +20,13 @@ class SlackPayloadFactoryTest extends Specification {
         ]
 
         when:
-        def payload = factory.from(buildScanReferences, ImmutableMap.of(), new TeamCityConfiguration("My Configuration", params))
+        def payload = factory.from(buildScanReferences, ImmutableMap.of(), TeamCityBuildStatus.SUCCESS, new TeamCityConfiguration("My Configuration", params))
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
         json == """{
   "username": "Gradle Cloud Services",
-  "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 1 build scan published:",
+  "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> succeeded. 1 build scan published:",
   "attachments": [
     {
       "color": "#000000",
@@ -53,13 +54,13 @@ class SlackPayloadFactoryTest extends Specification {
             "teamcity.build.id"            : "23"
         ]
         when:
-        def payload = factory.from(buildScanReferences, ImmutableMap.of(), new TeamCityConfiguration("My Configuration", params))
+        def payload = factory.from(buildScanReferences, ImmutableMap.of(), TeamCityBuildStatus.FAILURE, new TeamCityConfiguration("My Configuration", params))
         def json = SlackPayloadSerializer.create().toJson(payload)
 
         then:
         json == """{
   "username": "Gradle Cloud Services",
-  "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> 2 build scans published:",
+  "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> failed. 2 build scans published:",
   "attachments": [
     {
       "color": "#000000",

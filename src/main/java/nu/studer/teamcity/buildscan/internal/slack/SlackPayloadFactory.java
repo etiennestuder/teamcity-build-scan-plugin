@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
+import nu.studer.teamcity.buildscan.TeamCityBuildStatus;
 import nu.studer.teamcity.buildscan.TeamCityConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +24,7 @@ final class SlackPayloadFactory {
     }
 
     @NotNull
-    SlackPayload from(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull TeamCityConfiguration teamCityConfiguration) {
+    SlackPayload from(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull TeamCityBuildStatus teamCityBuildStatus, @NotNull TeamCityConfiguration teamCityConfiguration) {
         SlackPayload payload = new SlackPayload();
 
         // extract TeamCity build info
@@ -35,11 +36,16 @@ final class SlackPayloadFactory {
         // hard-code username
         payload.username("Gradle Cloud Services");
 
-        // main text, only hyper-linking to the build scan if there is only one build scan
+        // main text
+        String tcBuildOutcome =
+            teamCityBuildStatus == TeamCityBuildStatus.SUCCESS ? " succeeded." :
+                teamCityBuildStatus == TeamCityBuildStatus.FAILURE ? " failed." :
+                    teamCityBuildStatus == TeamCityBuildStatus.ERROR ? " encountered an error." : "";
+
         if (buildScans.size() == 1) {
-            payload.text(String.format("TeamCity <%s|[%s]> 1 build scan published:", buildUrl, buildConfigName));
+            payload.text(String.format("TeamCity <%s|[%s]>%s 1 build scan published:", buildUrl, buildConfigName, tcBuildOutcome));
         } else {
-            payload.text(String.format("TeamCity <%s|[%s]> %d build scans published:", buildUrl, buildConfigName, buildScans.size()));
+            payload.text(String.format("TeamCity <%s|[%s]>%s %d build scans published:", buildUrl, buildConfigName, tcBuildOutcome, buildScans.size()));
         }
 
         // for each build scan, add a separate attachment
