@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
 import nu.studer.teamcity.buildscan.ExternalIntegration;
+import nu.studer.teamcity.buildscan.TeamCityConfiguration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,17 +38,17 @@ final class SlackIntegration implements ExternalIntegration {
     @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
     @Override
     @NotNull
-    public Optional<Future> handle(@NotNull BuildScanReferences buildScans, @NotNull Map<String, String> params) {
+    public Optional<Future> handle(@NotNull BuildScanReferences buildScans, @NotNull TeamCityConfiguration teamCityConfiguration) {
         if (buildScans.isEmpty()) {
             return Optional.empty();
         }
 
-        URL webhookUrlString = getWebhookURL(params);
+        URL webhookUrlString = getWebhookURL(teamCityConfiguration);
         if (webhookUrlString == null) {
             return Optional.empty();
         }
 
-        List<ListenableFuture<Optional<BuildScanPayload>>> payloadAllFutures = retrieveBuildScansAsync(buildScans, params);
+        List<ListenableFuture<Optional<BuildScanPayload>>> payloadAllFutures = retrieveBuildScansAsync(buildScans, teamCityConfiguration);
         ListenableFuture<List<Optional<BuildScanPayload>>> payloadSucFutures = Futures.successfulAsList(payloadAllFutures);
         ListenableFuture<Map<String, BuildScanPayload>> payloadPerBuildScanFutures = Futures.transform(payloadSucFutures, ps -> ps
             .stream()
@@ -57,15 +58,15 @@ final class SlackIntegration implements ExternalIntegration {
             .collect(toMap(buildScanPayload -> buildScanPayload.data.publicId, Function.identity())));
 
         ListenableFuture<Void> notifySlackFuture = Futures.transformAsync(payloadPerBuildScanFutures, payloadPerBuildScan ->
-            notifySlackAsync(buildScans, params, payloadPerBuildScan, webhookUrlString)
+            notifySlackAsync(buildScans, payloadPerBuildScan, webhookUrlString, teamCityConfiguration)
         );
 
         return Optional.of(notifySlackFuture);
     }
 
     @Nullable
-    private static URL getWebhookURL(@NotNull Map<String, String> params) {
-        String webhookUrlString = params.get("BUILD_SCAN_SLACK_WEBHOOK_URL");
+    private static URL getWebhookURL(@NotNull TeamCityConfiguration teamCityConfiguration) {
+        String webhookUrlString = teamCityConfiguration.params.get("BUILD_SCAN_SLACK_WEBHOOK_URL");
         if (webhookUrlString == null) {
             return null;
         }
@@ -78,17 +79,17 @@ final class SlackIntegration implements ExternalIntegration {
         }
     }
 
-    private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(@NotNull BuildScanReferences buildScans, @NotNull Map<String, String> params) {
+    private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(@NotNull BuildScanReferences buildScans, @NotNull TeamCityConfiguration teamCityConfiguration) {
         return buildScans.all().stream().map(s -> {
-            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s, params));
+            ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s, teamCityConfiguration));
             Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"));
             return future;
         }).collect(toList());
     }
 
-    private Optional<BuildScanPayload> retrieveBuildScan(@NotNull BuildScanReference buildScan, @NotNull Map<String, String> params) throws IOException {
+    private Optional<BuildScanPayload> retrieveBuildScan(@NotNull BuildScanReference buildScan, @NotNull TeamCityConfiguration teamCityConfiguration) throws IOException {
         LOGGER.info("Retrieving build scan data: " + buildScan.getUrl());
-        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan), getCredentials(buildScan, params));
+        BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan), getCredentials(buildScan, teamCityConfiguration));
         BuildScanPayload payload = retriever.retrieve();
         return Optional.of(payload).filter(p -> p.state.equals("complete"));
     }
@@ -99,8 +100,8 @@ final class SlackIntegration implements ExternalIntegration {
     }
 
     @Nullable
-    private static PasswordCredentials getCredentials(@NotNull BuildScanReference buildScan, Map<String, String> params) {
-        return params.entrySet().stream()
+    private static PasswordCredentials getCredentials(@NotNull BuildScanReference buildScan, @NotNull TeamCityConfiguration teamCityConfiguration) {
+        return teamCityConfiguration.params.entrySet().stream()
             .filter(e -> e.getKey().equals("BUILD_SCAN_SERVER_AUTH") || e.getKey().matches("BUILD_SCAN_SERVER_AUTH_.+"))
             .map(e -> getServerAuth(e.getValue()))
             .filter(Optional::isPresent)
@@ -121,16 +122,16 @@ final class SlackIntegration implements ExternalIntegration {
         return Optional.ofNullable(serverAuth);
     }
 
-    private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) {
-        ListenableFuture<Void> future = executor.submit(() -> notifySlack(buildScans, params, buildScanPayloads, webhookUrl));
+    private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull URL webhookUrl, @NotNull TeamCityConfiguration teamCityConfiguration) {
+        ListenableFuture<Void> future = executor.submit(() -> notifySlack(buildScans, buildScanPayloads, webhookUrl, teamCityConfiguration));
         Futures.addCallback(future, new LoggingCallback("Notifying Slack via webhook"));
         return future;
     }
 
-    private Void notifySlack(@NotNull BuildScanReferences buildScans, Map<String, String> params, Map<String, BuildScanPayload> buildScanPayloads, URL webhookUrl) throws IOException {
+    private Void notifySlack(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull URL webhookUrl, @NotNull TeamCityConfiguration teamCityConfiguration) throws IOException {
         LOGGER.info("Notifying Slack via webhook: " + webhookUrl);
         SlackHttpNotifier notifier = SlackHttpNotifier.forWebhook(webhookUrl);
-        notifier.notify(payloadFactory.from(buildScans, buildScanPayloads, params));
+        notifier.notify(payloadFactory.from(buildScans, buildScanPayloads, teamCityConfiguration));
         return null;
     }
 

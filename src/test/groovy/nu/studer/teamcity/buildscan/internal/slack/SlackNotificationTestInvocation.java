@@ -3,6 +3,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 import com.google.common.collect.ImmutableMap;
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
+import nu.studer.teamcity.buildscan.TeamCityConfiguration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -48,7 +49,8 @@ public final class SlackNotificationTestInvocation {
         );
 
         SlackPayloadFactory payloadFactory = SlackPayloadFactory.create();
-        SlackPayload payload = payloadFactory.from(buildScanReferences, buildScanPayloads, params);
+        TeamCityConfiguration teamCityConfiguration = new TeamCityConfiguration(params);
+        SlackPayload payload = payloadFactory.from(buildScanReferences, buildScanPayloads, teamCityConfiguration);
 
         SlackHttpNotifier slackHttpNotifier = SlackHttpNotifier.forWebhook(new URL(args[0]));
         slackHttpNotifier.notify(payload);

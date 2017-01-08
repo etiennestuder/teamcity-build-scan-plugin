@@ -47,7 +47,9 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
 
             // notify external integration points
             if (!buildScans.isEmpty()) {
-                externalIntegration.handle(buildScans, build.getParametersProvider().getAll());
+                externalIntegration.handle(buildScans, new TeamCityConfiguration(
+                    build.getParametersProvider().getAll())
+                );
             }
         }
     }

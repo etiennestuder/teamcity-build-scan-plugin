@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
+import nu.studer.teamcity.buildscan.TeamCityConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,10 +23,11 @@ final class SlackPayloadFactory {
     }
 
     @NotNull
-    SlackPayload from(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull Map<String, String> params) {
+    SlackPayload from(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull TeamCityConfiguration teamCityConfiguration) {
         SlackPayload payload = new SlackPayload();
 
         // extract TeamCity build info
+        Map<String, String> params = teamCityConfiguration.params;
         String buildConfigName = params.get("system.teamcity.buildConfName");
         String serverUrl = params.get("teamcity.serverUrl");
         String buildId = params.get("teamcity.build.id");

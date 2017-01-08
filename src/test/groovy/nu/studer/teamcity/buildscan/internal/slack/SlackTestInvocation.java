@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.internal.slack;
 
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
+import nu.studer.teamcity.buildscan.TeamCityConfiguration;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -39,7 +40,8 @@ public final class SlackTestInvocation {
         ));
 
         SlackIntegration slackIntegration = new SlackIntegration();
-        Optional<Future> future = slackIntegration.handle(buildScanReferences, params);
+        TeamCityConfiguration teamCityConfiguration = new TeamCityConfiguration(params);
+        Optional<Future> future = slackIntegration.handle(buildScanReferences, teamCityConfiguration);
         future.get().get(20, TimeUnit.SECONDS);
 
         slackIntegration.shutdown();
