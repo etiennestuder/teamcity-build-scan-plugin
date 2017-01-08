@@ -18,7 +18,7 @@ buildScan {
 ext {
     CI = System.getenv().containsKey('CI') || project.properties.containsKey('CI')
     RELEASE = project.properties.containsKey('RELEASE')
-    baseVersion = '0.3'
+    baseVersion = '0.4'
     buildTime = new Date()
 }
 
@@ -103,7 +103,7 @@ bintray {
 
 tasks.build.dependsOn sources
 
-static def timestamp(Date date) {
+static timestamp(Date date) {
     def timestampFormat = new SimpleDateFormat('yyyyMMddHHmmss')
     timestampFormat.timeZone = TimeZone.getTimeZone('UTC')
     timestampFormat.format(date)
