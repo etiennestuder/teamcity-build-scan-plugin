@@ -34,6 +34,9 @@ class DefaultBuildScanLookupTest extends Specification {
             log("Publishing build information..."),
             log("http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
         [
+            log("Publishing build scan..."),
+            log("http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
+        [
             log("some text"),
             log("Publishing build information..."),
             log("https://scans.grdev.net/s/fgb5fkqivexry")] | ["fgb5fkqivexry"]
@@ -57,7 +60,7 @@ class DefaultBuildScanLookupTest extends Specification {
             log("Publishing build information..."),
             log("https://scans.grdev.net/s/fgb5fkqivexry"),
             log("some text"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.grdev.net/s/nfwou3cmx3f5e"),
             log("Publishing build information..."),
             log("https://scans.grdev.net/s/gixqsq36jmtpw"),

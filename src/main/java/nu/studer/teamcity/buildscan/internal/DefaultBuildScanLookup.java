@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 
 final class DefaultBuildScanLookup implements BuildScanLookup {
 
-    private static final String PUBLISHING_BUILD_INFO = "Publishing build information...";
+    private static final Pattern PUBLISHING_BUILD_PATTERN = Pattern.compile("Publishing build (scan|information)...");
     private static final Pattern BUILD_SCAN_URL_PATTERN = Pattern.compile("https?://.*/s/(.*)");
 
     @Override
@@ -27,7 +27,7 @@ final class DefaultBuildScanLookup implements BuildScanLookup {
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {
             LogMessage message = iterator.next();
             String text = message.getText();
-            if (!foundPublishMessage && text.equals(PUBLISHING_BUILD_INFO)) {
+            if (!foundPublishMessage && PUBLISHING_BUILD_PATTERN.matcher(text).matches()) {
                 foundPublishMessage = true;
             } else if (foundPublishMessage && isBuildScanUrl(text)) {
                 buildScans.add(new BuildScanReference(getBuildScanId(text), text));
