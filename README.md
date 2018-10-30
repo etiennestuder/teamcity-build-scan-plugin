@@ -1,8 +1,12 @@
 # teamcity-build-scan-plugin
 
-[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with the Gradle Build Scan Service, the first service offered by [Gradle Cloud Services](https://gradle.com).
+[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with Gradle Build Scans, the free service offered by [Gradle Inc.](https://gradle.com).
 
 For each Gradle build that is run from TeamCity, this plugin exposes the link to the created build scan.
+
+## Version compativility
+
+This plugin requires that you use at least build scan plugin 1.8 in your Gradle builds. It is recommended that you use the very [latest build scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) at all times to get the most insights from your builds.
 
 # Installation
 
