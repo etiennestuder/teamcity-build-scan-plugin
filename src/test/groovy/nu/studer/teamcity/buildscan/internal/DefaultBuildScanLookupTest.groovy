@@ -31,38 +31,38 @@ class DefaultBuildScanLookupTest extends Specification {
         where:
         logMessages                                         | expectedBuildScanIds
         [
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
         [
             log("Publishing build scan..."),
             log("http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
         [
             log("some text"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.grdev.net/s/fgb5fkqivexry")] | ["fgb5fkqivexry"]
         [
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.gradle.com/s/fgb5fkqivexry"),
             log("some text")]                               | ["fgb5fkqivexry"]
         [
             log("some text"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.gradle.com/s/fgb5fkqivexry"),
             log("some text")]                               | ["fgb5fkqivexry"]
         [
             log("some text"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.gradle.com/s/fgb5fkqivexry"),
             log("https://scans.gradle.com/s/nfwou3cmx3f5e"),
             log("some text")]                               | ["fgb5fkqivexry"]
         [
             log("some text"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.grdev.net/s/fgb5fkqivexry"),
             log("some text"),
             log("Publishing build scan..."),
             log("https://scans.grdev.net/s/nfwou3cmx3f5e"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("https://scans.grdev.net/s/gixqsq36jmtpw"),
             log("some text")]                               | ["fgb5fkqivexry", "nfwou3cmx3f5e", "gixqsq36jmtpw"]
         [
@@ -70,10 +70,10 @@ class DefaultBuildScanLookupTest extends Specification {
             log("https://scans.grdev.net/s/fgb5fkqivexry")] | []
         [
             log("some text"),
-            log("Publishing build information...")]         | []
+            log("Publishing build scan...")]                | []
         [
             log("some text"),
-            log("Publishing build information..."),
+            log("Publishing build scan..."),
             log("some text"),
             log("https://scans.grdev.net/s/fgb5fkqivexry")] | []
     }
