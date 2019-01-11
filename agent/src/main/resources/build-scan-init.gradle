@@ -1,0 +1,22 @@
+import jetbrains.buildServer.messages.serviceMessages.ServiceMessage
+
+initscript {
+    dependencies {
+        def teamCityInitLib = System.getenv('TEAMCITY_BUILD_INIT_PATH')
+        def classPathFiles = teamCityInitLib.split(File.pathSeparator)
+        classpath files(classPathFiles)
+    }
+}
+
+logger.quiet(new ServiceMessage('buildscan', 'BUILD_STARTED').toString())
+
+rootProject {
+    pluginManager.withPlugin('com.gradle.build-scan') {
+        if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
+            buildScan.buildScanPublished { scan ->
+                def message = new ServiceMessage('buildscan', scan.buildScanUri.toString())
+                logger.quiet(message.toString())
+            }
+        }
+    }
+}

@@ -19,10 +19,17 @@
 
     <bean id="cachedBuildScanLookup" primary="true"
           class="nu.studer.teamcity.buildscan.internal.CachedBuildScanLookup"
-          destroy-method="destroy"/>
+          destroy-method="destroy">
+        <constructor-arg type="nu.studer.teamcity.buildscan.BuildScanLookup" ref="dataStoreBuildScanLookup"/>
+    </bean>
 
-    <bean id="defaultBuildScanLookup"
-          class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanLookup"/>
+    <bean id="dataStoreBuildScanLookup"
+          class="nu.studer.teamcity.buildscan.internal.DataStoreBuildScanLookup">
+        <constructor-arg type="nu.studer.teamcity.buildscan.BuildScanLookup" ref="logIteratingBuildScanLookup"/>
+    </bean>
+
+    <bean id="logIteratingBuildScanLookup"
+          class="nu.studer.teamcity.buildscan.internal.LogIteratingBuildScanLookup"/>
 
     <bean id="buildScanDisplayArbiter"
           class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter"/>
@@ -31,4 +38,9 @@
           class="nu.studer.teamcity.buildscan.internal.slack.SlackIntegration"
           destroy-method="shutdown"/>
 
+    <bean id="buildScanServiceMessageListener"
+          class="nu.studer.teamcity.buildscan.internal.BuildScanServiceMessageListener"/>
+
+    <bean id="buildScanDataStore"
+          class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDataStore"/>
 </beans>

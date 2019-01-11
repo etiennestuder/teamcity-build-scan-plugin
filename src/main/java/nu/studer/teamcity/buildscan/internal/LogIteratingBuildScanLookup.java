@@ -10,18 +10,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-final class DefaultBuildScanLookup implements BuildScanLookup {
+final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
     private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
-    private static final Pattern BUILD_SCAN_URL_PATTERN = Pattern.compile("https?://.*/s/(.*)");
+
 
     @Override
     @NotNull
     public BuildScanReferences getBuildScansForBuild(@NotNull SBuild build) {
+        // If a build is still running we'll assume our callback-based method of getting scans is going to work.
+        // Avoid paying the cost of parsing the build log for currently running builds that just haven't happened
+        // to have published a scan yet.
+        if (!build.isFinished()) return BuildScanReferences.of();
+
         List<BuildScanReference> buildScans = new ArrayList<>();
         boolean foundPublishMessage = false;
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {
@@ -29,28 +31,14 @@ final class DefaultBuildScanLookup implements BuildScanLookup {
             String text = message.getText();
             if (!foundPublishMessage && PUBLISHING_BUILD_PATTERN.equals(text)) {
                 foundPublishMessage = true;
-            } else if (foundPublishMessage && isBuildScanUrl(text)) {
-                buildScans.add(new BuildScanReference(getBuildScanId(text), text));
+            } else if (foundPublishMessage && Util.isBuildScanUrl(text)) {
+                buildScans.add(new BuildScanReference(Util.getBuildScanId(text), text));
                 foundPublishMessage = false;
             } else {
                 foundPublishMessage = false;
             }
         }
         return BuildScanReferences.of(buildScans);
-    }
-
-    private static boolean isBuildScanUrl(String text) {
-        return doGetBuildScanId(text).isPresent();
-    }
-
-    private static String getBuildScanId(String text) {
-        //noinspection OptionalGetWithoutIsPresent
-        return doGetBuildScanId(text).get();
-    }
-
-    private static Optional<String> doGetBuildScanId(String text) {
-        Matcher matcher = BUILD_SCAN_URL_PATTERN.matcher(text);
-        return matcher.matches() ? Optional.of(matcher.group(1)) : Optional.empty();
     }
 
 }

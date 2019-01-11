@@ -6,16 +6,15 @@ import jetbrains.buildServer.util.cache.SCache;
 import nu.studer.teamcity.buildscan.BuildScanLookup;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 final class CachedBuildScanLookup implements BuildScanLookup {
 
     private final SCache<BuildScanReferences> cache;
-    private final BuildScanLookup delegate;
+    private BuildScanLookup delegate;
 
     CachedBuildScanLookup(
         @NotNull CacheProvider cacheProvider,
-        @NotNull @Qualifier("defaultBuildScanLookup") BuildScanLookup delegate
+        @NotNull BuildScanLookup delegate
     ) {
         this.cache = cacheProvider.getOrCreateCache("buildScans-0.1", BuildScanReferences.class);
         this.cache.setAllowToReset(true);
