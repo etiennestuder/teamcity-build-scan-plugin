@@ -1,1 +1,2 @@
 include ':agent'
+include ':gradle-plugin'

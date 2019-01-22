@@ -33,7 +33,7 @@ dependencies {
     compile 'com.google.guava:guava:20.0'
     agent project(path: ':agent', configuration: 'plugin')
 
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-2'
+    testCompile 'org.spockframework:spock-core:1.2-groovy-2.5'
 }
 
 teamcity {

@@ -19,6 +19,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String GRADLE_RUNNER = "gradle-runner";
     private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
+    private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
         eventDispatcher.addListener(this);
@@ -31,6 +32,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
 
             runner.addRunnerParameter(GRADLE_CMD_PARAMS, initScriptParam + " " + existingParams);
+            runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
         }
     }
 
