@@ -10,7 +10,7 @@ import java.util.List;
 
 final class DefaultBuildScanDataStore implements BuildScanDataStore {
 
-    private static final String BUILD_SCAN_STORAGE = "build-scan-storage";
+    private static final String BUILD_SCAN_STORAGE = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
     private static final String SEPARATOR = "|";
 
     @Override
