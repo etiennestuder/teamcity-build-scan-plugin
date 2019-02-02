@@ -12,7 +12,7 @@ import spock.lang.Specification
 
 import java.util.zip.GZIPOutputStream
 
-class TeamcityBuildScanGradlePluginTest extends Specification {
+class TeamCityBuildScanGradlePluginTest extends Specification {
 
     public static final String PUBLIC_SCAN_ID = "i2wepy2gr7ovw"
 

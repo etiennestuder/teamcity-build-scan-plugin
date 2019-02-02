@@ -9,7 +9,7 @@ import org.gradle.api.plugins.AppliedPlugin;
 
 import java.lang.reflect.Method;
 
-public class TeamcityBuildScanGradlePlugin implements Plugin<Project> {
+public class TeamCityBuildScanGradlePlugin implements Plugin<Project> {
 
     private static final String BUILD_SCAN_PLUGIN_ID = "com.gradle.build-scan";
     private static final String BUILD_SCAN_MESSAGE_NAME = "buildscan";

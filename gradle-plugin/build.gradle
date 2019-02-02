@@ -25,7 +25,7 @@ dependencies {
 plugindev {
     pluginId = 'nu.studer.teamcity-build-scan'
     pluginDescription 'Gradle plugin to notify TeamCity of build scans published during a build.'
-    pluginImplementationClass 'nu.studer.teamcity.buildscan.gradle.TeamcityBuildScanGradlePlugin'
+    pluginImplementationClass 'nu.studer.teamcity.buildscan.gradle.TeamCityBuildScanGradlePlugin'
     pluginLicenses 'Apache-2.0'
     pluginTags 'gradle', 'plugin', 'teamcity', 'build scan'
     authorId 'etiennestuder'
