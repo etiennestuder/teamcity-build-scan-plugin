@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.internal.slack;
 
+import nu.studer.teamcity.buildscan.internal.Util;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 

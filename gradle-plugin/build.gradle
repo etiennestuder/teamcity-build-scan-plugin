@@ -1,0 +1,54 @@
+plugins {
+    id 'groovy'
+    id 'nu.studer.plugindev' version '1.0.12'
+    id 'nu.studer.credentials' version '1.0.5'
+}
+
+version = baseVersion
+
+repositories {
+    maven {
+        url 'https://plugins.gradle.org/m2/'
+    }
+}
+dependencies {
+    compileOnly 'com.gradle:build-scan-plugin:2.1'
+    testCompile 'org.spockframework:spock-core:1.2-groovy-2.5', {
+        exclude group: 'org.codehaus.groovy'
+    }
+    testCompile 'io.ratpack:ratpack-groovy-test:1.6.0', {
+        exclude group: 'org.codehaus.groovy'
+    }
+    testCompile 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.9.4'
+}
+
+plugindev {
+    pluginId = 'nu.studer.teamcity-build-scan'
+    pluginDescription 'Gradle plugin to notify TeamCity of build scans published during a build.'
+    pluginImplementationClass 'nu.studer.teamcity.buildscan.gradle.TeamcityBuildScanGradlePlugin'
+    pluginLicenses 'Apache-2.0'
+    pluginTags 'gradle', 'plugin', 'teamcity', 'build scan'
+    authorId 'etiennestuder'
+    authorName 'Etienne Studer'
+    authorEmail 'etienne@studer.nu'
+    projectUrl 'https://github.com/etiennestuder/teamcity-build-scan-plugin'
+    projectInceptionYear '2019'
+    done()
+}
+
+bintray {
+    user = credentials.BINTRAY_USER
+    key = credentials.BINTRAY_API_KEY
+    pkg.repo = 'gradle-plugins'
+    dryRun = false
+}
+
+test {
+    environment('TEAMCITY_VERSION', '2018.1')
+}
+
+pluginUnderTestMetadata {
+    // because of weird classloading when testing plugins via testkit we need to explicitly ensure that the build
+    // scan plugin is on our plugin classpath at test runtime
+    pluginClasspath = pluginClasspath + configurations.compileOnly
+}

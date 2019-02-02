@@ -1,17 +1,17 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'com.gradle.build-scan' version '1.16'
+    id 'com.gradle.build-scan' version '2.1'
     id 'java'
     id 'groovy'
-    id 'com.github.rodm.teamcity-server' version '0.9.1' // see https://github.com/rodm/gradle-teamcity-plugin
+    id 'com.github.rodm.teamcity-server' version '1.1.1' // see https://github.com/rodm/gradle-teamcity-plugin
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.7.1'
 }
 
 buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
+    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    termsOfServiceAgree = 'yes'
     publishAlways()
 }
 
@@ -31,17 +31,15 @@ version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 dependencies {
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.google.guava:guava:20.0'
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-2'
+    agent project(path: ':agent', configuration: 'plugin')
+
+    testCompile 'org.spockframework:spock-core:1.2-groovy-2.5'
 }
 
 teamcity {
-    version = '9.1.6' // TeamCity API version
+    version = '2018.1' // TeamCity API version
 
     server {
-        downloadsDir = file('.teamcity/dists')
-        baseHomeDir = file('.teamcity/servers')
-        baseDataDir = file('.teamcity/data')
-
         descriptor {
             name = 'GradleBuildScanIntegration'
             displayName = 'Gradle Build Scan Integration'
@@ -55,14 +53,22 @@ teamcity {
             downloadUrl = 'https://github.com/etiennestuder/teamcity-build-scan-plugin'
             useSeparateClassloader = true
         }
+    }
 
-        environments {
-//            teamcity9 {
-//                version = "9.1.7"
-//            }
-            teamcity10 {
-                version = "10.0.2"
-            }
+    environments {
+        downloadsDir = file('.teamcity/dists')
+        baseHomeDir = file('.teamcity/servers')
+        baseDataDir = file('.teamcity/data')
+
+        teamcity2018_1 {
+            version = "2018.1.5"
+            serverOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+            agentOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006'
+        }
+        teamcity2018_2 {
+            version = "2018.2.1"
+            serverOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
+            agentOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006'
         }
     }
 }
