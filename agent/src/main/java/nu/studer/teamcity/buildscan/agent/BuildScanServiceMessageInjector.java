@@ -14,11 +14,11 @@ import java.io.File;
  * registers a callback on the build scan plugin for any published build scans and emits a TeamCity
  * {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
  */
-public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
+public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final String GRADLE_RUNNER = "gradle-runner";
-    private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
+    private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
@@ -41,4 +41,5 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, initScript);
         return initScript;
     }
+
 }
