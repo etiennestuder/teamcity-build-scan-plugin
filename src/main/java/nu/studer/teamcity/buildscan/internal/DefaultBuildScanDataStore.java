@@ -31,7 +31,7 @@ final class DefaultBuildScanDataStore implements BuildScanDataStore {
         CustomDataStorage customDataStorage = getCustomDataStorage(build);
         String existing = customDataStorage.getValue(buildId);
 
-        if (existing == null) {
+        if (existing == null || existing.isEmpty()) {
             customDataStorage.putValue(buildId, buildScanUrl);
         } else {
             List<String> scans = StringUtil.split(existing, BUILD_SCAN_URLS_SEPARATOR);
