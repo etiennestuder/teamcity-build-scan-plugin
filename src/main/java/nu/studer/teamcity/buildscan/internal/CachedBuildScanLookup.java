@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 final class CachedBuildScanLookup implements BuildScanLookup {
 
     private final SCache<BuildScanReferences> cache;
-    private BuildScanLookup delegate;
+    private final BuildScanLookup delegate;
 
     CachedBuildScanLookup(
         @NotNull CacheProvider cacheProvider,

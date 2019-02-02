@@ -15,7 +15,6 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
     private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
 
-
     @Override
     @NotNull
     public BuildScanReferences getBuildScansForBuild(@NotNull SBuild build) {

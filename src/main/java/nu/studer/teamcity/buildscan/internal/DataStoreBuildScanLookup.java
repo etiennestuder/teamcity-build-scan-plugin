@@ -8,25 +8,24 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class DataStoreBuildScanLookup implements BuildScanLookup {
+final class DataStoreBuildScanLookup implements BuildScanLookup {
 
     private final BuildScanLookup delegate;
     private final BuildScanDataStore buildScanDataStore;
 
-    public DataStoreBuildScanLookup(@NotNull BuildScanLookup delegate, @NotNull BuildScanDataStore buildScanDataStore) {
+    DataStoreBuildScanLookup(
+        @NotNull BuildScanDataStore buildScanDataStore,
+        @NotNull BuildScanLookup delegate
+    ) {
         this.delegate = delegate;
         this.buildScanDataStore = buildScanDataStore;
     }
 
-    @NotNull
     @Override
+    @NotNull
     public BuildScanReferences getBuildScansForBuild(@NotNull SBuild build) {
         List<BuildScanReference> buildScanReferences = buildScanDataStore.fetch(build);
-
-        if (buildScanReferences == null) {
-            return delegate.getBuildScansForBuild(build);
-        }
-
-        return BuildScanReferences.of(buildScanReferences);
+        return buildScanReferences == null ? delegate.getBuildScansForBuild(build) : BuildScanReferences.of(buildScanReferences);
     }
+
 }

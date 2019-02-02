@@ -13,6 +13,7 @@ public class BuildScanServiceMessageListener implements ServiceMessageTranslator
 
     private static final String BUILD_SCAN_SERVICE_MESSAGE_NAME = "buildscan";
     private static final String BUILD_STARTED_MESSAGE = "BUILD_STARTED";
+
     private final BuildScanDataStore buildScanDataStore;
 
     public BuildScanServiceMessageListener(@NotNull BuildScanDataStore buildScanDataStore) {
@@ -36,4 +37,5 @@ public class BuildScanServiceMessageListener implements ServiceMessageTranslator
     public String getServiceMessageName() {
         return BUILD_SCAN_SERVICE_MESSAGE_NAME;
     }
+
 }

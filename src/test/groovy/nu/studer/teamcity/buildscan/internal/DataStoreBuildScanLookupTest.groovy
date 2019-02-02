@@ -12,7 +12,7 @@ class DataStoreBuildScanLookupTest extends Specification {
         given:
         def store = Mock(BuildScanDataStore)
         def delegate = Mock(BuildScanLookup)
-        def lookup = new DataStoreBuildScanLookup(delegate, store)
+        def lookup = new DataStoreBuildScanLookup(store, delegate)
 
         when:
         lookup.getBuildScansForBuild(Mock(SBuild))
@@ -29,7 +29,7 @@ class DataStoreBuildScanLookupTest extends Specification {
             fetch(build) >> Collections.singletonList(reference)
         }
         def delegate = Mock(BuildScanLookup)
-        def lookup = new DataStoreBuildScanLookup(delegate, store)
+        def lookup = new DataStoreBuildScanLookup(store, delegate)
 
         when:
         def result = lookup.getBuildScansForBuild(build)
@@ -38,4 +38,5 @@ class DataStoreBuildScanLookupTest extends Specification {
         result == BuildScanReferences.of(reference)
         0 * delegate.getBuildScansForBuild(_)
     }
+
 }

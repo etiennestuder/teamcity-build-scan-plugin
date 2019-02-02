@@ -8,7 +8,7 @@ import nu.studer.teamcity.buildscan.BuildScanReference;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DefaultBuildScanDataStore implements BuildScanDataStore {
+final class DefaultBuildScanDataStore implements BuildScanDataStore {
 
     private static final String BUILD_SCAN_STORAGE = "build-scan-storage";
     private static final String SEPARATOR = "|";
@@ -61,4 +61,5 @@ public class DefaultBuildScanDataStore implements BuildScanDataStore {
 
         return buildScanReferences;
     }
+
 }

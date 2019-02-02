@@ -31,6 +31,12 @@
     <bean id="logIteratingBuildScanLookup"
           class="nu.studer.teamcity.buildscan.internal.LogIteratingBuildScanLookup"/>
 
+    <bean id="buildScanServiceMessageListener"
+          class="nu.studer.teamcity.buildscan.internal.BuildScanServiceMessageListener"/>
+
+    <bean id="buildScanDataStore"
+          class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDataStore"/>
+
     <bean id="buildScanDisplayArbiter"
           class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter"/>
 
@@ -38,9 +44,4 @@
           class="nu.studer.teamcity.buildscan.internal.slack.SlackIntegration"
           destroy-method="shutdown"/>
 
-    <bean id="buildScanServiceMessageListener"
-          class="nu.studer.teamcity.buildscan.internal.BuildScanServiceMessageListener"/>
-
-    <bean id="buildScanDataStore"
-          class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDataStore"/>
 </beans>
