@@ -1,6 +1,5 @@
 package nu.studer.teamcity.buildscan.internal.slack;
 
-import nu.studer.teamcity.buildscan.internal.Util;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,12 +54,21 @@ final class SlackHttpNotifier {
 
         // send payload
         try (InputStream is = new ByteArrayInputStream(bytes); OutputStream os = con.getOutputStream()) {
-            Util.copy(is, os);
+            copy(is, os);
         }
 
         // log response code
         int responseCode = con.getResponseCode();
         LOGGER.info("Invoking Slack webhook returned response code: " + responseCode);
+    }
+
+    private static void copy(@NotNull InputStream in, @NotNull OutputStream out) throws IOException {
+        byte[] buffer = new byte[4096];
+        int len = in.read(buffer);
+        while (len != -1) {
+            out.write(buffer, 0, len);
+            len = in.read(buffer);
+        }
     }
 
 }
