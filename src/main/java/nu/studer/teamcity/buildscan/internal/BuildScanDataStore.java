@@ -9,8 +9,8 @@ import java.util.List;
 public interface BuildScanDataStore {
 
     /**
-     * Stores and empty data set for the given build. Calls to {@link #fetch} differentiate between returning an empty
-     * result set and {@code null} for a build with which no information exists. Calls to this method will store an
+     * Stores an empty data set for the given build. Calls to {@link #fetch} differentiate between returning an empty
+     * result set and {@code null} for a build for which no information exists. Calls to this method will store an
      * empty entry in the store for the given build resulting in subsequent calls to {@link #fetch} returning an
      * empty collection instead of {@code null}. Calls to {@link #store} can be made after calling this method to store
      * subsequent data.
@@ -32,12 +32,13 @@ public interface BuildScanDataStore {
     void store(SBuild build, String buildScanUrl);
 
     /**
-     * Returns list of all build scans published by a given build. If the build published no scans an empty list
-     * will be returned or {@code null} if no data exists for the requested build.
+     * Returns the list of all build scans published by the given build. If the build published no scans an empty list
+     * is returned or {@code null} if no data exists for the requested build.
      *
-     * @param build The requested TeamCity build
+     * @param build the requested build
      * @return all published scans for the given build or {@code null} if no data exists for the given build
      */
     @Nullable
     List<BuildScanReference> fetch(SBuild build);
+
 }
