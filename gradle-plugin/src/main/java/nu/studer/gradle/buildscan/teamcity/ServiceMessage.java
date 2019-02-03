@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.gradle;
+package nu.studer.gradle.buildscan.teamcity;
 
 final class ServiceMessage {
 

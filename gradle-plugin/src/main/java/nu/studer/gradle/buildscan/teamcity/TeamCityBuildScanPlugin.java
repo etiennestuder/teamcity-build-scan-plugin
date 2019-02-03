@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.gradle;
+package nu.studer.gradle.buildscan.teamcity;
 
 import com.gradle.scan.plugin.BuildScanExtension;
 import org.gradle.api.Plugin;
@@ -7,7 +7,7 @@ import org.gradle.api.Project;
 import java.lang.reflect.Method;
 
 @SuppressWarnings("unused")
-public class TeamCityBuildScanGradlePlugin implements Plugin<Project> {
+public class TeamCityBuildScanPlugin implements Plugin<Project> {
 
     private static final String TEAMCITY_VERSION_ENV = "TEAMCITY_VERSION";
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN_ENV = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";

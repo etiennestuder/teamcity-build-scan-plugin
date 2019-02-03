@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.gradle
+package nu.studer.gradle.buildscan.teamcity
 
 
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -12,7 +12,7 @@ import spock.lang.Specification
 
 import java.util.zip.GZIPOutputStream
 
-class TeamCityBuildScanGradlePluginTest extends Specification {
+class TeamCityBuildScanPluginTest extends Specification {
 
     public static final String PUBLIC_SCAN_ID = "i2wepy2gr7ovw"
 
@@ -70,7 +70,7 @@ class TeamCityBuildScanGradlePluginTest extends Specification {
         buildScript.text = """
             plugins {
                 id 'com.gradle.build-scan' version '${version}'
-                id 'nu.studer.teamcity-build-scan'
+                id 'nu.studer.build-scan.teamcity'
             }
             
             buildScan {
