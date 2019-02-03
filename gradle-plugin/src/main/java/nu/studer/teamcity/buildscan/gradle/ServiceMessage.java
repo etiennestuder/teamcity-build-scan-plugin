@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.gradle;
 
-public class ServiceMessage {
+final class ServiceMessage {
+
     private static final String SERVICE_MESSAGE_START = "##teamcity[";
     private static final String SERVICE_MESSAGE_END = "]";
 
@@ -12,7 +13,7 @@ public class ServiceMessage {
         this.argument = argument;
     }
 
-    public static ServiceMessage of(String name, String argument) {
+    static ServiceMessage of(String name, String argument) {
         return new ServiceMessage(name, argument);
     }
 
@@ -20,11 +21,11 @@ public class ServiceMessage {
         StringBuilder sb = new StringBuilder();
         sb.append(SERVICE_MESSAGE_START);
         sb.append(name);
-        sb.append(" '");
+        sb.append(' ');
+        sb.append('\'');
         sb.append(escape(argument));
-        sb.append("'");
+        sb.append('\'');
         sb.append(SERVICE_MESSAGE_END);
-
         return sb.toString();
     }
 
@@ -33,7 +34,6 @@ public class ServiceMessage {
         for (char c : s.toCharArray()) {
             sb.append(escape(c));
         }
-
         return sb.toString();
     }
 
@@ -55,4 +55,5 @@ public class ServiceMessage {
                 return c < 128 ? Character.toString(c) : String.format("0x%04x", (int) c);
         }
     }
+
 }
