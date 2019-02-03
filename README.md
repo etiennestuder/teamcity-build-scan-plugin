@@ -4,9 +4,14 @@
 
 For each Gradle build that is run from TeamCity, this plugin exposes the link to the created build scan in the TeamCity UI.
 
-## Version compativility
+## Version compatibility
 
 This plugin requires that you use at least build scan plugin 1.8 in your Gradle builds. It is recommended that you use the very [latest build scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) at all times to get the most insights from your builds.
+
+## TeamCity build runner requirements
+
+When not using TeamCity's GradleRunner to launch Gradle builds, use the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to 
+notify TeamCity about the scans that were published while running a build. If you use the GradleRunner to launch Gradle builds, there is no need to apply that TeamCity build scan Gradle plugin. 
 
 # Installation
 
@@ -37,7 +42,8 @@ Both feedback and contributions are very welcome.
 
 # Acknowledgements
 
-Thanks to Pavel Sher from JetBrains for all the code pointers.
++ [pavelsher](https://github.com/pavelsher) (pr #6 that provides message service functionality)
++ [mark-vieira](https://github.com/mark-vieira) (several code pointers)
 
 # License
 
