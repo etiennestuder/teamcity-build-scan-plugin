@@ -1,6 +1,5 @@
 package nu.studer.gradle.buildscan.teamcity
 
-
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import org.gradle.testkit.runner.GradleRunner
