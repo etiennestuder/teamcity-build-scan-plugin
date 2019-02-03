@@ -2,7 +2,7 @@
 
 [TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with [build scans](https://scans.gradle.com/), the free service offered by [Gradle Inc.](https://gradle.com)
 
-For each Gradle build that is run from TeamCity, this plugin exposes the link to the created build scanin the TeamCity UI.
+For each Gradle build that is run from TeamCity, this plugin exposes the link to the created build scan in the TeamCity UI.
 
 ## Version compativility
 
