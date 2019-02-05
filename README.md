@@ -42,8 +42,8 @@ Both feedback and contributions are very welcome.
 
 # Acknowledgements
 
-+ [pavelsher](https://github.com/pavelsher) (pr #6 that provides message service functionality)
-+ [mark-vieira](https://github.com/mark-vieira) (several code pointers)
++ [mark-vieira](https://github.com/mark-vieira) (pr #6 that provides message service functionality)
++ [pavelsher](https://github.com/pavelsher) (several code pointers)
 
 # License
 
