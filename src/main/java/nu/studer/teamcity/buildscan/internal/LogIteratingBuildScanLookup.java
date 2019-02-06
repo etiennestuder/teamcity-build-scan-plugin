@@ -5,6 +5,7 @@ import jetbrains.buildServer.serverSide.buildLog.LogMessage;
 import nu.studer.teamcity.buildscan.BuildScanLookup;
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 
 final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
+    private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
     private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
 
     @Override
@@ -23,6 +25,7 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
         // to have published a scan yet.
         if (!build.isFinished()) return BuildScanReferences.of();
 
+        LOGGER.info(String.format("Parsing build log of build id: %s for build scan urls", build.getBuildId()));
         List<BuildScanReference> buildScans = new ArrayList<>();
         boolean foundPublishMessage = false;
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {

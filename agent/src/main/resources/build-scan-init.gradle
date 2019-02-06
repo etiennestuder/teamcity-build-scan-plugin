@@ -8,13 +8,14 @@ initscript {
     }
 }
 
-logger.quiet(new ServiceMessage('buildscan', 'BUILD_STARTED').toString())
+def messageName = 'nu.studer.teamcity.buildscan.buildScanLifeCycle'
+logger.quiet(ServiceMessage.asString(messageName, 'BUILD_STARTED').toString())
 
 rootProject {
     pluginManager.withPlugin('com.gradle.build-scan') {
         if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
             buildScan.buildScanPublished { scan ->
-                logger.quiet(new ServiceMessage('buildscan', scan.buildScanUri.toString()).toString())
+                logger.quiet(ServiceMessage.asString(messageName, "SCAN_URL:${scan.buildScanUri.toString()}"))
             }
         }
     }
