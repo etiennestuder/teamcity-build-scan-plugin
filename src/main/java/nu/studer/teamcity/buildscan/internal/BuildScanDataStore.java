@@ -12,10 +12,9 @@ public interface BuildScanDataStore {
      * Stores an empty data set for the given build. Calls to {@link #fetch} differentiate between returning an empty
      * result set and {@code null} for a build for which no information exists. Calls to this method will store an
      * empty entry in the store for the given build resulting in subsequent calls to {@link #fetch} returning an
-     * empty collection instead of {@code null}. Calls to {@link #store} can be made after calling this method to store
-     * subsequent data.
+     * empty collection instead of {@code null}.
      *
-     * Calls to this method after calling {@link #fetch} for the same build are ignored. Existing data for the
+     * Calls to this method after calling {@link #store} for the same build are ignored. Existing data for the
      * build will remain unchanged.
      *
      * @param build the build for which no scans have yet been published
