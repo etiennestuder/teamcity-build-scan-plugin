@@ -18,7 +18,7 @@ final class BuildScanServiceMessageListener implements ServiceMessageTranslator 
     // values need to be kept in sync with build-scan-init.gradle
     private static final String BUILD_SCAN_SERVICE_MESSAGE_NAME = "nu.studer.teamcity.buildscan.buildScanLifeCycle";
     private static final String BUILD_STARTED_MESSAGE = "BUILD_STARTED";
-    private static final String BUILD_SCAN_URL_MESSAGE_PREFIX = "SCAN_URL:";
+    private static final String BUILD_SCAN_URL_MESSAGE_PREFIX = "BUILD_SCAN_URL:";
 
     private final BuildScanDataStore buildScanDataStore;
 
