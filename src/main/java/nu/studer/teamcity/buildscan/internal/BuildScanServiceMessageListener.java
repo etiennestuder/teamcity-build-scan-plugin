@@ -13,12 +13,13 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 final class BuildScanServiceMessageListener implements ServiceMessageTranslator {
-    private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     // values need to be kept in sync with build-scan-init.gradle
     private static final String BUILD_SCAN_SERVICE_MESSAGE_NAME = "nu.studer.teamcity.buildscan.buildScanLifeCycle";
-    private static final String BUILD_STARTED_MESSAGE = "BUILD_STARTED";
-    private static final String BUILD_SCAN_URL_MESSAGE_PREFIX = "BUILD_SCAN_URL:";
+    private static final String BUILD_SCAN_SERVICE_STARTED_MESSAGE_ARGUMENT = "BUILD_STARTED";
+    private static final String BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX = "BUILD_SCAN_URL:";
+
+    private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     private final BuildScanDataStore buildScanDataStore;
 
@@ -30,10 +31,10 @@ final class BuildScanServiceMessageListener implements ServiceMessageTranslator 
     @Override
     public List<BuildMessage1> translate(@NotNull SRunningBuild runningBuild, @NotNull BuildMessage1 originalMessage, @NotNull ServiceMessage serviceMessage) {
         String argument = requireNonNull(serviceMessage.getArgument());
-        if (argument.equals(BUILD_STARTED_MESSAGE)) {
+        if (argument.equals(BUILD_SCAN_SERVICE_STARTED_MESSAGE_ARGUMENT)) {
             buildScanDataStore.mark(runningBuild);
-        } else if (argument.startsWith(BUILD_SCAN_URL_MESSAGE_PREFIX)) {
-            buildScanDataStore.store(runningBuild, argument.substring(BUILD_SCAN_URL_MESSAGE_PREFIX.length()));
+        } else if (argument.startsWith(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX)) {
+            buildScanDataStore.store(runningBuild, argument.substring(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX.length()));
         } else {
             LOGGER.error(String.format("Unknown argument format '%s'", argument));
         }

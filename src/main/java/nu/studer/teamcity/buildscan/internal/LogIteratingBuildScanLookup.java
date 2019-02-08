@@ -14,8 +14,9 @@ import java.util.List;
 
 final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
-    private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
     private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
+
+    private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     @Override
     @NotNull
@@ -23,9 +24,12 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
         // If a build is still running we'll assume our callback-based method of getting scans is going to work.
         // Avoid paying the cost of parsing the build log for currently running builds that just haven't happened
         // to have published a scan yet.
-        if (!build.isFinished()) return BuildScanReferences.of();
+        if (!build.isFinished()) {
+            return BuildScanReferences.of();
+        }
 
         LOGGER.info(String.format("Parsing build log of build id: %s for build scan urls", build.getBuildId()));
+
         List<BuildScanReference> buildScans = new ArrayList<>();
         boolean foundPublishMessage = false;
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {
