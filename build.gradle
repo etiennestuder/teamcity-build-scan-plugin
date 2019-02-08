@@ -18,7 +18,7 @@ buildScan {
 ext {
     CI = System.getenv().containsKey('CI') || project.properties.containsKey('CI')
     RELEASE = project.properties.containsKey('RELEASE')
-    baseVersion = '0.7'
+    baseVersion = '0.8'
     buildTime = new Date()
 }
 
@@ -92,7 +92,7 @@ bintray {
     key = findProperty('bintrayKey')
     publications = ['PluginPublication']
 
-    dryRun = false
+    dryRun = true
     publish = true
     override = false
 
