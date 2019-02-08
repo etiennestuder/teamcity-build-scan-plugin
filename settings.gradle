@@ -1,2 +1,1 @@
 include ':agent'
-include ':gradle-build-scan-teamcity-plugin'
