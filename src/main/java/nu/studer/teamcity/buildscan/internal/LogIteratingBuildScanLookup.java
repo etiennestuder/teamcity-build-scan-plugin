@@ -14,9 +14,9 @@ import java.util.List;
 
 final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
-    private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
-
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
+
+    private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
 
     @Override
     @NotNull
