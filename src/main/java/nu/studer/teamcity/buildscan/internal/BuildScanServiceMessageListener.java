@@ -36,7 +36,7 @@ final class BuildScanServiceMessageListener implements ServiceMessageTranslator 
         } else if (argument.startsWith(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX)) {
             buildScanDataStore.store(runningBuild, argument.substring(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX.length()));
         } else {
-            LOGGER.error(String.format("Unknown argument format '%s'", argument));
+            LOGGER.error(String.format("Unknown argument format: '%s' for message service: %s", argument, BUILD_SCAN_SERVICE_MESSAGE_NAME));
         }
 
         // omit these service messages from the final build log
