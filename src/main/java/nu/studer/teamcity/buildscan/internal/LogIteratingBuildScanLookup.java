@@ -16,7 +16,7 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
-    private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
+    private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan";
 
     @Override
     @NotNull
@@ -35,10 +35,10 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {
             LogMessage message = iterator.next();
             String text = message.getText();
-            if (!foundPublishMessage && PUBLISHING_BUILD_PATTERN.equals(text)) {
+            if (!foundPublishMessage && text.contains(PUBLISHING_BUILD_PATTERN)) { // TODO add test
                 foundPublishMessage = true;
             } else if (foundPublishMessage && Util.isBuildScanUrl(text)) {
-                buildScans.add(new BuildScanReference(Util.getBuildScanId(text), text));
+                buildScans.add(new BuildScanReference(Util.getBuildScanId(text), Util.getBuildScanUrl(text)));
                 foundPublishMessage = false;
             } else {
                 foundPublishMessage = false;
