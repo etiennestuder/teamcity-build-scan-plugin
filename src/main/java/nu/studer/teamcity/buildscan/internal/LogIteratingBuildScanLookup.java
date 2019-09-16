@@ -35,7 +35,7 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {
             LogMessage message = iterator.next();
             String text = message.getText();
-            if (!foundPublishMessage && text.contains(PUBLISHING_BUILD_PATTERN)) { // TODO add test
+            if (!foundPublishMessage && text.contains(PUBLISHING_BUILD_PATTERN)) {
                 foundPublishMessage = true;
             } else if (foundPublishMessage && Util.isBuildScanUrl(text)) {
                 buildScans.add(new BuildScanReference(Util.getBuildScanId(text), Util.getBuildScanUrl(text)));

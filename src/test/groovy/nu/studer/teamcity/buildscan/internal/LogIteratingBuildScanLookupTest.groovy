@@ -36,6 +36,9 @@ class LogIteratingBuildScanLookupTest extends Specification {
             log("Publishing build scan..."),
             log("http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
         [
+            log("[INFO] Publishing build scan..."),
+            log("[INFO] http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
+        [
             log("Publishing build scan..."),
             log("http://scans.grdev.net/s/fgb5fkqivexry")]  | ["fgb5fkqivexry"]
         [

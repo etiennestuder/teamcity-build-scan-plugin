@@ -10,8 +10,7 @@ import nu.studer.teamcity.buildscan.BuildScanReferences
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.GRADLE_RUNNER
-import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.SIMPLE_RUNNER
+import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.*
 
 class DefaultBuildScanDisplayArbiterTest extends Specification {
 
@@ -41,6 +40,34 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
         [buildRunnerDescriptor(GRADLE_RUNNER), buildRunnerDescriptor(GRADLE_RUNNER)]       | true
         [buildRunnerDescriptor('some other runner')]                                       | false
         []                                                                                 | false
+    }
+
+    @Unroll
+    def "show build scan info if Maven runner is present"() {
+        given:
+        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Mock(BuildScanLookup))
+
+        and:
+        SBuildType buildType = Mock(SBuildType)
+        buildType.buildRunners >> { buildRunnerTypes }
+
+        and:
+        SBuild build = Mock(SBuild)
+        build.buildType >> buildType
+
+        when:
+        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(build)
+
+        then:
+        show == expectedToShow
+
+        where:
+        buildRunnerTypes                                                                  | expectedToShow
+        [buildRunnerDescriptor(MAVEN_RUNNER)]                                             | true
+        [buildRunnerDescriptor(MAVEN_RUNNER), buildRunnerDescriptor('some other runner')] | true
+        [buildRunnerDescriptor(MAVEN_RUNNER), buildRunnerDescriptor(MAVEN_RUNNER)]        | true
+        [buildRunnerDescriptor('some other runner')]                                      | false
+        []                                                                                | false
     }
 
     @Unroll
