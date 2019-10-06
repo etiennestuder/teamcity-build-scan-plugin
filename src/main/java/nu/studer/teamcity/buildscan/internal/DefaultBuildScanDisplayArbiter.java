@@ -37,9 +37,7 @@ final class DefaultBuildScanDisplayArbiter implements BuildScanDisplayArbiter {
             .map(r -> r.getRunType().getType())
             .collect(Collectors.toList());
 
-        if (runnerTypes.contains(GRADLE_RUNNER)) {
-            return true;
-        } else if (runnerTypes.contains(MAVEN_RUNNER)) {
+        if (runnerTypes.contains(GRADLE_RUNNER) || runnerTypes.contains(MAVEN_RUNNER)) {
             return true;
         } else if (runnerTypes.contains(SIMPLE_RUNNER) && !buildScanLookup.getBuildScansForBuild(build).isEmpty()) {
             return true;
