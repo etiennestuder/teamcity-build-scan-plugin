@@ -16,7 +16,8 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
-    private static final String PUBLISHING_BUILD_PATTERN = "Publishing build scan...";
+    private static final String PUBLISHING_BUILD_PATTERN_GRADLE = "Publishing build scan...";
+    private static final String PUBLISHING_BUILD_PATTERN_MAVEN = "[INFO] Publishing build scan...";
 
     @Override
     @NotNull
@@ -35,10 +36,11 @@ final class LogIteratingBuildScanLookup implements BuildScanLookup {
         for (Iterator<LogMessage> iterator = build.getBuildLog().getMessagesIterator(); iterator.hasNext(); ) {
             LogMessage message = iterator.next();
             String text = message.getText();
-            if (!foundPublishMessage && PUBLISHING_BUILD_PATTERN.equals(text)) {
+            // We use equals because it performs much better than contains
+            if (!foundPublishMessage && (text.equals(PUBLISHING_BUILD_PATTERN_GRADLE) || text.equals(PUBLISHING_BUILD_PATTERN_MAVEN))) {
                 foundPublishMessage = true;
             } else if (foundPublishMessage && Util.isBuildScanUrl(text)) {
-                buildScans.add(new BuildScanReference(Util.getBuildScanId(text), text));
+                buildScans.add(new BuildScanReference(Util.getBuildScanId(text), Util.getBuildScanUrl(text)));
                 foundPublishMessage = false;
             } else {
                 foundPublishMessage = false;

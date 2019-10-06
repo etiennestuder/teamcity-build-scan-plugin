@@ -42,6 +42,14 @@ public final class BuildScanReference implements Serializable {
     }
 
     @Override
+    public String toString() {
+        return "BuildScanReference{" +
+            "id='" + id + '\'' +
+            ", url='" + url + '\'' +
+            '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
