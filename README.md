@@ -2,16 +2,22 @@
 
 [TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with [build scans](https://scans.gradle.com/), the free service offered by [Gradle Inc.](https://gradle.com)
 
-For each Gradle build that is run from TeamCity, this plugin exposes the link to the created build scan in the TeamCity UI.
+For each Gradle and Maven build that is run from TeamCity, this plugin exposes the link to the created build scan in the TeamCity UI.
 
 ## Version compatibility
 
-This plugin requires that you use at least build scan plugin 1.8 in your Gradle builds. It is recommended that you use the very [latest build scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) at all times to get the most insights from your builds.
+This plugin requires that you use at least Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds. It is recommended that you use the very [latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the very [latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
 
 ## TeamCity build runner requirements
 
+When using TeamCity's GradleRunner to launch Gradle builds, there is nothing special to do.
+
 When not using TeamCity's GradleRunner to launch Gradle builds, use the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to 
-notify TeamCity about the scans that were published while running a build. If you use the GradleRunner to launch Gradle builds, there is no need to apply that TeamCity build scan Gradle plugin. 
+notify TeamCity about the build scans that were published while running a build. If you use the GradleRunner to launch Gradle builds, there is no need to apply that TeamCity build scan Gradle plugin. 
+
+When using TeamCity's MavenRunner to launch Maven builds, there is nothing special to do.
+
+When not using TeamCity's MavenRunner to launch Maven builds, no build scans are captured.
 
 # Installation
 
@@ -42,6 +48,7 @@ Both feedback and contributions are very welcome.
 
 # Acknowledgements
 
++ [autonomousapps](https://github.com/autonomousapps) (pr #9 that provides build scans for Maven builds)
 + [mark-vieira](https://github.com/mark-vieira) (pr #6 that provides message service functionality)
 + [pavelsher](https://github.com/pavelsher) (several code pointers)
 
