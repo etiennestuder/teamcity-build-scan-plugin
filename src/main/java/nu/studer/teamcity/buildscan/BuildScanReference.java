@@ -33,9 +33,9 @@ public final class BuildScanReference implements Serializable {
     @SuppressWarnings("unused")
     public String getUrlWithoutProtocol() {
         if (url.startsWith("http://")) {
-            return url.substring("http://" .length());
+            return url.substring("http://".length());
         } else if (url.startsWith("https://")) {
-            return url.substring("https://" .length());
+            return url.substring("https://".length());
         } else {
             return url;
         }

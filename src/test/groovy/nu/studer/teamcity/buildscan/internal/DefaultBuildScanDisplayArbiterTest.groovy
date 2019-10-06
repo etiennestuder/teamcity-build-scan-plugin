@@ -10,7 +10,9 @@ import nu.studer.teamcity.buildscan.BuildScanReferences
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.*
+import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.GRADLE_RUNNER
+import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.MAVEN_RUNNER
+import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.SIMPLE_RUNNER
 
 class DefaultBuildScanDisplayArbiterTest extends Specification {
 

@@ -38,4 +38,5 @@ class UtilTest extends Specification {
         'https://gradle.chess.com/s/urh37ke7awlrk'        | 'https://gradle.chess.com/s/urh37ke7awlrk'
         '[INFO] https://gradle.chess.com/s/urh37ke7awlrk' | 'https://gradle.chess.com/s/urh37ke7awlrk'
     }
+
 }
