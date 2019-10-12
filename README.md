@@ -6,7 +6,10 @@ For each Gradle and Maven build that is run from TeamCity, this plugin exposes t
 
 ## Version compatibility
 
-This plugin requires that you use at least Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds. It is recommended that you use the very [latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the very [latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
+This plugin requires that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds. 
+It is recommended that you use the very [latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) or
+[latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) and the 
+very [latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
 
 ## TeamCity build runner requirements
 
@@ -21,10 +24,10 @@ When not using TeamCity's MavenRunner to launch Maven builds, no build scans are
 
 # Installation
 
-1. Download the plugin .zip file from [https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin) (see _Downloads_ section at the bottom of the page).
+1. Download the plugin `.zip` file from [https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin) (see _Downloads_ section at the bottom of the page).
 
 1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the 
-previously downloaded plugin .zip file.
+previously downloaded plugin `.zip` file.
 
 1. Restart TeamCity.
 
