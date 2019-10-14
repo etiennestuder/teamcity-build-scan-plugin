@@ -1,1 +1,9 @@
 include ':agent'
+
+rootProject.name = 'teamcity-build-scan-plugin'
+
+buildCache {
+    local {
+        enabled = true
+    }
+}
