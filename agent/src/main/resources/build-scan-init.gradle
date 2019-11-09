@@ -11,12 +11,27 @@ initscript {
 def serviceMessageName = 'nu.studer.teamcity.buildscan.buildScanLifeCycle'
 logger.quiet(ServiceMessage.asString(serviceMessageName, 'BUILD_STARTED').toString())
 
+def BUILD_SCAN_PLUGIN_ID = 'com.gradle.build-scan'
+def GRADLE_ENTERPRISE_PLUGIN_ID = 'com.gradle.enterprise'
+
+def buildScanPublishedAction = { def buildScan ->
+    if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
+        buildScan.buildScanPublished { scan ->
+            logger.quiet(ServiceMessage.asString(serviceMessageName, "BUILD_SCAN_URL:${scan.buildScanUri.toString()}"))
+        }
+    }
+}
+
 rootProject {
-    pluginManager.withPlugin('com.gradle.build-scan') {
-        if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
-            buildScan.buildScanPublished { scan ->
-                logger.quiet(ServiceMessage.asString(serviceMessageName, "BUILD_SCAN_URL:${scan.buildScanUri.toString()}"))
-            }
+    pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+        buildScanPublishedAction(buildScan)
+    }
+}
+
+gradle.settingsEvaluated {
+    it.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
+        gradle.rootProject {
+            buildScanPublishedAction(buildScan)
         }
     }
 }

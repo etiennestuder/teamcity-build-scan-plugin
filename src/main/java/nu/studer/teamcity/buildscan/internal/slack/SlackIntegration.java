@@ -56,11 +56,10 @@ final class SlackIntegration implements ExternalIntegration {
             .filter(Objects::nonNull)
             .filter(Optional::isPresent)
             .map(Optional::get)
-            .collect(toMap(buildScanPayload -> buildScanPayload.data.publicId, Function.identity())));
+            .collect(toMap(buildScanPayload -> buildScanPayload.data.publicId, Function.identity())), MoreExecutors.directExecutor());
 
         ListenableFuture<Void> notifySlackFuture = Futures.transformAsync(payloadPerBuildScanFutures, payloadPerBuildScan ->
-            notifySlackAsync(buildScans, payloadPerBuildScan, webhookUrlString, teamCityBuildStatus, teamCityConfiguration)
-        );
+            notifySlackAsync(buildScans, payloadPerBuildScan, webhookUrlString, teamCityBuildStatus, teamCityConfiguration), MoreExecutors.directExecutor());
 
         return Optional.of(notifySlackFuture);
     }
@@ -83,7 +82,7 @@ final class SlackIntegration implements ExternalIntegration {
     private List<ListenableFuture<Optional<BuildScanPayload>>> retrieveBuildScansAsync(@NotNull BuildScanReferences buildScans, @NotNull TeamCityConfiguration teamCityConfiguration) {
         return buildScans.all().stream().map(s -> {
             ListenableFuture<Optional<BuildScanPayload>> future = executor.submit(() -> retrieveBuildScan(s, teamCityConfiguration));
-            Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"));
+            Futures.addCallback(future, new LoggingCallback("Retrieving build scan data"), MoreExecutors.directExecutor());
             return future;
         }).collect(toList());
     }
@@ -125,7 +124,7 @@ final class SlackIntegration implements ExternalIntegration {
 
     private ListenableFuture<Void> notifySlackAsync(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull URL webhookUrl, @NotNull TeamCityBuildStatus teamCityBuildStatus, @NotNull TeamCityConfiguration teamCityConfiguration) {
         ListenableFuture<Void> future = executor.submit(() -> notifySlack(buildScans, buildScanPayloads, webhookUrl, teamCityBuildStatus, teamCityConfiguration));
-        Futures.addCallback(future, new LoggingCallback("Notifying Slack via webhook"));
+        Futures.addCallback(future, new LoggingCallback("Notifying Slack via webhook"), MoreExecutors.directExecutor());
         return future;
     }
 
