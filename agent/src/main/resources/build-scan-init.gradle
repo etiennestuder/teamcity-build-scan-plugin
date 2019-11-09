@@ -26,12 +26,7 @@ rootProject {
     pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
         buildScanPublishedAction(buildScan)
     }
-}
-
-gradle.settingsEvaluated {
-    it.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
-        gradle.rootProject {
-            buildScanPublishedAction(buildScan)
-        }
+    pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
+        buildScanPublishedAction(buildScan)
     }
 }
