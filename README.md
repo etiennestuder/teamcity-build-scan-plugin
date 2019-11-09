@@ -7,9 +7,9 @@ For each Gradle and Maven build that is run from TeamCity, this plugin exposes t
 ## Version compatibility
 
 This plugin requires that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds. 
-It is recommended that you use the very [latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) or
-[latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) and the 
-very [latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
+It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
+[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the 
+[latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
 
 ## TeamCity build runner requirements
 
@@ -51,6 +51,7 @@ Both feedback and contributions are very welcome.
 
 # Acknowledgements
 
++ [guylabs](https://github.com/guylabs) (pr #10 that provides support for the Gradle Enterprise Gradle plugin)
 + [autonomousapps](https://github.com/autonomousapps) (pr #9 that provides build scans for Maven builds)
 + [mark-vieira](https://github.com/mark-vieira) (pr #6 that provides message service functionality)
 + [pavelsher](https://github.com/pavelsher) (several code pointers)
