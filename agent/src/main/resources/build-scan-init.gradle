@@ -32,6 +32,6 @@ rootProject {
 // Gradle 6.x
 gradle.settingsEvaluated { settings ->
     settings.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
-        buildScanPublishedAction(gradleEnterprise.buildScan)
+        buildScanPublishedAction(settings.gradleEnterprise.buildScan)
     }
 }
