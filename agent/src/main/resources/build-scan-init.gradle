@@ -28,10 +28,8 @@ rootProject {
     }
 }
 
-gradle.settingsEvaluated {
-    it.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
-        gradle.rootProject {
-            buildScanPublishedAction(buildScan)
-        }
+gradle.settingsEvaluated { settings ->
+    settings.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
+        buildScanPublishedAction(gradleEnterprise.buildScan)
     }
 }
