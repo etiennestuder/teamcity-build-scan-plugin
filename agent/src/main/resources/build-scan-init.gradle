@@ -22,12 +22,14 @@ def buildScanPublishedAction = { def buildScan ->
     }
 }
 
+// Gradle 5.x
 rootProject {
     pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
         buildScanPublishedAction(buildScan)
     }
 }
 
+// Gradle 6.x
 gradle.settingsEvaluated { settings ->
     settings.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
         buildScanPublishedAction(gradleEnterprise.buildScan)
