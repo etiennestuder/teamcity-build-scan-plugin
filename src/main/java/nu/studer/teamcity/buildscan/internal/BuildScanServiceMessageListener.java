@@ -12,7 +12,7 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
-final class BuildScanServiceMessageListener implements ServiceMessageTranslator {
+public final class BuildScanServiceMessageListener implements ServiceMessageTranslator {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
@@ -23,7 +23,7 @@ final class BuildScanServiceMessageListener implements ServiceMessageTranslator 
 
     private final BuildScanDataStore buildScanDataStore;
 
-    BuildScanServiceMessageListener(@NotNull BuildScanDataStore buildScanDataStore) {
+    public BuildScanServiceMessageListener(@NotNull BuildScanDataStore buildScanDataStore) {
         this.buildScanDataStore = buildScanDataStore;
     }
 

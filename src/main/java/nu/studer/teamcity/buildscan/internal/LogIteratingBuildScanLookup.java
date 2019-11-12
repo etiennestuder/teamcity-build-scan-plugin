@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-final class LogIteratingBuildScanLookup implements BuildScanLookup {
+public final class LogIteratingBuildScanLookup implements BuildScanLookup {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 

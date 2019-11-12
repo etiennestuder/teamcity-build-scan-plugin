@@ -7,12 +7,12 @@ import nu.studer.teamcity.buildscan.BuildScanLookup;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
 import org.jetbrains.annotations.NotNull;
 
-final class CachedBuildScanLookup implements BuildScanLookup {
+public final class CachedBuildScanLookup implements BuildScanLookup {
 
     private final SCache<BuildScanReferences> cache;
     private final BuildScanLookup delegate;
 
-    CachedBuildScanLookup(
+    public CachedBuildScanLookup(
         @NotNull CacheProvider cacheProvider,
         @NotNull BuildScanLookup delegate
     ) {

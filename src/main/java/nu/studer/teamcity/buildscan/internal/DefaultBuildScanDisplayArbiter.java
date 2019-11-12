@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-final class DefaultBuildScanDisplayArbiter implements BuildScanDisplayArbiter {
+public final class DefaultBuildScanDisplayArbiter implements BuildScanDisplayArbiter {
 
     static final String GRADLE_RUNNER = "gradle-runner";
     static final String MAVEN_RUNNER = "Maven2";
@@ -18,7 +18,7 @@ final class DefaultBuildScanDisplayArbiter implements BuildScanDisplayArbiter {
 
     private final BuildScanLookup buildScanLookup;
 
-    DefaultBuildScanDisplayArbiter(@NotNull BuildScanLookup buildScanLookup) {
+    public DefaultBuildScanDisplayArbiter(@NotNull BuildScanLookup buildScanLookup) {
         this.buildScanLookup = buildScanLookup;
     }
 

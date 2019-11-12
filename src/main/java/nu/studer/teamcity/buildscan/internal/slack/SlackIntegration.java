@@ -29,7 +29,7 @@ import java.util.function.Function;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-final class SlackIntegration implements ExternalIntegration {
+public final class SlackIntegration implements ExternalIntegration {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 

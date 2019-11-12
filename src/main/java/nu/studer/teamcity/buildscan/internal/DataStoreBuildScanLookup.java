@@ -8,12 +8,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-final class DataStoreBuildScanLookup implements BuildScanLookup {
+public final class DataStoreBuildScanLookup implements BuildScanLookup {
 
     private final BuildScanLookup delegate;
     private final BuildScanDataStore buildScanDataStore;
 
-    DataStoreBuildScanLookup(
+    public DataStoreBuildScanLookup(
         @NotNull BuildScanDataStore buildScanDataStore,
         @NotNull BuildScanLookup delegate
     ) {
