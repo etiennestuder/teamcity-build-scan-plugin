@@ -22,6 +22,14 @@ public final class LogIteratingBuildScanLookup implements BuildScanLookup {
     @Override
     @NotNull
     public BuildScanReferences getBuildScansForBuild(@NotNull SBuild build) {
+        // check if log parsing is disabled via configuration parameter
+        String logParsing = build.getParametersProvider().get("BUILD_SCAN_LOG_PARSING");
+        boolean iterateLog = logParsing == null || Boolean.parseBoolean(logParsing);
+        if (!iterateLog) {
+            LOGGER.info(String.format("Log parsing disabled. Not parsing build log of build id: %s for build scan urls", build.getBuildId()));
+            return BuildScanReferences.of();
+        }
+
         // If a build is still running we'll assume our callback-based method of getting scans is going to work.
         // Avoid paying the cost of parsing the build log for currently running builds that just haven't happened
         // to have published a scan yet.
