@@ -26,6 +26,7 @@ public final class LogIteratingBuildScanLookup implements BuildScanLookup {
         // Avoid paying the cost of parsing the build log for currently running builds that just haven't happened
         // to have published a scan yet.
         if (!build.isFinished()) {
+            LOGGER.info(String.format("Build not yet finished. Not parsing build log of build id: %s for build scan urls", build.getBuildId()));
             return BuildScanReferences.of();
         }
 
