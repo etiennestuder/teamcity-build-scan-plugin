@@ -1,17 +1,20 @@
 import java.text.SimpleDateFormat
 
 plugins {
-    id 'com.gradle.build-scan' version '2.4.2'
+    id 'com.gradle.build-scan' version '3.1.1'
     id 'java'
     id 'groovy'
-    id 'com.github.rodm.teamcity-server' version '1.2.2' // see https://github.com/rodm/gradle-teamcity-plugin
-    id 'com.github.rodm.teamcity-environments' version '1.2.2'
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.8.4'
+    id 'com.github.rodm.teamcity-server' version '1.2.2' // see https://github.com/rodm/gradle-teamcity-plugin
+    id 'com.github.rodm.teamcity-environments' version '1.2.2'
 }
 
 buildScan {
-    termsOfServiceUrl = 'https://gradle.com/terms-of-service'
+    publishAlways()
+    obfuscation {
+        ipAddresses { addresses -> addresses.collect { address -> '0.0.0.0' } }
+    }
 }
 
 ext {
