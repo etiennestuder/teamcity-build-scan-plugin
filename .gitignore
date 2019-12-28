@@ -1,9 +1,6 @@
 .gradle
 .idea
 .teamcity
-classes
 build
-*.iml
-*.ipr
-*.iws
+out
 .DS_Store
