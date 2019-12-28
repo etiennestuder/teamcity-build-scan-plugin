@@ -10,48 +10,120 @@ import spock.lang.Unroll
 
 class LogIteratingBuildScanLookupTest extends Specification {
 
-    def "avoids iterating build log when disabled via configuration"() {
+    def "iterates build log if configuration parameter not present"() {
         given:
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        BuildLog buildLog = Mock(BuildLog)
-        ParametersProvider parametersProvider = Mock(ParametersProvider) {
-            get("BUILD_SCAN_LOG_PARSING") >> 'false'
-        }
-
-        SBuild build = Mock(SBuild) {
-            getBuildLog() >> buildLog
-            getParametersProvider() >> parametersProvider
-        }
-
-        when:
-        lookup.getBuildScansForBuild(build)
-
-        then:
-        0 * build.isFinished()
-        0 * buildLog.getMessagesIterator()
-    }
-
-    def "avoids iterating build log when build is still running"() {
-        given:
-        LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
-
-        and:
-        BuildLog buildLog = Mock(BuildLog)
         ParametersProvider parametersProvider = Mock(ParametersProvider)
 
+        BuildLog buildLog = Mock(BuildLog)
+        buildLog.messagesIterator >> {
+            [
+                log("Publishing build scan..."),
+                log("http://scans.grdev.net/s/fgb5fkqivexry")
+            ].iterator()
+        }
+
         SBuild build = Mock(SBuild) {
-            getBuildLog() >> buildLog
+            isFinished() >> true
             getParametersProvider() >> parametersProvider
-            isFinished() >> false
+            getBuildLog() >> buildLog
         }
 
         when:
-        lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(build)
 
         then:
-        0 * buildLog.getMessagesIterator()
+        buildScans.size() == 1
+    }
+
+    def "iterates build log if configuration parameter present and set to true"() {
+        given:
+        LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
+
+        and:
+        ParametersProvider parametersProvider = Mock(ParametersProvider) {
+            get('BUILD_SCAN_LOG_PARSING') >> 'true'
+        }
+
+        BuildLog buildLog = Mock(BuildLog)
+        buildLog.messagesIterator >> {
+            [
+                log("Publishing build scan..."),
+                log("http://scans.grdev.net/s/fgb5fkqivexry")
+            ].iterator()
+        }
+
+        SBuild build = Mock(SBuild) {
+            isFinished() >> true
+            getParametersProvider() >> parametersProvider
+            getBuildLog() >> buildLog
+        }
+
+        when:
+        def buildScans = lookup.getBuildScansForBuild(build)
+
+        then:
+        buildScans.size() == 1
+    }
+
+    def "skips iterating build log if configuration parameter present but not set to true"() {
+        given:
+        LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
+
+        and:
+        ParametersProvider parametersProvider = Mock(ParametersProvider) {
+            get('BUILD_SCAN_LOG_PARSING') >> 'dummy'
+        }
+
+        BuildLog buildLog = Mock(BuildLog)
+        buildLog.messagesIterator >> {
+            [
+                log("Publishing build scan..."),
+                log("http://scans.grdev.net/s/fgb5fkqivexry")
+            ].iterator()
+        }
+
+        SBuild build = Mock(SBuild) {
+            isFinished() >> true
+            getParametersProvider() >> parametersProvider
+            getBuildLog() >> buildLog
+        }
+
+        when:
+        def buildScans = lookup.getBuildScansForBuild(build)
+
+        then:
+        buildScans.isEmpty()
+    }
+
+    def "skips iterating build log if build is still running"() {
+        given:
+        LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
+
+        and:
+        ParametersProvider parametersProvider = Mock(ParametersProvider)
+
+        BuildLog buildLog = Mock(BuildLog)
+        buildLog.messagesIterator >> {
+            [
+                log("Publishing build scan..."),
+                log("http://scans.grdev.net/s/fgb5fkqivexry")
+            ].iterator()
+        }
+
+        SBuild build = Mock(SBuild) {
+            isFinished() >> false
+            getParametersProvider() >> parametersProvider
+            getBuildLog() >> buildLog
+        }
+
+        when:
+        def buildScans = lookup.getBuildScansForBuild(build)
+
+        then:
+        buildScans.isEmpty()
     }
 
     @Unroll
@@ -60,14 +132,17 @@ class LogIteratingBuildScanLookupTest extends Specification {
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        SBuild build = Mock(SBuild) {
-            getParametersProvider() >> Mock(ParametersProvider)
-            isFinished() >> true
-        }
+        ParametersProvider parametersProvider = Mock(ParametersProvider)
+
         BuildLog buildLog = Mock(BuildLog)
-        build.buildLog >> buildLog
         buildLog.messagesIterator >> {
             logMessages.iterator()
+        }
+
+        SBuild build = Mock(SBuild) {
+            isFinished() >> true
+            getParametersProvider() >> parametersProvider
+            getBuildLog() >> buildLog
         }
 
         when:
