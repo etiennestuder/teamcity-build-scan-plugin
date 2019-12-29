@@ -5,6 +5,7 @@ import jetbrains.buildServer.parameters.ParametersProvider
 import jetbrains.buildServer.serverSide.SBuild
 import jetbrains.buildServer.serverSide.buildLog.BuildLog
 import jetbrains.buildServer.serverSide.buildLog.LogMessage
+import nu.studer.teamcity.buildscan.TeamCityConfiguration
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -44,7 +45,7 @@ class LogIteratingBuildScanLookupTest extends Specification {
 
         and:
         ParametersProvider parametersProvider = Mock(ParametersProvider) {
-            get('BUILD_SCAN_LOG_PARSING') >> 'true'
+            get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'true'
         }
 
         BuildLog buildLog = Mock(BuildLog)
@@ -74,7 +75,7 @@ class LogIteratingBuildScanLookupTest extends Specification {
 
         and:
         ParametersProvider parametersProvider = Mock(ParametersProvider) {
-            get('BUILD_SCAN_LOG_PARSING') >> 'dummy'
+            get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'dummy'
         }
 
         BuildLog buildLog = Mock(BuildLog)

@@ -5,6 +5,7 @@ import jetbrains.buildServer.serverSide.buildLog.LogMessage;
 import nu.studer.teamcity.buildscan.BuildScanLookup;
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import nu.studer.teamcity.buildscan.BuildScanReferences;
+import nu.studer.teamcity.buildscan.TeamCityConfiguration;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public final class LogIteratingBuildScanLookup implements BuildScanLookup {
     @NotNull
     public BuildScanReferences getBuildScansForBuild(@NotNull SBuild build) {
         // check if log parsing is disabled via configuration parameter
-        String logParsing = build.getParametersProvider().get("BUILD_SCAN_LOG_PARSING");
+        String logParsing = build.getParametersProvider().get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING);
         boolean iterateLog = logParsing == null || Boolean.parseBoolean(logParsing);
         if (!iterateLog) {
             LOGGER.info(String.format("Log parsing disabled. Not parsing build log of build id: %s for build scan urls", build.getBuildId()));
