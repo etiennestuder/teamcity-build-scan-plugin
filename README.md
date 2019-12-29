@@ -19,10 +19,16 @@ It is recommended that you use the [latest Gradle Enterprise Gradle plugin versi
 
 ## TeamCity build runner requirements
 
-When using TeamCity's GradleRunner to launch Gradle builds, there is nothing special to do.
+### Gradle builds
 
-When not using TeamCity's GradleRunner to launch Gradle builds, use the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to 
-notify TeamCity about the build scans that were published while running a build. If you use the GradleRunner to launch Gradle builds, there is no need to apply that TeamCity build scan Gradle plugin. 
+If you use TeamCity's GradleRunner to launch your Gradle builds, there is nothing special to do.
+
+If, and only if, you do not use TeamCity's GradleRunner to launch Gradle builds, apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds in order to
+notify TeamCity about the build scans that were published while running a build.
+
+If you do not use TeamCity's GradleRunner to launch Gradle builds and you do not apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. In that case, you can suppress the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and the value being `false`. 
+
+### Maven builds
 
 When using TeamCity's MavenRunner to launch Maven builds, there is nothing special to do.
 
