@@ -5,13 +5,14 @@ teamcity-build-scan-plugin
 
 # Overview
 
-[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with [build scans](https://scans.gradle.com/), the free service offered by [Gradle Inc.](https://gradle.com)
+[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with build scans. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Gradle Enterprise](https://gradle.com/enterprise).
 
 For each Gradle and Maven build that is run from TeamCity, this plugin exposes the link to the created build scan in the TeamCity UI.
 
 ## Version compatibility
 
-This plugin requires that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds. 
+This plugin requires that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds.
+
 It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
 [latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the 
 [latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
