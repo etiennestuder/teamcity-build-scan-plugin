@@ -30,9 +30,9 @@ If you do not use TeamCity's GradleRunner to launch Gradle builds and you do not
 
 ### Maven builds
 
-When using TeamCity's MavenRunner to launch Maven builds, there is nothing special to do.
+If you use TeamCity's MavenRunner or any other runner to launch Maven builds, there is nothing special to do.
 
-When not using TeamCity's MavenRunner to launch Maven builds, no build scans are captured.
+For Maven builds, integration with build scans always happens via log parsing. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. In that case, you can suppress the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and the value being `false`. 
 
 # Installation
 
