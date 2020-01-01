@@ -9,6 +9,8 @@ teamcity-build-scan-plugin
 
 For each Gradle and Maven build that is run from TeamCity, this plugin exposes the link to the created build scan in the TeamCity UI.
 
+The plugin is hosted at [Bintray's JCenter](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin).
+
 ## Build scan
 
 Recent build scan: https://scans.gradle.com/s/cv4z5js6g6xga
@@ -20,7 +22,7 @@ Find out more about build scans for Gradle and Maven at https://scans.gradle.com
 This plugin requires that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds.
 
 It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
-[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the 
+[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the
 [latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
 
 ## TeamCity build runner requirements
@@ -32,19 +34,19 @@ If you use TeamCity's GradleRunner to launch your Gradle builds, there is nothin
 If, and only if, you do not use TeamCity's GradleRunner to launch Gradle builds, apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds in order to
 notify TeamCity about the build scans that were published while running a build.
 
-If you do not use TeamCity's GradleRunner to launch Gradle builds and you do not apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. In that case, you can suppress the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and the value being `false`. 
+If you do not use TeamCity's GradleRunner to launch Gradle builds and you do not apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. In that case, you can suppress the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and the value being `false`.
 
 ### Maven builds
 
 If you use TeamCity's MavenRunner or any other runner to launch Maven builds, there is nothing special to do.
 
-For Maven builds, integration with build scans always happens via log parsing. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. In that case, you can suppress the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and the value being `false`. 
+For Maven builds, integration with build scans always happens via log parsing. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. In that case, you can suppress the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and the value being `false`.
 
 # Installation
 
 1. Download the plugin `.zip` file from [https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin](https://bintray.com/etienne/teamcity-plugins/teamcity-build-scan-plugin) (see _Downloads_ section at the bottom of the page).
 
-1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the 
+1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the
 previously downloaded plugin `.zip` file.
 
 1. Restart TeamCity.
