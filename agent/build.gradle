@@ -6,7 +6,7 @@ plugins {
 
 teamcity {
     agent {
-        archiveName = "teamcity-build-scan-plugin-agent.zip"
+        archiveName = 'teamcity-build-scan-plugin-agent.zip'
         descriptor {
             pluginDeployment {
                 useSeparateClassloader = true

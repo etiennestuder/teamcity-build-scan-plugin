@@ -23,12 +23,12 @@ group = 'nu.studer'
 version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 
 dependencies {
-    compile 'com.google.code.gson:gson:2.8.6'
-    compile 'com.google.guava:guava:28.1-jre'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.google.guava:guava:28.1-jre'
 
     agent project(path: ':agent', configuration: 'plugin')
 
-    testCompile 'org.spockframework:spock-core:1.3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
 }
 
 teamcity {
