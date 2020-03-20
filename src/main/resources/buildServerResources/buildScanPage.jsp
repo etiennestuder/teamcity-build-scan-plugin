@@ -15,7 +15,7 @@
     <c:otherwise>
         <div>
             No build scans have been published.
-            Learn more about how to enable Gradle build scans <a href="https://gradle.com/get-started" target="_blank">here</a>.
+            Learn more about how to enable Gradle build scans <a href="https://scans.gradle.com" target="_blank">here</a>.
         </div>
     </c:otherwise>
 </c:choose>
