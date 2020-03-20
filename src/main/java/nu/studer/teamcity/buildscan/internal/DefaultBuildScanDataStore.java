@@ -22,6 +22,7 @@ public final class DefaultBuildScanDataStore implements BuildScanDataStore {
 
         if (existing == null) {
             customDataStorage.putValue(buildId, "");
+            customDataStorage.flush();
         }
     }
 
@@ -33,11 +34,13 @@ public final class DefaultBuildScanDataStore implements BuildScanDataStore {
 
         if (existing == null || existing.isEmpty()) {
             customDataStorage.putValue(buildId, buildScanUrl);
+            customDataStorage.flush();
         } else {
             List<String> scans = StringUtil.split(existing, BUILD_SCAN_URLS_SEPARATOR);
             scans.add(buildScanUrl);
 
             customDataStorage.putValue(buildId, StringUtil.join(BUILD_SCAN_URLS_SEPARATOR, scans));
+            customDataStorage.flush();
         }
     }
 
