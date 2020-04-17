@@ -1,12 +1,8 @@
 package nu.studer.teamcity.buildscan.internal;
 
 import jetbrains.buildServer.serverSide.SBuild;
-import nu.studer.teamcity.buildscan.BuildScanReference;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
-public interface BuildScanDataStore {
+public interface BuildScanDataStore extends ReadOnlyBuildScanDataStore {
 
     /**
      * Stores an empty data set for the given build. Calls to {@link #fetch} differentiate between returning an empty
@@ -29,15 +25,4 @@ public interface BuildScanDataStore {
      * @param buildScanUrl the URL of the published build scan
      */
     void store(SBuild build, String buildScanUrl);
-
-    /**
-     * Returns the list of all build scans published by the given build. If the build published no scans an empty list
-     * is returned or {@code null} if no data exists for the requested build.
-     *
-     * @param build the requested build
-     * @return all published scans for the given build or {@code null} if no data exists for the given build
-     */
-    @Nullable
-    List<BuildScanReference> fetch(SBuild build);
-
 }

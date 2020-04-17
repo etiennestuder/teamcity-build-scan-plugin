@@ -9,40 +9,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DefaultBuildScanDataStore implements BuildScanDataStore {
+
+public final class CustomDatastoreBuildScanDataStore implements ReadOnlyBuildScanDataStore {
 
     private static final String BUILD_SCAN_STORAGE_ID = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
     private static final String BUILD_SCAN_URLS_SEPARATOR = "|";
-
-    @Override
-    public void mark(SBuild build) {
-        String buildId = String.valueOf(build.getBuildId());
-        CustomDataStorage customDataStorage = getCustomDataStorage(build);
-        String existing = customDataStorage.getValue(buildId);
-
-        if (existing == null) {
-            customDataStorage.putValue(buildId, "");
-            customDataStorage.flush();
-        }
-    }
-
-    @Override
-    public void store(SBuild build, String buildScanUrl) {
-        String buildId = String.valueOf(build.getBuildId());
-        CustomDataStorage customDataStorage = getCustomDataStorage(build);
-        String existing = customDataStorage.getValue(buildId);
-
-        if (existing == null || existing.isEmpty()) {
-            customDataStorage.putValue(buildId, buildScanUrl);
-            customDataStorage.flush();
-        } else {
-            List<String> scans = StringUtil.split(existing, BUILD_SCAN_URLS_SEPARATOR);
-            scans.add(buildScanUrl);
-
-            customDataStorage.putValue(buildId, StringUtil.join(BUILD_SCAN_URLS_SEPARATOR, scans));
-            customDataStorage.flush();
-        }
-    }
 
     @Override
     public List<BuildScanReference> fetch(SBuild build) {
@@ -70,5 +41,4 @@ public final class DefaultBuildScanDataStore implements BuildScanDataStore {
         //noinspection ConstantConditions
         return build.getBuildType().getCustomDataStorage(BUILD_SCAN_STORAGE_ID);
     }
-
 }
