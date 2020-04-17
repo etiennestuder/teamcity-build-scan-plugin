@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
+    public static final String BUILDSCANS_DIR = "buildscans";
+    public static final String BUILDSCAN_URLS_FILE = "buildscan_urls.txt";
     private final ReadOnlyBuildScanDataStore fallbackDataStore;
 
     public ArtifactBuildScanDataStore(ReadOnlyBuildScanDataStore fallbackDataStore) {
@@ -28,7 +31,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Override
     public void mark(SBuild build) {
-        final Path buildScanFile = getBuildScanFile(build);
+        final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
         try {
             createIfNotExists(buildScanFile);
         } catch (IOException ex) {
@@ -38,7 +41,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Override
     public void store(SBuild build, String buildScanUrl) {
-        final Path buildScanFile = getBuildScanFile(build);
+        final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
         try {
             createIfNotExists(buildScanFile);
             Files.write(buildScanFile, Collections.singletonList(buildScanUrl), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
@@ -56,8 +59,8 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
     }
 
     @NotNull
-    private Path getBuildScanFile(SBuild build) {
-        return Paths.get(build.getArtifactsDirectory().getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, "buildscans", "buildscan_urls.txt");
+    Path getBuildScanFile(File directory) {
+        return Paths.get(directory.getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, BUILDSCANS_DIR, BUILDSCAN_URLS_FILE);
     }
 
     @Override
@@ -67,7 +70,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Nullable
     private List<BuildScanReference> fetchOrFallback(SBuild build) {
-        final Path buildScanFile = getBuildScanFile(build);
+        final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
         List<BuildScanReference> result;
         if (Files.exists(buildScanFile)) {
             try {
