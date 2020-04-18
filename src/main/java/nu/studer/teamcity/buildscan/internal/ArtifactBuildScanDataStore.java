@@ -9,7 +9,6 @@ import nu.studer.teamcity.buildscan.BuildScanReference;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
@@ -36,7 +35,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Override
     public void mark(SBuild build) {
-        final Path buildScanLinksFile = getBuildScanLinksFile(build.getArtifactsDirectory());
+        final Path buildScanLinksFile = getBuildScanLinksFile(build);
 
         try {
             createFileIfNotExists(buildScanLinksFile);
@@ -47,7 +46,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Override
     public void store(SBuild build, String buildScanUrl) {
-        final Path buildScanLinksFile = getBuildScanLinksFile(build.getArtifactsDirectory());
+        final Path buildScanLinksFile = getBuildScanLinksFile(build);
 
         try {
             createFileIfNotExists(buildScanLinksFile);
@@ -64,7 +63,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Override
     public List<BuildScanReference> fetch(SBuild build) {
-        final Path buildScanLinksFile = getBuildScanLinksFile(build.getArtifactsDirectory());
+        final Path buildScanLinksFile = getBuildScanLinksFile(build);
 
         List<BuildScanReference> result;
         if (Files.exists(buildScanLinksFile)) {
@@ -83,8 +82,8 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @NotNull
     @VisibleForTesting
-    Path getBuildScanLinksFile(File dir) {
-        return Paths.get(dir.getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, BUILD_SCANS_DIR, BUILD_SCAN_LINKS_FILE);
+    Path getBuildScanLinksFile(SBuild build) {
+        return Paths.get(build.getArtifactsDirectory().getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, BUILD_SCANS_DIR, BUILD_SCAN_LINKS_FILE);
     }
 
     private static void createFileIfNotExists(Path file) throws IOException {
