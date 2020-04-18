@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DefaultBuildScanDataStore implements BuildScanDataStore {
+public final class CustomDataStorageBuildScanDataStore implements BuildScanDataStore {
 
     private static final String BUILD_SCAN_STORAGE_ID = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
     private static final String BUILD_SCAN_URLS_SEPARATOR = "|";
