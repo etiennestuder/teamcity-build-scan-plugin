@@ -17,7 +17,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static nu.studer.teamcity.buildscan.internal.Util.getBuildScanId;
 
 public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
@@ -58,7 +60,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
             Files.write(buildScanLinksFile, Collections.singletonList(buildScanUrl), Charsets.UTF_8, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
             LOGGER.info("Persisting build scan URL: " + buildScanUrl + ", for build id: " + build.getBuildId());
         } catch (IOException e) {
-            LOGGER.error(String.format("Could not store build scan URL %s in build scan links file %s", buildScanUrl, buildScanLinksFile), e);
+            LOGGER.error(String.format("Could not write build scan URL %s to build scan links file %s", buildScanUrl, buildScanLinksFile), e);
         }
     }
 
@@ -68,9 +70,9 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
         if (Files.exists(buildScanLinksFile)) {
             try {
-                return Files.lines(buildScanLinksFile, Charsets.UTF_8).map(scanUrl -> new BuildScanReference(Util.getBuildScanId(scanUrl), scanUrl)).collect(Collectors.toList());
+                return Files.lines(buildScanLinksFile, Charsets.UTF_8).map(buildScanUrl -> new BuildScanReference(getBuildScanId(buildScanUrl), buildScanUrl)).collect(toList());
             } catch (IOException e) {
-                LOGGER.error(String.format("Could not read buildscan file %s", buildScanLinksFile), e);
+                LOGGER.error(String.format("Could not read build scan URLs from build scan links file %s", buildScanLinksFile), e);
                 return Collections.emptyList();
             }
         } else {
