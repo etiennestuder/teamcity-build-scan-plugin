@@ -71,6 +71,7 @@ Both feedback and contributions are very welcome.
 
 # Acknowledgements
 
++ [jonnybbb](https://github.com/jonnybbb) (pr #14 that stores build scan links under artifacts)
 + [davidburstromspotify](https://github.com/davidburstromspotify) (bug report and proposed fix)
 + [guylabs](https://github.com/guylabs) (pr #10 that provides support for the Gradle Enterprise Gradle plugin)
 + [autonomousapps](https://github.com/autonomousapps) (pr #9 that provides build scans for Maven builds)
