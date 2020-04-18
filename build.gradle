@@ -31,6 +31,11 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:1.3-groovy-2.5'
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 teamcity {
     version = '2019.1' // TeamCity API version
 
