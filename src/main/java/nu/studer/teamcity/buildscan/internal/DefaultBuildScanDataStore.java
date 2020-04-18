@@ -4,6 +4,7 @@ import jetbrains.buildServer.serverSide.CustomDataStorage;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.util.StringUtil;
 import nu.studer.teamcity.buildscan.BuildScanReference;
+import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ public final class DefaultBuildScanDataStore implements BuildScanDataStore {
 
     private static final String BUILD_SCAN_STORAGE_ID = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
     private static final String BUILD_SCAN_URLS_SEPARATOR = "|";
+
+    private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     @Override
     public void mark(SBuild build) {
@@ -33,13 +36,16 @@ public final class DefaultBuildScanDataStore implements BuildScanDataStore {
         String existing = customDataStorage.getValue(buildId);
 
         if (existing == null || existing.isEmpty()) {
+            LOGGER.info("Storing build scan URL: " + buildScanUrl + ", for build id: " + buildId);
             customDataStorage.putValue(buildId, buildScanUrl);
             customDataStorage.flush();
         } else {
             List<String> scans = StringUtil.split(existing, BUILD_SCAN_URLS_SEPARATOR);
             scans.add(buildScanUrl);
 
-            customDataStorage.putValue(buildId, StringUtil.join(BUILD_SCAN_URLS_SEPARATOR, scans));
+            String buildScanString = StringUtil.join(BUILD_SCAN_URLS_SEPARATOR, scans);
+            LOGGER.info("Storing build scan URLs: " + buildScanString + ", for build id: " + buildId);
+            customDataStorage.putValue(buildId, buildScanString);
             customDataStorage.flush();
         }
     }
