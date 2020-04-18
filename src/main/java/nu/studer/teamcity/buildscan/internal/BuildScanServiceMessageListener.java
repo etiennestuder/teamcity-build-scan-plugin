@@ -4,6 +4,7 @@ import jetbrains.buildServer.messages.BuildMessage1;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessage;
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessageTranslator;
 import jetbrains.buildServer.serverSide.SRunningBuild;
+import nu.studer.teamcity.buildscan.BuildScanDataStore;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 

@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.internal
 
 import jetbrains.buildServer.serverSide.SBuild
+import nu.studer.teamcity.buildscan.BuildScanDataStore
 import nu.studer.teamcity.buildscan.BuildScanLookup
 import nu.studer.teamcity.buildscan.BuildScanReference
 import nu.studer.teamcity.buildscan.BuildScanReferences

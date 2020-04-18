@@ -3,6 +3,7 @@ package nu.studer.teamcity.buildscan.internal;
 import jetbrains.buildServer.serverSide.CustomDataStorage;
 import jetbrains.buildServer.serverSide.SBuild;
 import jetbrains.buildServer.util.StringUtil;
+import nu.studer.teamcity.buildscan.BuildScanDataStore;
 import nu.studer.teamcity.buildscan.BuildScanReference;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;

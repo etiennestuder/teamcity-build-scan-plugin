@@ -1,7 +1,6 @@
-package nu.studer.teamcity.buildscan.internal;
+package nu.studer.teamcity.buildscan;
 
 import jetbrains.buildServer.serverSide.SBuild;
-import nu.studer.teamcity.buildscan.BuildScanReference;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
