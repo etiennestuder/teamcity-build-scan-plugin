@@ -36,35 +36,35 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @Override
     public void mark(SBuild build) {
-        final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
+        final Path buildScanLinksFile = getBuildScanLinksFile(build.getArtifactsDirectory());
         try {
-            createFileIfNotExists(buildScanFile);
+            createFileIfNotExists(buildScanLinksFile);
         } catch (IOException ex) {
-            LOGGER.error(String.format("Could not create buildscan file %s", buildScanFile), ex);
+            LOGGER.error(String.format("Could not create buildscan file %s", buildScanLinksFile), ex);
         }
     }
 
     @Override
     public void store(SBuild build, String buildScanUrl) {
-        final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
+        final Path buildScanLinksFile = getBuildScanLinksFile(build.getArtifactsDirectory());
         try {
-            createFileIfNotExists(buildScanFile);
-            Files.write(buildScanFile, Collections.singletonList(buildScanUrl), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
+            createFileIfNotExists(buildScanLinksFile);
+            Files.write(buildScanLinksFile, Collections.singletonList(buildScanUrl), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
             LOGGER.debug(String.format("Successfully stored buildscan url %s for build %s in directory %s", buildScanUrl, build.getBuildId(), build.getArtifactsDirectory()));
         } catch (IOException ex) {
-            LOGGER.error(String.format("Could not store build scan url %s into buildscan file %s", buildScanUrl, buildScanFile), ex);
+            LOGGER.error(String.format("Could not store build scan url %s into buildscan file %s", buildScanUrl, buildScanLinksFile), ex);
         }
     }
 
     @Override
     public List<BuildScanReference> fetch(SBuild build) {
-        final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
+        final Path buildScanLinksFile = getBuildScanLinksFile(build.getArtifactsDirectory());
         List<BuildScanReference> result;
-        if (Files.exists(buildScanFile)) {
+        if (Files.exists(buildScanLinksFile)) {
             try {
-                result = Files.lines(buildScanFile, Charsets.UTF_8).map(scanUrl -> new BuildScanReference(Util.getBuildScanId(scanUrl), scanUrl)).collect(Collectors.toList());
+                result = Files.lines(buildScanLinksFile, Charsets.UTF_8).map(scanUrl -> new BuildScanReference(Util.getBuildScanId(scanUrl), scanUrl)).collect(Collectors.toList());
             } catch (IOException ex) {
-                LOGGER.error(String.format("Could not read buildscan file %s", buildScanFile), ex);
+                LOGGER.error(String.format("Could not read buildscan file %s", buildScanLinksFile), ex);
                 result = Collections.emptyList();
             }
         } else {
@@ -75,8 +75,8 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
     @NotNull
     @VisibleForTesting
-    Path getBuildScanFile(File directory) {
-        return Paths.get(directory.getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, BUILD_SCANS_DIR, BUILD_SCAN_LINKS_FILE);
+    Path getBuildScanLinksFile(File dir) {
+        return Paths.get(dir.getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, BUILD_SCANS_DIR, BUILD_SCAN_LINKS_FILE);
     }
 
     private static void createFileIfNotExists(Path file) throws IOException {
