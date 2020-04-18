@@ -56,8 +56,9 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
         try {
             Files.write(buildScanLinksFile, Collections.singletonList(buildScanUrl), StandardOpenOption.WRITE, StandardOpenOption.APPEND);
+            LOGGER.info("Persisting build scan URL: " + buildScanUrl + ", for build id: " + build.getBuildId());
         } catch (IOException e) {
-            LOGGER.error(String.format("Could not store build scan url %s into buildscan file %s", buildScanUrl, buildScanLinksFile), e);
+            LOGGER.error(String.format("Could not store build scan URL %s in build scan links file %s", buildScanUrl, buildScanLinksFile), e);
         }
     }
 
