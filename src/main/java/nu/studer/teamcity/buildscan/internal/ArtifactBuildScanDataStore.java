@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,7 +38,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
     public void mark(SBuild build) {
         final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
         try {
-            createIfNotExists(buildScanFile);
+            createFileIfNotExists(buildScanFile);
         } catch (IOException ex) {
             LOGGER.error(String.format("Could not create buildscan file %s", buildScanFile), ex);
         }
@@ -47,7 +48,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
     public void store(SBuild build, String buildScanUrl) {
         final Path buildScanFile = getBuildScanFile(build.getArtifactsDirectory());
         try {
-            createIfNotExists(buildScanFile);
+            createFileIfNotExists(buildScanFile);
             Files.write(buildScanFile, Collections.singletonList(buildScanUrl), StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.APPEND);
             LOGGER.debug(String.format("Successfully stored buildscan url %s for build %s in directory %s", buildScanUrl, build.getBuildId(), build.getArtifactsDirectory()));
         } catch (IOException ex) {
@@ -78,10 +79,15 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
         return Paths.get(directory.getAbsolutePath(), ArtifactsConstants.TEAMCITY_ARTIFACTS_DIR, BUILD_SCANS_DIR, BUILD_SCAN_LINKS_FILE);
     }
 
-    private static void createIfNotExists(Path buildScanFile) throws IOException {
-        Files.createDirectories(buildScanFile.getParent());
-        if (!Files.exists(buildScanFile)) {
-            Files.createFile(buildScanFile);
+    private static void createFileIfNotExists(Path file) throws IOException {
+        if (!Files.exists(file)) {
+            Files.createDirectories(file.getParent());
+            try {
+                Files.createFile(file);
+            } catch (FileAlreadyExistsException e) {
+                // not a failure scenario, this can happen since our check for existence and
+                // the possible creation are not atomic (while createFile _is_ atomic)
+            }
         }
     }
 
