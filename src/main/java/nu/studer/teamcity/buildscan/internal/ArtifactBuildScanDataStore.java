@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.internal;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import jetbrains.buildServer.ArtifactsConstants;
 import jetbrains.buildServer.serverSide.SBuild;
 import nu.studer.teamcity.buildscan.BuildScanDataStore;
@@ -70,7 +71,8 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
 
         if (Files.exists(buildScanLinksFile)) {
             try {
-                return Files.lines(buildScanLinksFile, Charsets.UTF_8).map(buildScanUrl -> new BuildScanReference(getBuildScanId(buildScanUrl), buildScanUrl)).collect(toList());
+                List<String> buildScanUrls = Files.readAllLines(buildScanLinksFile, Charsets.UTF_8);
+                return buildScanUrls.stream().map(buildScanUrl -> new BuildScanReference(getBuildScanId(buildScanUrl), buildScanUrl)).collect(toList());
             } catch (IOException e) {
                 LOGGER.error(String.format("Could not read build scan URLs from build scan links file %s", buildScanLinksFile), e);
                 return Collections.emptyList();
