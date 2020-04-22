@@ -2,7 +2,6 @@ package nu.studer.teamcity.buildscan.internal;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
-import com.google.common.collect.Lists;
 import jetbrains.buildServer.ArtifactsConstants;
 import jetbrains.buildServer.serverSide.SBuild;
 import nu.studer.teamcity.buildscan.BuildScanDataStore;
