@@ -5,7 +5,6 @@ import jetbrains.buildServer.serverSide.SQLRunner;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanDataStore.BUILD_SCAN_STORAGE_ID;
