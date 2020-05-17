@@ -21,11 +21,12 @@ public final class BuildScanCleanupController extends BaseAjaxActionController i
     private final SecurityContext securityContext;
 
     public BuildScanCleanupController(@NotNull WebControllerManager controllerManager,
-                                      @NotNull CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner,
-                                      @NotNull SecurityContext securityContext) {
+                                      @NotNull SecurityContext securityContext,
+                                      @NotNull CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner
+    ) {
         super(controllerManager);
-        this.customDataStorageBuildScanCleaner = customDataStorageBuildScanCleaner;
         this.securityContext = securityContext;
+        this.customDataStorageBuildScanCleaner = customDataStorageBuildScanCleaner;
         controllerManager.registerController("/admin/buildScanCleanup.html", this);
         registerAction(this);
     }

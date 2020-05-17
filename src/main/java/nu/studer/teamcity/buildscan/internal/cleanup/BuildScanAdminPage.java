@@ -25,14 +25,14 @@ public final class BuildScanAdminPage extends AdminPage {
         setPosition(PositionConstraint.last());
     }
 
-    @Override
-    public boolean isAvailable(@NotNull HttpServletRequest request) {
-        return super.isAvailable(request) && checkHasGlobalPermission(request, Permission.CHANGE_SERVER_SETTINGS);
-    }
-
     @NotNull
     public String getGroup() {
         return SERVER_RELATED_GROUP;
+    }
+
+    @Override
+    public boolean isAvailable(@NotNull HttpServletRequest request) {
+        return super.isAvailable(request) && checkHasGlobalPermission(request, Permission.CHANGE_SERVER_SETTINGS);
     }
 
     @Override
