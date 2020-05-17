@@ -28,9 +28,9 @@ public final class CustomDataStorageBuildScanCleaner {
     public Integer itemsToRemove() {
         return server.getSQLRunner().runSql(connection -> {
             try (Statement statement = connection.createStatement()) {
-                try (ResultSet resultSet = statement.executeQuery("select count(data_id) from custom_data where data_key='" + BUILD_SCAN_STORAGE_ID + "'")) {
+                try (ResultSet resultSet = statement.executeQuery("select count(data_id) as row_count from custom_data where data_key='" + BUILD_SCAN_STORAGE_ID + "'")) {
                     if (resultSet.next()) {
-                        return resultSet.getInt("count");
+                        return resultSet.getInt("row_count");
                     } else {
                         return 0;
                     }
