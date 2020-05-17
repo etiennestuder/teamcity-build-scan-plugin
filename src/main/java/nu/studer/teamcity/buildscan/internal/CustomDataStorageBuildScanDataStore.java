@@ -14,7 +14,7 @@ import static nu.studer.teamcity.buildscan.internal.Util.getBuildScanId;
 
 public final class CustomDataStorageBuildScanDataStore implements BuildScanDataStore {
 
-    private static final String BUILD_SCAN_STORAGE_ID = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
+    public static final String BUILD_SCAN_STORAGE_ID = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
     private static final String BUILD_SCAN_URLS_SEPARATOR = "|";
 
     @Override
