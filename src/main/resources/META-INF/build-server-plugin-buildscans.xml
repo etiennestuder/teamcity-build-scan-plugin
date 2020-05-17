@@ -55,9 +55,11 @@
     </bean>
 
     <bean id="buildScanCleanupController"
-          class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanCleanupController"/>
+          class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanCleanupController">
+    </bean>
 
     <bean id="customDataStorageBuildScanCleaner"
-          class="nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanCleaner"/>
+          class="nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanCleaner">
+    </bean>
 
 </beans>
