@@ -50,7 +50,9 @@
           destroy-method="shutdown"/>
 
     <bean id="buildScanAdminPage"
-          class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanAdminPage"/>
+          class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanAdminPage"
+          init-method="register">
+    </bean>
 
     <bean id="buildScanCleanupController"
           class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanCleanupController"/>

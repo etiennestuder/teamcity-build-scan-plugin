@@ -23,7 +23,6 @@ public final class BuildScanAdminPage extends AdminPage {
         addJsFile(descriptor.getPluginResourcesPath("js/buildScan.js"));
         setTabTitle("Build scan");
         setPosition(PositionConstraint.last());
-        register();
     }
 
     @Override
