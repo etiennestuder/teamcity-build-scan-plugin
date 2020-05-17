@@ -37,7 +37,7 @@ public final class BuildScanAdminPage extends AdminPage {
 
     @Override
     public void fillModel(@NotNull Map<String, Object> model, @NotNull HttpServletRequest request) {
-        model.put("count", customDataStorageBuildScanCleaner.itemsToRemove());
+        model.put("itemsToRemove", customDataStorageBuildScanCleaner.itemsToRemove());
     }
 
 }

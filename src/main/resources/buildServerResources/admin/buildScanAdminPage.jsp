@@ -1,9 +1,9 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@include file="/include-internal.jsp" %>
-    <jsp:useBean id="count" type="java.lang.Integer" scope="request"/>
+    <jsp:useBean id="itemsToRemove" type="java.lang.Integer" scope="request"/>
     <h3>Cleanup storage of previous plugin versions</h3>
     <c:choose>
-        <c:when test = "${count > 0}">
+        <c:when test = "${itemsToRemove > 0}">
             <h4>Warning: This will remove all build scans from previous versions of this plugin</h4>
             <authz:authorize allPermissions="CONFIGURE_SERVER_DATA_CLEANUP">
 
