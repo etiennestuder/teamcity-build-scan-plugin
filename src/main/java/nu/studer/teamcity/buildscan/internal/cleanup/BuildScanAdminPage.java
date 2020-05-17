@@ -21,7 +21,7 @@ public final class BuildScanAdminPage extends AdminPage {
         setPluginName(descriptor.getPluginName());
         setIncludeUrl(descriptor.getPluginResourcesPath("/admin/buildScanAdminPage.jsp"));
         addJsFile(descriptor.getPluginResourcesPath("js/buildScan.js"));
-        setTabTitle("Build Scan");
+        setTabTitle("Build scan");
         setPosition(PositionConstraint.last());
         register();
     }

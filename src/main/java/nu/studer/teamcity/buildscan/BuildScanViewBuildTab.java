@@ -27,7 +27,7 @@ public final class BuildScanViewBuildTab extends ViewBuildTab {
         @NotNull BuildScanDisplayArbiter buildScanDisplayArbiter,
         @NotNull BuildScanLookup buildScanLookup
     ) {
-        super("Build Scan", "buildScan", pagePlaces, pluginDescriptor.getPluginResourcesPath("/buildScanPage.jsp"), buildServer);
+        super("Build scan", "buildScan", pagePlaces, pluginDescriptor.getPluginResourcesPath("/buildScanPage.jsp"), buildServer);
         setPosition(PositionConstraint.last());
 
         this.buildScanDisplayArbiter = buildScanDisplayArbiter;

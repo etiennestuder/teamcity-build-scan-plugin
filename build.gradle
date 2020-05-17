@@ -42,7 +42,7 @@ teamcity {
     server {
         descriptor {
             name = 'GradleBuildScanIntegration'
-            displayName = 'Gradle Build Scan Integration'
+            displayName = 'Integration for Gradle and Maven build scans'
             description = 'Provides easy navigation from TeamCity builds to Gradle and Maven build scans'
             version = project.version
             vendorName = 'Etienne Studer'
