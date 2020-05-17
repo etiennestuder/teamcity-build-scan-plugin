@@ -36,6 +36,6 @@ public class BuildScanCleanupController extends BaseAjaxActionController impleme
 
     @Override
     public void process(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @Nullable Element ajaxResponse) {
-        customDataStorageCleaner.cleanup();
+        customDataStorageCleaner.removeStoredItems();
     }
 }
