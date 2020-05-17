@@ -1,9 +1,13 @@
-package nu.studer.teamcity.buildscan.internal.cleanup;
+package nu.studer.teamcity.buildscan.internal;
 
 import jetbrains.buildServer.serverSide.SBuildServer;
 import jetbrains.buildServer.serverSide.SQLRunner;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,9 +55,9 @@ public final class CustomDataStorageBuildScanCleaner {
                 boolean autoCommitSetting = connection.getAutoCommit();
                 connection.setAutoCommit(false);
                 try (PreparedStatement deleteCustomDataBody = deleteCustomDataBodySQLStatement(connection); PreparedStatement deleteCustomData = deleteCustomDataSQLStatement(connection)) {
-                    for (int count = 1; count <= dataIds.size();count++) {
-                        Long dataId = dataIds.get(count-1);
-                        int remaining = allEntriesCount - count ;
+                    for (int count = 1; count <= dataIds.size(); count++) {
+                        Long dataId = dataIds.get(count - 1);
+                        int remaining = allEntriesCount - count;
                         deleteCustomDataBody.setLong(1, dataId);
                         deleteCustomData.setLong(1, dataId);
                         deleteCustomDataBody.addBatch();
