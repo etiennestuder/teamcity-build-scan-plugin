@@ -11,11 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-public class BuildScanAdminPage extends AdminPage {
+public final class BuildScanAdminPage extends AdminPage {
 
     private final CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner;
 
-    public BuildScanAdminPage(@NotNull PagePlaces pagePlaces, @NotNull PluginDescriptor descriptor, CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner) {
+    public BuildScanAdminPage(@NotNull PagePlaces pagePlaces, @NotNull PluginDescriptor descriptor, @NotNull CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner) {
         super(pagePlaces);
         this.customDataStorageBuildScanCleaner = customDataStorageBuildScanCleaner;
         setPluginName(descriptor.getPluginName());

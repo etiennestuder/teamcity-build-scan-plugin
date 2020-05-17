@@ -15,18 +15,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import static jetbrains.buildServer.serverSide.auth.AuthUtil.hasGlobalPermission;
 
-public class BuildScanCleanupController extends BaseAjaxActionController implements ControllerAction {
-    private final CustomDataStorageBuildScanCleaner customDataStorageCleaner;
+public final class BuildScanCleanupController extends BaseAjaxActionController implements ControllerAction {
+
+    private final CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner;
     private final SecurityContext securityContext;
 
     public BuildScanCleanupController(@NotNull WebControllerManager controllerManager,
-                                      @NotNull CustomDataStorageBuildScanCleaner customDataStorageCleaner,
+                                      @NotNull CustomDataStorageBuildScanCleaner customDataStorageBuildScanCleaner,
                                       @NotNull SecurityContext securityContext) {
         super(controllerManager);
-        this.customDataStorageCleaner = customDataStorageCleaner;
+        this.customDataStorageBuildScanCleaner = customDataStorageBuildScanCleaner;
         this.securityContext = securityContext;
         controllerManager.registerController("/admin/buildScanCleanup.html", this);
-        this.registerAction(this);
+        registerAction(this);
     }
 
     @Override
@@ -36,6 +37,7 @@ public class BuildScanCleanupController extends BaseAjaxActionController impleme
 
     @Override
     public void process(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @Nullable Element ajaxResponse) {
-        customDataStorageCleaner.removeStoredItems();
+        customDataStorageBuildScanCleaner.removeStoredItems();
     }
+
 }

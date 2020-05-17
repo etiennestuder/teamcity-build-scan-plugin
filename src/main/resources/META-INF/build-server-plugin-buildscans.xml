@@ -49,8 +49,13 @@
           class="nu.studer.teamcity.buildscan.internal.slack.SlackIntegration"
           destroy-method="shutdown"/>
 
-    <bean id="buildScanAdminPage" class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanAdminPage"/>
-    <bean id="buildScanCleanupController" class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanCleanupController"/>
-    <bean id="customDataStorageBuildScanCleaner" class="nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanCleaner"/>
+    <bean id="buildScanAdminPage"
+          class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanAdminPage"/>
+
+    <bean id="buildScanCleanupController"
+          class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanCleanupController"/>
+
+    <bean id="customDataStorageBuildScanCleaner"
+          class="nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanCleaner"/>
 
 </beans>
