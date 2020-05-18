@@ -19,7 +19,7 @@ public class BuildScanAdminPage extends AdminPage {
         this.customDataStorageBuildScanCleaner = customDataStorageBuildScanCleaner;
         setPluginName(descriptor.getPluginName());
         setIncludeUrl(descriptor.getPluginResourcesPath("/admin/buildScanAdminPage.jsp"));
-        addJsFile(descriptor.getPluginResourcesPath("js/buildScan.js"));
+        addJsFile(descriptor.getPluginResourcesPath("/admin/js/buildScan.js"));
         setTabTitle("Build Scan");
         setPosition(PositionConstraint.last());
         register();
