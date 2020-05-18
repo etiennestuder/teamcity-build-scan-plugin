@@ -4,7 +4,7 @@ BS.BuildScan = {
         $('startBuildScanCleanupButton').disabled = true
         $('progressRing').style.visibility = 'visible'
         $('cleanupResult').textContent = 'Cleanup is running...';
-        BS.ajaxRequest($('cleanupCustomDataStorage').action, {
+        BS.ajaxRequest('/admin/buildScanCleanup.html', {
             method: 'POST',
             onComplete: function (res) {
                 $('progressRing').style.visibility = 'hidden'

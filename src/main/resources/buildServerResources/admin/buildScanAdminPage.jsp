@@ -11,12 +11,11 @@
                      <th>Warning: This will remove all build scans from previous versions of this plugin</th>
                      <td>
                          <div id="cleanupResult" style="visibility:hidden;">Not running</div>
-                         <form id="cleanupCustomDataStorage" action="<c:url value='/admin/buildScanCleanup.html'/>" onsubmit="return false">
                            <input class="btn btn_mini" type="button" id="startBuildScanCleanupButton" value="Start clean-up now" onclick="return BS.BuildScan.startCleanup();">
-                         </form>
                      </td>
                      <td>
-                       <forms:progressRing id="progressRing" className="progressRingInline" style="visibility:hidden;"/></td>
+                       <forms:progressRing id="progressRing" className="progressRingInline" style="visibility:hidden;"/>
+                     </td>
                     </tr>
                   </tbody>
                 </table>
