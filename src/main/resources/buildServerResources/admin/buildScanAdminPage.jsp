@@ -8,7 +8,7 @@ teamcity-build-scan-plugin, the build scan links for a given TeamCity build are 
 Running the clean-up action below will irrevocably remove all build scan links stored in the legacy persistence. No TeamCity builds
 will be deleted and no build scans will be deleted.</p>
 <c:choose>
-    <c:when test = "${itemsToRemove == 0}">
+    <c:when test = "${itemsToRemove > 0}">
         <authz:authorize allPermissions="CONFIGURE_SERVER_DATA_CLEANUP">
             <table class="runnerFormTable">
               <tbody>
