@@ -1,0 +1,22 @@
+# IDEA
+# ----
+.idea
+.shelf
+/*.iml
+/*.ipr
+/*.iws
+/out
+
+# MAVEN
+# -----
+/target
+.mvn/.gradle-enterprise/gradle-enterprise-workspace-id
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+
+# OS X
+# ----
+.DS_Store
