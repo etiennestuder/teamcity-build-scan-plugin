@@ -2,10 +2,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>nu.studer</groupId>
-    <artifactId>teamcity-build-scan-agent-service-message-maven-extension</artifactId>
+    <artifactId>service-message-maven-extension</artifactId>
     <packaging>jar</packaging>
     <version>1.0</version>
-    <name>TeamCity Build Scan Agent Service Message Maven Extension</name>
+    <name>Service Message Maven Extension</name>
     <description>Maven extension to send services messages containing build scan links to the TeamCity server</description>
     <url>https://github.com/etiennestuder/teamcity-build-scan-plugin</url>
 

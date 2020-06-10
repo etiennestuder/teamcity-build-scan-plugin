@@ -4,5 +4,5 @@ plugins {
 
 task buildExtension(type: Exec) {
     commandLine './mvnw', 'clean', 'package'
-    outputs.file('teamcity-build-scan-agent-service-message-maven-extension-1.0.jar')
+    outputs.file('service-message-maven-extension-1.0.jar')
 }
