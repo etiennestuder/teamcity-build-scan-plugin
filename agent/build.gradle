@@ -3,6 +3,21 @@ plugins {
     id 'com.github.rodm.teamcity-agent'
 }
 
+configurations {
+    mvnExtension {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
+dependencies {
+    mvnExtension project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
+}
+
+processResources {
+    from configurations.mvnExtension
+}
+
 teamcity {
     agent {
         archiveName = 'teamcity-build-scan-plugin-agent.zip'

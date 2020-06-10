@@ -3,6 +3,22 @@ plugins {
 }
 
 task buildExtension(type: Exec) {
+    inputs.file('pom.xml')
+    inputs.dir('src/main')
+    outputs.file('target/service-message-maven-extension-1.0.jar')
+
     commandLine './mvnw', 'clean', 'package'
-    outputs.file('service-message-maven-extension-1.0.jar')
+}
+
+configurations {
+    mvnExtension {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    mvnExtension(buildExtension.outputs.files.singleFile) {
+        builtBy buildExtension
+    }
 }
