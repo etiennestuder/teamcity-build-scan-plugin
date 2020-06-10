@@ -19,6 +19,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static final String GRADLE_RUNNER = "gradle-runner";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
     private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
+
+    private static final String MAVEN_RUNNER = "Maven2";
+    private static final String MAVEN_CMD_PARAMS = "runnerArgs";
+    private static final String BUILD_SCAN_EXT_MAVEN = "build-scan-ext.jar";
+
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
@@ -33,6 +38,12 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
             runner.addRunnerParameter(GRADLE_CMD_PARAMS, initScriptParam + " " + existingParams);
             runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
+        } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
+            String existingParams = runner.getRunnerParameters().getOrDefault(MAVEN_CMD_PARAMS, "");
+            String extJarParam = "-Dmaven.ext.class.path=" + getExtensionJar(runner).getAbsolutePath();
+
+            runner.addRunnerParameter(MAVEN_CMD_PARAMS, extJarParam + " " + existingParams);
+            runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
         }
     }
 
@@ -40,6 +51,12 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         File initScript = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_INIT_GRADLE);
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, initScript);
         return initScript;
+    }
+
+    private File getExtensionJar(BuildRunnerContext runner) {
+        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_EXT_MAVEN);
+        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_EXT_MAVEN, extensionJar);
+        return extensionJar;
     }
 
 }
