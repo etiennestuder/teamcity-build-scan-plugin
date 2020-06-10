@@ -17,6 +17,7 @@ gradleEnterprise {
 }
 
 include ':agent'
+include ':agent:service-message-maven-extension'
 
 rootProject.name = 'teamcity-build-scan-plugin'
 
