@@ -22,7 +22,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
-    private static final String BUILD_SCAN_EXT_MAVEN = "build-scan-ext.jar";
+    private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
 
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
