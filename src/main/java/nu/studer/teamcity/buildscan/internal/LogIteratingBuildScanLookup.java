@@ -27,19 +27,11 @@ public final class LogIteratingBuildScanLookup implements BuildScanLookup {
         String logParsing = build.getParametersProvider().get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING);
         boolean iterateLog = Boolean.parseBoolean(logParsing);
         if (!iterateLog) {
-            LOGGER.info(String.format("Log parsing not explicitly enabled. Not parsing build log of build id: %s for build scan urls", build.getBuildId()));
+            LOGGER.info(String.format("Log parsing not enabled. Not parsing build log for build scan urls of build id: %s", build.getBuildId()));
             return BuildScanReferences.of();
         }
 
-        // If a build is still running we'll assume our callback-based method of getting scans is going to work.
-        // Avoid paying the cost of parsing the build log for currently running builds that just haven't happened
-        // to have published a scan yet.
-        if (!build.isFinished()) {
-            LOGGER.info(String.format("Build not yet finished. Not parsing build log of build id: %s for build scan urls", build.getBuildId()));
-            return BuildScanReferences.of();
-        }
-
-        LOGGER.info(String.format("Parsing build log of build id: %s for build scan urls", build.getBuildId()));
+        LOGGER.info(String.format("Parsing build log for build scan urls of build id: %s", build.getBuildId()));
 
         List<BuildScanReference> buildScans = new ArrayList<>();
         boolean foundPublishMessage = false;
