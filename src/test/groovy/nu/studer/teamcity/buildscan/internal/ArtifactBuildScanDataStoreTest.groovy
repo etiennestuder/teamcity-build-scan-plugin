@@ -12,7 +12,6 @@ import java.nio.file.Files
 
 class ArtifactBuildScanDataStoreTest extends Specification {
 
-    BuildScanDataStore fallBackStore
     ArtifactBuildScanDataStore store
     File artifactsFolder
 
@@ -20,8 +19,7 @@ class ArtifactBuildScanDataStoreTest extends Specification {
     TemporaryFolder tempDir = new TemporaryFolder()
 
     void setup() {
-        fallBackStore = Mock()
-        store = new ArtifactBuildScanDataStore(fallBackStore)
+        store = new ArtifactBuildScanDataStore()
         artifactsFolder = tempDir.newFolder()
     }
 
@@ -74,17 +72,16 @@ class ArtifactBuildScanDataStoreTest extends Specification {
         buildScanUrls << [[], ['http://gradle.com/s/1'], ['http://gradle.com/s/1', 'http://gradle.com/s/2']]
     }
 
-    def "fallback store is invoked when no build scan links file is present"() {
+    def "null is returned when no build scan links file is present"() {
         given:
         SBuild build = Mock()
         build.artifactsDirectory >> artifactsFolder
-        fallBackStore.fetch(build) >> [new BuildScanReference('fallback', 'http://gradle.com/s/fallback')]
 
         when:
         def scanReferences = store.fetch(build)
 
         then:
-        scanReferences.collect { it.url } == ['http://gradle.com/s/fallback']
+        scanReferences == null
     }
 
 }

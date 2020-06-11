@@ -10,14 +10,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import static nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanDataStore.BUILD_SCAN_STORAGE_ID;
-
 @SuppressWarnings("deprecation")
 public final class CustomDataStorageBuildScanCleaner {
 
     private static final int BATCH_SIZE = 10;
     private static final String DELETE_CUSTOM_DATA_BODY_SQL = "delete from custom_data_body where id = ?";
     private static final String DELETE_FROM_CUSTOM_DATA_SQL = "delete from custom_data where data_id = ?";
+    private static final String BUILD_SCAN_STORAGE_ID = "nu.studer.teamcity.buildscan.DefaultBuildScanDataStore";
 
     private final SBuildServer server;
 

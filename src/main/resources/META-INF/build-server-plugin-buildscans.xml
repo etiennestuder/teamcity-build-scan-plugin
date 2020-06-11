@@ -34,13 +34,8 @@
     <bean id="buildScanServiceMessageListener"
           class="nu.studer.teamcity.buildscan.internal.BuildScanServiceMessageListener"/>
 
-    <bean id="artifactBuildScanDataStore" primary="true"
-          class="nu.studer.teamcity.buildscan.internal.ArtifactBuildScanDataStore">
-        <constructor-arg type="nu.studer.teamcity.buildscan.BuildScanDataStore" ref="customDataStorageBuildScanDataStore"/>
-    </bean>
-
-    <bean id="customDataStorageBuildScanDataStore"
-          class="nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanDataStore"/>
+    <bean id="artifactBuildScanDataStore"
+          class="nu.studer.teamcity.buildscan.internal.ArtifactBuildScanDataStore"/>
 
     <bean id="buildScanDisplayArbiter"
           class="nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter"/>

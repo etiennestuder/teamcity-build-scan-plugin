@@ -29,12 +29,6 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
     private static final String BUILD_SCANS_DIR = "build_scans";
     private static final String BUILD_SCAN_LINKS_FILE = "build_scans.txt";
 
-    private final BuildScanDataStore delegate;
-
-    public ArtifactBuildScanDataStore(@NotNull BuildScanDataStore delegate) {
-        this.delegate = delegate;
-    }
-
     @Override
     public void mark(SBuild build) {
         final Path buildScanLinksFile = getBuildScanLinksFile(build);
@@ -77,7 +71,7 @@ public final class ArtifactBuildScanDataStore implements BuildScanDataStore {
                 return Collections.emptyList();
             }
         } else {
-            return delegate.fetch(build);
+            return null;
         }
     }
 
