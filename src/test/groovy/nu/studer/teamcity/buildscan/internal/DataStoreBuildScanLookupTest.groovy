@@ -15,8 +15,10 @@ class DataStoreBuildScanLookupTest extends Specification {
         def delegate = Mock(BuildScanLookup)
         def lookup = new DataStoreBuildScanLookup(store, delegate)
 
+        def sbuild = Stub(SBuild)
+
         when:
-        lookup.getBuildScansForBuild(Mock(SBuild))
+        lookup.getBuildScansForBuild(sbuild)
 
         then:
         1 * delegate.getBuildScansForBuild(_) >> BuildScanReferences.of()
@@ -24,16 +26,16 @@ class DataStoreBuildScanLookupTest extends Specification {
 
     def "returns store results"() {
         given:
-        def build = Mock(SBuild)
-        def reference = new BuildScanReference("someid", "https://gradle.company.com/s/someid")
-        def store = Mock(BuildScanDataStore) {
-            fetch(build) >> Collections.singletonList(reference)
-        }
+        def store = Mock(BuildScanDataStore)
         def delegate = Mock(BuildScanLookup)
         def lookup = new DataStoreBuildScanLookup(store, delegate)
 
+        def sbuild = Stub(SBuild)
+        def reference = new BuildScanReference("someid", "https://gradle.company.com/s/someid")
+        store.fetch(sbuild) >> Collections.singletonList(reference)
+
         when:
-        def result = lookup.getBuildScansForBuild(build)
+        def result = lookup.getBuildScansForBuild(sbuild)
 
         then:
         result == BuildScanReferences.of(reference)

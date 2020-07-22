@@ -19,18 +19,18 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
     @Unroll
     def "show build scan info if Gradle runner is present"() {
         given:
-        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Mock(BuildScanLookup))
+        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Stub(BuildScanLookup))
 
         and:
-        SBuildType buildType = Mock(SBuildType)
+        SBuildType buildType = Stub(SBuildType)
         buildType.buildRunners >> { buildRunnerTypes }
 
         and:
-        SBuild build = Mock(SBuild)
-        build.buildType >> buildType
+        SBuild sbuild = Stub(SBuild)
+        sbuild.buildType >> buildType
 
         when:
-        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(build)
+        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(sbuild)
 
         then:
         show == expectedToShow
@@ -47,18 +47,18 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
     @Unroll
     def "show build scan info if Maven runner is present"() {
         given:
-        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Mock(BuildScanLookup))
+        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Stub(BuildScanLookup))
 
         and:
-        SBuildType buildType = Mock(SBuildType)
+        SBuildType buildType = Stub(SBuildType)
         buildType.buildRunners >> { buildRunnerTypes }
 
         and:
-        SBuild build = Mock(SBuild)
-        build.buildType >> buildType
+        SBuild sbuild = Stub(SBuild)
+        sbuild.buildType >> buildType
 
         when:
-        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(build)
+        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(sbuild)
 
         then:
         show == expectedToShow
@@ -75,21 +75,21 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
     @Unroll
     def "show build scan info if CmdLine runner is present and build created a build scan"() {
         given:
-        BuildScanLookup buildScanLookup = Mock(BuildScanLookup)
+        BuildScanLookup buildScanLookup = Stub(BuildScanLookup)
         buildScanLookup.getBuildScansForBuild(_ as SBuild) >> { buildScanReferencesInBuild }
 
         DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(buildScanLookup)
 
         and:
-        SBuildType buildType = Mock(SBuildType)
+        SBuildType buildType = Stub(SBuildType)
         buildType.buildRunners >> { buildRunnerTypes }
 
         and:
-        SBuild build = Mock(SBuild)
-        build.buildType >> buildType
+        SBuild sbuild = Stub(SBuild)
+        sbuild.buildType >> buildType
 
         when:
-        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(build)
+        def show = defaultBuildScanDisplayArbiter.showBuildScanInfo(sbuild)
 
         then:
         show == expectedToShow
@@ -101,8 +101,8 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
     }
 
     private SBuildRunnerDescriptor buildRunnerDescriptor(String runnerType) {
-        SBuildRunnerDescriptor descriptor = Mock(SBuildRunnerDescriptor)
-        RunType runType = Mock(RunType)
+        SBuildRunnerDescriptor descriptor = Stub(SBuildRunnerDescriptor)
+        RunType runType = Stub(RunType)
         runType.getType() >> { runnerType }
         descriptor.getRunType() >> { runType }
         descriptor

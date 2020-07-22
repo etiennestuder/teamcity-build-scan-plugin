@@ -13,24 +13,22 @@ class CachedBuildScanLookupTest extends Specification {
 
     def "cache is only queried iff build has already finished"() {
         given:
-        SCache cache = Mock(SCache)
-        CacheProvider cacheProvider = Mock(CacheProvider)
+        SCache cache = Stub(SCache)
+        CacheProvider cacheProvider = Stub(CacheProvider)
         cacheProvider.getOrCreateCache(_ as String, _ as Class) >> cache
 
-        CachedBuildScanLookup lookup = new CachedBuildScanLookup(cacheProvider, Mock(BuildScanLookup))
+        CachedBuildScanLookup lookup = new CachedBuildScanLookup(cacheProvider, Stub(BuildScanLookup))
 
         and:
         BuildScanReference buildScanReference = new BuildScanReference('someScanId', 'someScanUrl')
-        cache.fetch(_ as String, _ as Calculator) >> {
-            BuildScanReferences.of(buildScanReference)
-        }
+        cache.fetch(_ as String, _ as Calculator) >> BuildScanReferences.of(buildScanReference)
 
         and:
-        SBuild build = Mock(SBuild)
-        build.isFinished() >> { true }
+        SBuild sbuild = Stub(SBuild)
+        sbuild.isFinished() >> true
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.all() == [buildScanReference]
@@ -38,10 +36,10 @@ class CachedBuildScanLookupTest extends Specification {
 
     def "cache is not queried if build has not yet finished"() {
         given:
-        CacheProvider cacheProvider = Mock(CacheProvider)
-        cacheProvider.getOrCreateCache(_ as String, _ as Class) >> Mock(SCache)
+        CacheProvider cacheProvider = Stub(CacheProvider)
+        cacheProvider.getOrCreateCache(_ as String, _ as Class) >> Stub(SCache)
 
-        BuildScanLookup delegateLookup = Mock(BuildScanLookup)
+        BuildScanLookup delegateLookup = Stub(BuildScanLookup)
 
         CachedBuildScanLookup lookup = new CachedBuildScanLookup(cacheProvider, delegateLookup)
 
@@ -50,11 +48,11 @@ class CachedBuildScanLookupTest extends Specification {
         delegateLookup.getBuildScansForBuild(_ as SBuild) >> { BuildScanReferences.of(buildScanReference) }
 
         and:
-        SBuild build = Mock(SBuild)
-        build.isFinished() >> { false }
+        SBuild sbuild = Stub(SBuild)
+        sbuild.isFinished() >> false
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.all() == [buildScanReference]

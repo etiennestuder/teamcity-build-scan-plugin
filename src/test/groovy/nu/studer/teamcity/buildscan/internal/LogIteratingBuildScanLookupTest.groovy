@@ -16,11 +16,11 @@ class LogIteratingBuildScanLookupTest extends Specification {
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        ParametersProvider parametersProvider = Mock(ParametersProvider) {
+        ParametersProvider parametersProvider = Stub(ParametersProvider) {
             get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'true'
         }
 
-        BuildLog buildLog = Mock(BuildLog)
+        BuildLog buildLog = Stub(BuildLog)
         buildLog.messagesIterator >> {
             [
                 log("Publishing build scan..."),
@@ -28,14 +28,14 @@ class LogIteratingBuildScanLookupTest extends Specification {
             ].iterator()
         }
 
-        SBuild build = Mock(SBuild) {
+        SBuild sbuild = Stub(SBuild) {
             isFinished() >> true
             getParametersProvider() >> parametersProvider
             getBuildLog() >> buildLog
         }
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.size() == 1
@@ -46,11 +46,11 @@ class LogIteratingBuildScanLookupTest extends Specification {
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        ParametersProvider parametersProvider = Mock(ParametersProvider) {
+        ParametersProvider parametersProvider = Stub(ParametersProvider) {
             get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'dummy'
         }
 
-        BuildLog buildLog = Mock(BuildLog)
+        BuildLog buildLog = Stub(BuildLog)
         buildLog.messagesIterator >> {
             [
                 log("Publishing build scan..."),
@@ -58,14 +58,14 @@ class LogIteratingBuildScanLookupTest extends Specification {
             ].iterator()
         }
 
-        SBuild build = Mock(SBuild) {
+        SBuild sbuild = Stub(SBuild) {
             isFinished() >> true
             getParametersProvider() >> parametersProvider
             getBuildLog() >> buildLog
         }
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.isEmpty()
@@ -76,9 +76,9 @@ class LogIteratingBuildScanLookupTest extends Specification {
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        ParametersProvider parametersProvider = Mock(ParametersProvider)
+        ParametersProvider parametersProvider = Stub(ParametersProvider)
 
-        BuildLog buildLog = Mock(BuildLog)
+        BuildLog buildLog = Stub(BuildLog)
         buildLog.messagesIterator >> {
             [
                 log("Publishing build scan..."),
@@ -86,14 +86,14 @@ class LogIteratingBuildScanLookupTest extends Specification {
             ].iterator()
         }
 
-        SBuild build = Mock(SBuild) {
+        SBuild sbuild = Stub(SBuild) {
             isFinished() >> true
             getParametersProvider() >> parametersProvider
             getBuildLog() >> buildLog
         }
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.isEmpty()
@@ -104,9 +104,9 @@ class LogIteratingBuildScanLookupTest extends Specification {
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        ParametersProvider parametersProvider = Mock(ParametersProvider)
+        ParametersProvider parametersProvider = Stub(ParametersProvider)
 
-        BuildLog buildLog = Mock(BuildLog)
+        BuildLog buildLog = Stub(BuildLog)
         buildLog.messagesIterator >> {
             [
                 log("Publishing build scan..."),
@@ -114,14 +114,14 @@ class LogIteratingBuildScanLookupTest extends Specification {
             ].iterator()
         }
 
-        SBuild build = Mock(SBuild) {
+        SBuild sbuild = Stub(SBuild) {
             isFinished() >> false
             getParametersProvider() >> parametersProvider
             getBuildLog() >> buildLog
         }
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.isEmpty()
@@ -133,23 +133,23 @@ class LogIteratingBuildScanLookupTest extends Specification {
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()
 
         and:
-        ParametersProvider parametersProvider = Mock(ParametersProvider) {
+        ParametersProvider parametersProvider = Stub(ParametersProvider) {
             get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'true'
         }
 
-        BuildLog buildLog = Mock(BuildLog)
+        BuildLog buildLog = Stub(BuildLog)
         buildLog.messagesIterator >> {
             logMessages.iterator()
         }
 
-        SBuild build = Mock(SBuild) {
+        SBuild sbuild = Stub(SBuild) {
             isFinished() >> true
             getParametersProvider() >> parametersProvider
             getBuildLog() >> buildLog
         }
 
         when:
-        def buildScans = lookup.getBuildScansForBuild(build)
+        def buildScans = lookup.getBuildScansForBuild(sbuild)
 
         then:
         buildScans.all()*.id == expectedBuildScanIds

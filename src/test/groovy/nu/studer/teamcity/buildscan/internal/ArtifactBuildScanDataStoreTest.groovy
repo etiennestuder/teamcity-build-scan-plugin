@@ -1,8 +1,6 @@
 package nu.studer.teamcity.buildscan.internal
 
 import jetbrains.buildServer.serverSide.SBuild
-import nu.studer.teamcity.buildscan.BuildScanDataStore
-import nu.studer.teamcity.buildscan.BuildScanReference
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -25,29 +23,29 @@ class ArtifactBuildScanDataStoreTest extends Specification {
 
     def "empty build scan links file is created when build is marked as started"() {
         given:
-        SBuild build = Mock()
-        build.artifactsDirectory >> artifactsFolder
+        SBuild sbuild = Stub(SBuild)
+        sbuild.artifactsDirectory >> artifactsFolder
 
         when:
-        store.mark(build)
+        store.mark(sbuild)
 
         then:
-        Files.exists(store.getBuildScanLinksFile(build))
-        store.getBuildScanLinksFile(build).readLines() == []
+        Files.exists(store.getBuildScanLinksFile(sbuild))
+        store.getBuildScanLinksFile(sbuild).toFile().readLines() == []
     }
 
     @Unroll
     def "build scans urls are appended to build scan links file line by line"() {
         given:
-        SBuild build = Mock()
-        build.artifactsDirectory >> artifactsFolder
+        SBuild sbuild = Stub(SBuild)
+        sbuild.artifactsDirectory >> artifactsFolder
 
         when:
-        buildScanUrls.each { scanUrl -> store.store(build, scanUrl) }
+        buildScanUrls.each { scanUrl -> store.store(sbuild, scanUrl) }
 
         then:
-        Files.exists(store.getBuildScanLinksFile(build))
-        store.getBuildScanLinksFile(build).readLines() == buildScanUrls
+        Files.exists(store.getBuildScanLinksFile(sbuild))
+        store.getBuildScanLinksFile(sbuild).toFile().readLines() == buildScanUrls
 
         where:
         buildScanUrls << [['http://gradle.com/s/1'], ['http://gradle.com/s/1', 'http://gradle.com/s/2']]
@@ -56,14 +54,14 @@ class ArtifactBuildScanDataStoreTest extends Specification {
     @Unroll
     def "fetched build scan references contain previously persisted build scan urls"() {
         given:
-        SBuild build = Mock()
-        build.artifactsDirectory >> artifactsFolder
+        SBuild sbuild = Stub(SBuild)
+        sbuild.artifactsDirectory >> artifactsFolder
 
         and:
-        buildScanUrls.each { scanUrl -> store.store(build, scanUrl) }
+        buildScanUrls.each { scanUrl -> store.store(sbuild, scanUrl) }
 
         when:
-        def scanReferences = store.fetch(build)
+        def scanReferences = store.fetch(sbuild)
 
         then:
         scanReferences.collect { it.url } == buildScanUrls
@@ -74,11 +72,11 @@ class ArtifactBuildScanDataStoreTest extends Specification {
 
     def "null is returned when no build scan links file is present"() {
         given:
-        SBuild build = Mock()
-        build.artifactsDirectory >> artifactsFolder
+        SBuild sbuild = Stub(SBuild)
+        sbuild.artifactsDirectory >> artifactsFolder
 
         when:
-        def scanReferences = store.fetch(build)
+        def scanReferences = store.fetch(sbuild)
 
         then:
         scanReferences == null
