@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'base'
 }
@@ -7,7 +9,8 @@ task buildExtension(type: Exec) {
     inputs.dir('src/main')
     outputs.file('target/service-message-maven-extension-1.0.jar')
 
-    commandLine './mvnw', 'clean', 'package'
+    def mvnw = DefaultNativePlatform.currentOperatingSystem.isWindows() ? './mvnw.cmd' : './mvnw'
+    commandLine mvnw, 'clean', 'package'
 }
 
 configurations {
