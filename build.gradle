@@ -108,8 +108,6 @@ bintray {
     }
 }
 
-tasks.build.dependsOn sources
-
 static timestamp(Date date) {
     def timestampFormat = new SimpleDateFormat('yyyyMMddHHmmss')
     timestampFormat.timeZone = TimeZone.getTimeZone('UTC')
