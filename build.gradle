@@ -5,6 +5,7 @@ plugins {
     id 'groovy'
     id 'maven-publish'
     id 'com.jfrog.bintray' version '1.8.5'
+    id 'nu.studer.credentials' version '2.1'
     id 'com.github.rodm.teamcity-server' version '1.2.2' // see https://github.com/rodm/gradle-teamcity-plugin
     id 'com.github.rodm.teamcity-environments' version '1.2.2'
 }
@@ -87,8 +88,8 @@ publishing.publications {
 }
 
 bintray {
-    user = findProperty('bintrayUser')
-    key = findProperty('bintrayKey')
+    user = credentials.BINTRAY_USER
+    key = credentials.BINTRAY_API_KEY
     publications = ['PluginPublication']
 
     dryRun = true
