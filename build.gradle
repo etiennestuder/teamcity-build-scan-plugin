@@ -66,8 +66,8 @@ teamcity {
         baseHomeDir = mkdir('.teamcity/servers')
         baseDataDir = mkdir('.teamcity/data')
 
-        teamcity2019_1 {
-            version = "2019.1.3"
+        teamcity2020_1 {
+            version = '2020.1.3'
             serverOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
             agentOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006'
         }
