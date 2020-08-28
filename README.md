@@ -70,7 +70,7 @@ previously downloaded plugin `.zip` file.
 Both feedback and contributions are very welcome.
 
 # Acknowledgements
-
++ [dmitry-treskunov](https://github.com/dmitry-treskunov) (bug report and proposed fix)
 + [pbielicki](https://github.com/pbielicki) (pr #17 that adds a hint to the BuildScanServiceMessageMavenExtension @Component)
 + [jonnybbb](https://github.com/jonnybbb) (pr #14 and #15 that store build scan links under artifacts and clean up legacy data)
 + [davidburstromspotify](https://github.com/davidburstromspotify) (bug report and proposed fix)
