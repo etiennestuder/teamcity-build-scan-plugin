@@ -31,7 +31,7 @@ public final class LogIteratingBuildScanLookup implements BuildScanLookup {
             return BuildScanReferences.of();
         }
 
-        LOGGER.info(String.format("Parsing build log for build scan urls of build id: %s", build.getBuildId()));
+        LOGGER.debug(String.format("Parsing build log for build scan urls of build id: %s", build.getBuildId()));
 
         List<BuildScanReference> buildScans = new ArrayList<>();
         boolean foundPublishMessage = false;

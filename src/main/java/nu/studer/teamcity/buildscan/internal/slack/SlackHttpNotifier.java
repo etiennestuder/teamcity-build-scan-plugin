@@ -59,7 +59,7 @@ final class SlackHttpNotifier {
 
         // log response code
         int responseCode = con.getResponseCode();
-        LOGGER.info("Invoking Slack webhook returned response code: " + responseCode);
+        LOGGER.debug("Invoking Slack webhook returned response code: " + responseCode);
     }
 
     private static void copy(@NotNull InputStream in, @NotNull OutputStream out) throws IOException {

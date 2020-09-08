@@ -89,7 +89,7 @@ final class BuildScanHttpRetriever {
 
         // log response code
         int responseCode = con.getResponseCode();
-        LOGGER.info("Invoking build scan data end-point returned response code: " + responseCode);
+        LOGGER.debug("Invoking build scan data end-point returned response code: " + responseCode);
 
         return buildScanPayload;
     }

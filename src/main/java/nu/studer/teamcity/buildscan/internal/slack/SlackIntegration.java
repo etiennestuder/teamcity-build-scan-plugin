@@ -88,7 +88,7 @@ public final class SlackIntegration implements ExternalIntegration {
     }
 
     private Optional<BuildScanPayload> retrieveBuildScan(@NotNull BuildScanReference buildScan, @NotNull TeamCityConfiguration teamCityConfiguration) throws IOException {
-        LOGGER.info("Retrieving build scan data: " + buildScan.getUrl());
+        LOGGER.debug("Retrieving build scan data: " + buildScan.getUrl());
         BuildScanHttpRetriever retriever = BuildScanHttpRetriever.forUrl(toScanDataUrl(buildScan), getCredentials(buildScan, teamCityConfiguration));
         BuildScanPayload payload = retriever.retrieve();
         return Optional.of(payload).filter(p -> p.state.equals("complete"));
@@ -129,7 +129,7 @@ public final class SlackIntegration implements ExternalIntegration {
     }
 
     private Void notifySlack(@NotNull BuildScanReferences buildScans, @NotNull Map<String, BuildScanPayload> buildScanPayloads, @NotNull URL webhookUrl, @NotNull TeamCityBuildStatus teamCityBuildStatus, @NotNull TeamCityConfiguration teamCityConfiguration) throws IOException {
-        LOGGER.info("Notifying Slack via webhook: " + webhookUrl);
+        LOGGER.debug("Notifying Slack via webhook: " + webhookUrl);
         SlackHttpNotifier notifier = SlackHttpNotifier.forWebhook(webhookUrl);
         notifier.notify(payloadFactory.from(buildScans, buildScanPayloads, teamCityBuildStatus, teamCityConfiguration));
         return null;
@@ -156,7 +156,7 @@ public final class SlackIntegration implements ExternalIntegration {
 
         @Override
         public void onSuccess(@Nullable Object result) {
-            LOGGER.info(action + " succeeded");
+            LOGGER.debug(action + " succeeded");
         }
 
         @Override
