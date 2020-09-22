@@ -1,5 +1,17 @@
 import java.text.SimpleDateFormat
 
+buildscript {
+    dependencies.components {
+        withModule("com.github.rodm:gradle-teamcity-plugin") {
+            allVariants {
+                withDependencies {
+                    removeAll { it.name == 'junit-bom' }
+                }
+            }
+        }
+    }
+}
+
 plugins {
     id 'java'
     id 'groovy'
