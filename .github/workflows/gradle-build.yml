@@ -18,4 +18,4 @@ jobs:
        - name: Build with Gradle
          uses: eskatos/gradle-command-action@v1
          with:
-           arguments: build testAll -Pteamcity-build-scan-plugin.acceptGradleTOS=true
+           arguments: build -Pteamcity-build-scan-plugin.acceptGradleTOS=true
