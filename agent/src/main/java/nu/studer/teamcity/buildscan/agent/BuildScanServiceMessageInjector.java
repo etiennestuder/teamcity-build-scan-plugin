@@ -18,7 +18,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GRADLE_RUNNER = "gradle-runner";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
-    private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
+    static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
 
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";

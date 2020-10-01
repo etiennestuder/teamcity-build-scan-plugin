@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'groovy'
     id 'com.github.rodm.teamcity-agent'
 }
 
@@ -8,10 +9,37 @@ configurations {
         canBeConsumed = false
         canBeResolved = true
     }
+    teamCityInitClasspath {
+        canBeConsumed = false
+        canBeResolved = true
+    }
+}
+
+sourceSets {
+    mockBuildScanPlugin {
+        groovy {
+            srcDir 'src/mockBuildScanPlugin/groovy'
+        }
+    }
+}
+
+repositories {
+    jcenter()
 }
 
 dependencies {
     mvnExtension project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
+
+    teamCityInitClasspath 'org.jetbrains.teamcity:serviceMessages:2020.1.1'
+    testImplementation gradleTestKit()
+    testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-junit4:2.0-M3-groovy-2.5'
+    testImplementation 'io.ratpack:ratpack-groovy-test:1.7.5', {
+        exclude module: 'groovy-all'
+    }
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.10.1'
+
+    mockBuildScanPluginCompileOnly gradleApi()
 }
 
 processResources {
@@ -27,4 +55,43 @@ teamcity {
             }
         }
     }
+}
+
+def mockPluginJar = tasks.register('mockPluginJar', Jar) {
+    it.from sourceSets.mockBuildScanPlugin.output
+    it.archiveBaseName.set('mockBuildScanPlugin')
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgumentProviders.add(new TeamCityInitClasspathCommandLineArgumentProvider(teamCityInitClasspath: configurations.teamCityInitClasspath))
+    jvmArgumentProviders.add(new MockPluginJarCommandLineArgumentProvider(mockPluginJar: mockPluginJar))
+}
+
+final class TeamCityInitClasspathCommandLineArgumentProvider implements CommandLineArgumentProvider {
+
+    @Classpath
+    FileCollection teamCityInitClasspath
+
+    @Override
+    Iterable<String> asArguments() {
+        [
+                "-DteamCityInitClasspath=${teamCityInitClasspath.files.join(File.pathSeparator)}"
+        ]
+    }
+
+}
+
+final class MockPluginJarCommandLineArgumentProvider implements CommandLineArgumentProvider {
+
+    @Classpath
+    TaskProvider<Jar> mockPluginJar
+
+    @Override
+    Iterable<String> asArguments() {
+        [
+                "-DmockPluginJar=${mockPluginJar.get().outputs.files.singleFile.absolutePath}"
+        ]
+    }
+
 }
