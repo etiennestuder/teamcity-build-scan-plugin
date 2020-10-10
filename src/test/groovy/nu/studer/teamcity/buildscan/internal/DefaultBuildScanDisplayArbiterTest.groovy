@@ -17,9 +17,12 @@ import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbit
 class DefaultBuildScanDisplayArbiterTest extends Specification {
 
     @Unroll
-    def "show build scan info if Gradle runner is present"() {
+    def "show build scan info if Gradle runner is present and build created a build scan"() {
         given:
-        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Stub(BuildScanLookup))
+        BuildScanLookup buildScanLookup = Stub(BuildScanLookup)
+        buildScanLookup.getBuildScansForBuild(_ as SBuild) >> { buildScanReferencesInBuild }
+
+        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(buildScanLookup)
 
         and:
         SBuildType buildType = Stub(SBuildType)
@@ -36,18 +39,22 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
         show == expectedToShow
 
         where:
-        buildRunnerTypes                                                                   | expectedToShow
-        [buildRunnerDescriptor(GRADLE_RUNNER)]                                             | true
-        [buildRunnerDescriptor(GRADLE_RUNNER), buildRunnerDescriptor('some other runner')] | true
-        [buildRunnerDescriptor(GRADLE_RUNNER), buildRunnerDescriptor(GRADLE_RUNNER)]       | true
-        [buildRunnerDescriptor('some other runner')]                                       | false
-        []                                                                                 | false
+        buildRunnerTypes                                                                   | buildScanReferencesInBuild                                                  | expectedToShow
+        [buildRunnerDescriptor(GRADLE_RUNNER)]                                             | BuildScanReferences.of()                                                    | false
+        [buildRunnerDescriptor(GRADLE_RUNNER)]                                             | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | true
+        [buildRunnerDescriptor(GRADLE_RUNNER), buildRunnerDescriptor('some other runner')] | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | true
+        [buildRunnerDescriptor(GRADLE_RUNNER), buildRunnerDescriptor(GRADLE_RUNNER)]       | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | true
+        [buildRunnerDescriptor('some other runner')]                                       | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | false
+        []                                                                                 | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | false
     }
 
     @Unroll
-    def "show build scan info if Maven runner is present"() {
+    def "show build scan info if Maven runner is present and build created a build scan"() {
         given:
-        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(Stub(BuildScanLookup))
+        BuildScanLookup buildScanLookup = Stub(BuildScanLookup)
+        buildScanLookup.getBuildScansForBuild(_ as SBuild) >> { buildScanReferencesInBuild }
+
+        DefaultBuildScanDisplayArbiter defaultBuildScanDisplayArbiter = new DefaultBuildScanDisplayArbiter(buildScanLookup)
 
         and:
         SBuildType buildType = Stub(SBuildType)
@@ -64,12 +71,13 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
         show == expectedToShow
 
         where:
-        buildRunnerTypes                                                                  | expectedToShow
-        [buildRunnerDescriptor(MAVEN_RUNNER)]                                             | true
-        [buildRunnerDescriptor(MAVEN_RUNNER), buildRunnerDescriptor('some other runner')] | true
-        [buildRunnerDescriptor(MAVEN_RUNNER), buildRunnerDescriptor(MAVEN_RUNNER)]        | true
-        [buildRunnerDescriptor('some other runner')]                                      | false
-        []                                                                                | false
+        buildRunnerTypes                                                                  | buildScanReferencesInBuild                                                  | expectedToShow
+        [buildRunnerDescriptor(MAVEN_RUNNER)]                                             | BuildScanReferences.of()                                                    | false
+        [buildRunnerDescriptor(MAVEN_RUNNER)]                                             | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | true
+        [buildRunnerDescriptor(MAVEN_RUNNER), buildRunnerDescriptor('some other runner')] | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | true
+        [buildRunnerDescriptor(MAVEN_RUNNER), buildRunnerDescriptor(MAVEN_RUNNER)]        | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | true
+        [buildRunnerDescriptor('some other runner')]                                      | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | false
+        []                                                                                | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | false
     }
 
     @Unroll
