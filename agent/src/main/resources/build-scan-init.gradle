@@ -1,6 +1,6 @@
 import jetbrains.buildServer.messages.serviceMessages.ServiceMessage
 
-if (!gradleVersionSupported()) {
+if (GradleVersion.current() < GradleVersion.version('4.1')) {
     return
 }
 
@@ -26,34 +26,18 @@ def buildScanPublishedAction = { def buildScan ->
     }
 }
 
-// Gradle 4.1+ and 5.+
-rootProject {
-    pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
-        buildScanPublishedAction(buildScan)
+if (GradleVersion.current() < GradleVersion.version('6.0')) {
+    // Gradle 4.1+ and 5.+
+    rootProject {
+        pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+            buildScanPublishedAction(buildScan)
+        }
     }
-}
-
-// Gradle 6.+
-gradle.settingsEvaluated { settings ->
-    settings.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
-        buildScanPublishedAction(settings.gradleEnterprise.buildScan)
-    }
-}
-
-// require at least Gradle 4.1 (build scan plugin 1.8)
-boolean gradleVersionSupported() {
-    def parts = gradle.gradleVersion.split('\\.')
-    if (parts.length < 2) {
-        false
-    } else {
-        def major = parts[0]
-        def minor = parts[1]
-        if (major < '4') {
-            false
-        } else if (major == '4' && minor < '1') {
-            false
-        } else {
-            true
+} else {
+    // Gradle 6.+
+    gradle.settingsEvaluated { settings ->
+        settings.pluginManager.withPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) {
+            buildScanPublishedAction(settings.gradleEnterprise.buildScan)
         }
     }
 }
