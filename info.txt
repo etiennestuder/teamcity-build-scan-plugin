@@ -1,7 +1,6 @@
 Release process:
 - ensure `baseVersion` has correct value in build.gradle
 - Run `gr -i clean build generatePomFileForPluginPublicationPublication bintrayUpload -PRELEASE`
-- Set `dryRun` to true in the `bintray` config in build.gradle
 - Tag release, e.g. `git tag v0.2`, and push the tag, e.g. `git push origin v0.2`
 - update `baseVersion` to next anticipated version in build.gradle
 
