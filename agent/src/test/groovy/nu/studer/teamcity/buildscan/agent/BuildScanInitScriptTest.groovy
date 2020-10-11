@@ -1,16 +1,17 @@
 package nu.studer.teamcity.buildscan.agent
 
 import org.gradle.util.GradleVersion
+import spock.lang.Ignore
 
 class BuildScanInitScriptTest extends BaseInitScriptTest {
 
     private static final List<GradleVersion> NOT_SUPPORTED_GRADLE_VERSIONS = [
-        GradleVersion.version('3.5.1'),
-        GradleVersion.version('4.0.2')
+//        GradleVersion.version('3.5.1'),
+//        GradleVersion.version('4.0.2')
     ]
 
     private static final List<GradleVersion> SUPPORTED_GRADLE_VERSIONS = [
-        GradleVersion.version('4.1'),
+//        GradleVersion.version('4.1'),
         GradleVersion.version('4.10.3'),
         GradleVersion.version('5.1.1'),
         GradleVersion.version('5.6.4'),
@@ -18,6 +19,7 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
         GradleVersion.current()
     ]
 
+    @Ignore
     def "does not fail build when using a Gradle version older than minimum version 4.1 (#gradleVersion)"() {
         when:
         def result = run(gradleVersion)
