@@ -1,6 +1,10 @@
 plugins {
-    id 'java'
+    id 'groovy'
     id 'com.github.rodm.teamcity-agent'
+}
+
+repositories {
+    jcenter()
 }
 
 configurations {
@@ -8,10 +12,23 @@ configurations {
         canBeConsumed = false
         canBeResolved = true
     }
+    teamCityInitClasspath {
+        canBeConsumed = false
+        canBeResolved = true
+    }
 }
 
 dependencies {
     mvnExtension project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
+    teamCityInitClasspath 'org.jetbrains.teamcity:serviceMessages:2020.1.1'
+
+    testImplementation gradleTestKit()
+    testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-2.5'
+    testImplementation 'org.spockframework:spock-junit4:2.0-M3-groovy-2.5'
+    testImplementation 'io.ratpack:ratpack-groovy-test:1.7.5', {
+        exclude module: 'groovy-all'
+    }
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.10.1'
 }
 
 processResources {
@@ -27,4 +44,23 @@ teamcity {
             }
         }
     }
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgumentProviders.add(new TeamCityInitClasspathCommandLineArgumentProvider(teamCityInitClasspath: configurations.teamCityInitClasspath))
+}
+
+final class TeamCityInitClasspathCommandLineArgumentProvider implements CommandLineArgumentProvider {
+
+    @Classpath
+    FileCollection teamCityInitClasspath
+
+    @Override
+    Iterable<String> asArguments() {
+        [
+            "-DteamCityInitClasspath=${teamCityInitClasspath.files.join(File.pathSeparator)}"
+        ]
+    }
+
 }
