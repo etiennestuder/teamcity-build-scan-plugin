@@ -7,7 +7,7 @@ jobs:
      strategy:
          matrix:
              java: [ 8, 9, 10, 11, 12, 13 ]
-         name: Building with Java Toolchain ${{ matrix.java }}
+     name: Build with Java Toolchain ${{ matrix.java }}
      steps:
        - name: Check out project
          uses: actions/checkout@v2
