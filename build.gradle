@@ -36,7 +36,8 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
+        String langVersion = findProperty('langVersion') ?: '8'
+        languageVersion = JavaLanguageVersion.of(langVersion)
     }
 }
 
