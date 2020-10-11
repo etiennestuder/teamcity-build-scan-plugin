@@ -93,9 +93,9 @@ bintray {
     key = credentials.BINTRAY_API_KEY
     publications = ['PluginPublication']
 
-    dryRun = true
     publish = true
     override = false
+    dryRun = false
 
     pkg {
         repo = 'teamcity-plugins'
