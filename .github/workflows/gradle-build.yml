@@ -4,6 +4,10 @@ on: [push, workflow_dispatch]
 jobs:
   build:
      runs-on: ubuntu-latest
+     strategy:
+         matrix:
+             java: [ 8, 9, 10, 11, 12, 13 ]
+         name: Building with Java Toolchain ${{ matrix.java }}
      steps:
        - name: Check out project
          uses: actions/checkout@v2
@@ -14,7 +18,7 @@ jobs:
        - name: Build with Gradle
          uses: eskatos/gradle-command-action@v1
          with:
-           arguments: build -Pteamcity-build-scan-plugin.acceptGradleTOS=true
+           arguments: build -PlangVersion=${{ matrix.java }} -Pteamcity-build-scan-plugin.acceptGradleTOS=true
            wrapper-cache-enabled: true
            dependencies-cache-enabled: true
            configuration-cache-enabled: false
