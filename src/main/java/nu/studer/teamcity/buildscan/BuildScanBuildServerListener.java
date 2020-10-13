@@ -39,6 +39,11 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
         LOGGER.info(String.format("Registered %s. %s-%s", getClass().getSimpleName(), pluginDescriptor.getPluginName(), pluginDescriptor.getPluginVersion()));
     }
 
+    public void unregister() {
+        buildServer.removeListener(this);
+        LOGGER.info(String.format("Unregistered %s. %s-%s", getClass().getSimpleName(), pluginDescriptor.getPluginName(), pluginDescriptor.getPluginVersion()));
+    }
+
     @Override
     public void buildFinished(@NotNull SRunningBuild build) {
         if (buildScanDisplayArbiter.showBuildScanInfo(build)) {
