@@ -90,6 +90,14 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
             }
         }
 
+        @Override
+        String toString() {
+            return "JdkCompatibleGradleVersion{" +
+                "Gradle " + gradleVersion.version +
+                ", JDK " + jdkMin + "-" + jdkMax +
+                '}';
+        }
+
     }
 
 }
