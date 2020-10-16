@@ -90,8 +90,8 @@ publishing.publications {
 }
 
 bintray {
-    user = credentials.BINTRAY_USER
-    key = credentials.BINTRAY_API_KEY
+    user = credentials.BINTRAY_USER ?: System.getenv('BINTRAY_USER')
+    key = credentials.BINTRAY_API_KEY ?: System.getenv('BINTRAY_API_KEY')
     publications = ['PluginPublication']
 
     publish = true
