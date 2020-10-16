@@ -5,7 +5,8 @@
        default-autowire="constructor">
 
     <bean id="buildScanViewBuildTab"
-          class="nu.studer.teamcity.buildscan.BuildScanViewBuildTab">
+          class="nu.studer.teamcity.buildscan.BuildScanViewBuildTab"
+          destroy-method="unregister">
     </bean>
 
     <bean id="buildScanBuildServerListener"
@@ -16,7 +17,9 @@
 
     <bean id="buildScanCrumbSummaryExtension"
           class="nu.studer.teamcity.buildscan.BuildScanCrumbSummaryExtension"
-          init-method="register"/>
+          init-method="register"
+          destroy-method="unregister">
+    </bean>
 
     <bean id="cachedBuildScanLookup" primary="true"
           class="nu.studer.teamcity.buildscan.internal.CachedBuildScanLookup"
@@ -47,7 +50,8 @@
 
     <bean id="buildScanAdminPage"
           class="nu.studer.teamcity.buildscan.internal.cleanup.BuildScanAdminPage"
-          init-method="register">
+          init-method="register"
+          destroy-method="unregister">
     </bean>
 
     <bean id="buildScanCleanupController"
