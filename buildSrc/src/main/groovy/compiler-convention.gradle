@@ -1,6 +1,0 @@
-tasks.withType(JavaCompile).configureEach {
-    javaCompiler = javaToolchains.compilerFor {
-        String javaCompilerVersion = findProperty('javaCompilerVersion') ?: '8'
-        languageVersion = JavaLanguageVersion.of(javaCompilerVersion)
-    }
-}

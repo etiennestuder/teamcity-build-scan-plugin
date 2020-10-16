@@ -8,6 +8,7 @@ import jetbrains.buildServer.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Map;
 
 /**
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself
@@ -33,13 +34,13 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            String existingParams = runner.getRunnerParameters().getOrDefault(GRADLE_CMD_PARAMS, "");
+            String existingParams = getOrDefault(GRADLE_CMD_PARAMS, runner);
             String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
 
             runner.addRunnerParameter(GRADLE_CMD_PARAMS, initScriptParam + " " + existingParams);
             runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            String existingParams = runner.getRunnerParameters().getOrDefault(MAVEN_CMD_PARAMS, "");
+            String existingParams = getOrDefault(MAVEN_CMD_PARAMS, runner);
             String extJarParam = "-Dmaven.ext.class.path=" + getExtensionJar(runner).getAbsolutePath();
 
             runner.addRunnerParameter(MAVEN_CMD_PARAMS, extJarParam + " " + existingParams);
@@ -57,6 +58,12 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_EXT_MAVEN);
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_EXT_MAVEN, extensionJar);
         return extensionJar;
+    }
+
+    @SuppressWarnings("Java8MapApi") // support JDK6
+    private static String getOrDefault(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
+        Map<String, String> runnerParameters = runner.getRunnerParameters();
+        return runnerParameters.containsKey(paramName) ? runnerParameters.get(paramName) : "";
     }
 
 }
