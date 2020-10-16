@@ -35,10 +35,8 @@ dependencies {
 }
 
 java {
-    toolchain {
-        String langVersion = findProperty('langVersion') ?: '8'
-        languageVersion = JavaLanguageVersion.of(langVersion)
-    }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 test {

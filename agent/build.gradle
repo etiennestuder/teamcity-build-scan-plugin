@@ -46,12 +46,6 @@ teamcity {
     }
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-}
-
 test {
     useJUnitPlatform()
     jvmArgumentProviders.add(new TeamCityInitClasspathCommandLineArgumentProvider(teamCityInitClasspath: configurations.teamCityInitClasspath))
