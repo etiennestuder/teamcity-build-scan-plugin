@@ -32,11 +32,16 @@ public final class BuildScanBuildServerListener extends BuildServerAdapter {
         this.externalIntegration = externalIntegration;
     }
 
-    @SuppressWarnings({"WeakerAccess", "unused"})
+    @SuppressWarnings("unused")
     public void register() {
         buildServer.addListener(this);
-
         LOGGER.info(String.format("Registered %s. %s-%s", getClass().getSimpleName(), pluginDescriptor.getPluginName(), pluginDescriptor.getPluginVersion()));
+    }
+
+    @SuppressWarnings("unused")
+    public void unregister() {
+        buildServer.removeListener(this);
+        LOGGER.info(String.format("Unregistered %s. %s-%s", getClass().getSimpleName(), pluginDescriptor.getPluginName(), pluginDescriptor.getPluginVersion()));
     }
 
     @Override
