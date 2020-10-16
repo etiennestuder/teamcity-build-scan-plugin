@@ -14,7 +14,7 @@ plugins {
 ext {
     CI = System.getenv().containsKey('CI') || project.properties.containsKey('CI')
     RELEASE = project.properties.containsKey('RELEASE')
-    baseVersion = '0.21'
+    baseVersion = '0.22'
     buildTime = new Date()
 }
 
