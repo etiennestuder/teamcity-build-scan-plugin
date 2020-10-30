@@ -26,7 +26,7 @@
         "level": "notice"
     },
     {
-        "message": "This is a annotation on file outside of changed",
+        "message": "This is a annotation on file outside of changed. [Some link](https://www.google.com)",
         "path": "LICENSE.md",
         "line": {
             "start": 1,
