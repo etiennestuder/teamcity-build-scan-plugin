@@ -9,6 +9,6 @@ jobs:
             -   name: Annotate
                 uses: Attest/annotations-action@v1.0.7
                 with:
-                    token: ${{ secrets.GITHUB_TOKEN }}
-                    input: './annotations.json'
+                    secret: ${{ secrets.GITHUB_TOKEN }}
+                    path: './annotations.json'
                     title: 'Annotate Files'
