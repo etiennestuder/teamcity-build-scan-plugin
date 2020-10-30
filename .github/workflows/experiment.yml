@@ -7,7 +7,7 @@ jobs:
         steps:
             -   uses: actions/checkout@v1
             -   name: Annotate
-                uses: Attest/annotations-action@v1.0.3
+                uses: Attest/annotations-action@v1.0.7
                 with:
                     token: ${{ secrets.GITHUB_TOKEN }}
                     input: './annotations.json'
