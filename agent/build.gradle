@@ -61,7 +61,7 @@ final class TeamCityInitClasspathCommandLineArgumentProvider implements CommandL
 
     @Override
     Iterable<String> asArguments() {
-        ["-DteamCityInitClasspath=${teamCityInitClasspath.files.join(File.pathSeparator)}"]
+        ["-DteamCityInitClasspath=$teamCityInitClasspath.asPath"]
     }
 
 }
