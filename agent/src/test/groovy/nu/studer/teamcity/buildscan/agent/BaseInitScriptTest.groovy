@@ -7,11 +7,10 @@ import jetbrains.buildServer.util.FileUtil
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.util.GradleVersion
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import ratpack.groovy.test.embed.GroovyEmbeddedApp
 import spock.lang.AutoCleanup
 import spock.lang.Specification
+import spock.lang.TempDir
 
 import java.util.zip.GZIPOutputStream
 
@@ -28,8 +27,8 @@ class BaseInitScriptTest extends Specification {
     File settingsFile
     File buildFile
 
-    @Rule
-    TemporaryFolder testProjectDir = new TemporaryFolder()
+    @TempDir
+    File testProjectDir
 
     @AutoCleanup
     def mockScansServer = GroovyEmbeddedApp.of {
@@ -74,9 +73,9 @@ class BaseInitScriptTest extends Specification {
     }
 
     def setup() {
-        initScriptFile = testProjectDir.newFile('initscript.gradle')
-        settingsFile = testProjectDir.newFile('settings.gradle')
-        buildFile = testProjectDir.newFile('build.gradle')
+        initScriptFile = new File(testProjectDir, 'initscript.gradle')
+        settingsFile = new File(testProjectDir, 'settings.gradle')
+        buildFile = new File(testProjectDir, 'build.gradle')
 
         FileUtil.copyResource(BuildScanServiceMessageInjector.class, '/' + BUILD_SCAN_INIT_GRADLE, initScriptFile)
     }
@@ -133,7 +132,7 @@ class BaseInitScriptTest extends Specification {
         def args = ['tasks', '-I', initScriptFile.absolutePath]
         GradleRunner.create()
             .withGradleVersion(gradleVersion.version)
-            .withProjectDir(testProjectDir.root)
+            .withProjectDir(testProjectDir)
             .withArguments(args)
             .withEnvironment(['TEAMCITY_BUILD_INIT_PATH': System.getProperty(TEAMCITY_BUILD_INIT_CLASS_PATH_SYS_PROP)])
             .build()

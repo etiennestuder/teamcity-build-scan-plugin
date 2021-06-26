@@ -1,9 +1,8 @@
 package nu.studer.teamcity.buildscan.internal
 
 import jetbrains.buildServer.serverSide.SBuild
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import spock.lang.TempDir
 import spock.lang.Unroll
 
 import java.nio.file.Files
@@ -13,12 +12,13 @@ class ArtifactBuildScanDataStoreTest extends Specification {
     ArtifactBuildScanDataStore store
     File artifactsFolder
 
-    @Rule
-    TemporaryFolder tempDir = new TemporaryFolder()
+    @TempDir
+    File tempDir
 
     void setup() {
         store = new ArtifactBuildScanDataStore()
-        artifactsFolder = tempDir.newFolder()
+        def testFolder = specificationContext.currentIteration.name.replace(':', '.').replace('\'', '')
+        artifactsFolder = new File(tempDir, testFolder)
     }
 
     def "empty build scan links file is created when build is marked as started"() {
