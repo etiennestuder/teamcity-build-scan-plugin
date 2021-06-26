@@ -1,5 +1,4 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
     <groupId>nu.studer</groupId>
     <artifactId>service-message-maven-extension</artifactId>
@@ -8,6 +7,10 @@
     <name>Service Message Maven Extension</name>
     <description>Maven extension to send services messages containing build scan links to the TeamCity server</description>
     <url>https://github.com/etiennestuder/teamcity-build-scan-plugin</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -62,5 +65,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
