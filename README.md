@@ -48,12 +48,12 @@ If you do not use TeamCity's MavenRunner to launch Maven builds, you can still g
 
 # Installation
 
-## Option 1: Automatically install plugin via Admin UI
+## Option 1: Conveniently select plugin
 
 1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and browse the plugins repository.
 2. Select, install, and activate the plugin as described [here](https://www.jetbrains.com/help/teamcity/installing-additional-plugins.html#Installing+a+plugin+from+JetBrains+Plugins+repository).
 
-## Option 2: Manually install plugin
+## Option 2: Manually upload plugin
 
 1. Download the plugin `.zip` file from [https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
 
