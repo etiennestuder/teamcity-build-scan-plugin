@@ -2,7 +2,7 @@ import jetbrains.buildServer.messages.serviceMessages.ServiceMessage
 import org.gradle.util.GradleVersion
 
 if (GradleVersion.current() < GradleVersion.version('4.1')) {
-    logger.warn("${GradleVersion.current()} is not supported by the TeamCity Build Scan plugin.")
+    logger.warn("TeamCity Build Scan plugin requires at least Gradle 4.1. Build uses Gradle ${GradleVersion.current()}.")
     return
 }
 
