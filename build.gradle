@@ -60,9 +60,9 @@ teamcity {
         }
 
         publish {
-             token = findProperty('jetbrains.token')
-             notes = findProperty('change.notes')
-         }
+            channels = ['Stable']
+            token = findProperty('teamCityPluginPublishToken')
+        }
     }
 
     environments {
