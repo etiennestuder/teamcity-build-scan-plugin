@@ -34,6 +34,12 @@ processResources {
     from configurations.mvnExtension
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     javaCompiler = javaToolchains.compilerFor {
         String javaCompilerVersion = findProperty('javaCompilerVersion') ?: '8'
