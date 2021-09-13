@@ -31,9 +31,9 @@ dependencies {
     testImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
 }
 
-tasks.withType(JavaCompile).configureEach {
-    javaCompiler = javaToolchains.compilerFor {
-        languageVersion = JavaLanguageVersion.of('8')
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
     }
 }
 
