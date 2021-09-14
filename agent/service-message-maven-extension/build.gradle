@@ -1,16 +1,22 @@
 import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
 
 plugins {
-    id 'base'
+    id 'java-base'
 }
 
 task buildExtension(type: Exec) {
-    inputs.file('pom.xml')
-    inputs.dir('src/main')
-    outputs.file('target/service-message-maven-extension-1.0.jar')
+    def toolchain = project.getExtensions().getByType(JavaToolchainService.class)
+    def launcherFor = toolchain.launcherFor { it.languageVersion.set(JavaLanguageVersion.of(11)) }
+
+    def path = launcherFor.get().metadata.getInstallationPath().asFile.absolutePath
+    inputs.property 'javaHome', path
+    inputs.file 'pom.xml'
+    inputs.dir 'src/main'
+    outputs.file 'target/service-message-maven-extension-1.0.jar'
 
     def mvnw = DefaultNativePlatform.currentOperatingSystem.isWindows() ? './mvnw.cmd' : './mvnw'
     commandLine mvnw, 'clean', 'package'
+    environment 'JAVA_HOME', path
 }
 
 configurations {
