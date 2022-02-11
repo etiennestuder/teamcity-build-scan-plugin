@@ -23,7 +23,7 @@ dependencies {
     teamCityInitClasspath 'org.jetbrains.teamcity:serviceMessages:2020.2.1'
 
     testImplementation gradleTestKit()
-    testImplementation ('io.ratpack:ratpack-groovy-test:1.8.2') {
+    testImplementation ('io.ratpack:ratpack-groovy-test:1.9.0') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.12.1'
