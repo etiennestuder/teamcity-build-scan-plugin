@@ -24,7 +24,7 @@ group = 'nu.studer'
 version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.google.guava:guava:31.0.1-jre'
 
     agent project(path: ':agent', configuration: 'plugin')
