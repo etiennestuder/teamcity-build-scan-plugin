@@ -27,7 +27,7 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.13.1'
-    testImplementation('org.spockframework:spock-core:2.0-groovy-3.0')
+    testImplementation('org.spockframework:spock-core:2.1-groovy-3.0')
 }
 
 processResources {
