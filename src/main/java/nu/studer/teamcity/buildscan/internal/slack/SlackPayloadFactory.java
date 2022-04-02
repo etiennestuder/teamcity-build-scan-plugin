@@ -34,7 +34,7 @@ final class SlackPayloadFactory {
         String buildUrl = String.format("%s/viewLog.html?buildId=%s", serverUrl, buildId);
 
         // hard-code username
-        payload.username("Gradle Cloud Services");
+        payload.username("Gradle Enterprise");
 
         // main text
         String tcBuildOutcome =
