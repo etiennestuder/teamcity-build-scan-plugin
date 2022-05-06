@@ -5,10 +5,31 @@ if (GradleVersion.current() < GradleVersion.version('4.1')) {
     return
 }
 
+initscript {
+    def geVersion = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version')
+    if (geVersion && !gradle.getParent()) {
+        repositories {
+            maven { url 'https://plugins.gradle.org/m2' }
+        }
+        dependencies {
+            classpath GradleVersion.current() >= GradleVersion.version('5.0') ?
+                    "com.gradle:gradle-enterprise-gradle-plugin:$geVersion" :
+                    "com.gradle:build-scan-plugin:$geVersion"
+        }
+    }
+}
+
 logger.quiet(generateBuildScanLifeCycleMessage('BUILD_STARTED'))
 
 def BUILD_SCAN_PLUGIN_ID = 'com.gradle.build-scan'
+def BUILD_SCAN_PLUGIN_CLASS = 'com.gradle.scan.plugin.BuildScanPlugin'
+
+def GRADLE_ENTERPRISE_PLUGIN_ID = 'com.gradle.enterprise'
+def GRADLE_ENTERPRISE_PLUGIN_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin'
 def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterpriseExtension'
+
+def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.url')
+def autoApplyGe = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && !gradle.getParent()
 
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
@@ -21,21 +42,41 @@ def buildScanPublishedAction = { def buildScan ->
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
     // Gradle 4.1+ and 5.+
     rootProject {
+        if (autoApplyGe && !pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
+            pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
+        }
+
         pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
             buildScanPublishedAction(buildScan)
+            buildScan {
+                afterEvaluate {
+                    server = geUrl ?: server
+                    publishAlwaysIf(autoApplyGe)
+                }
+            }
         }
     }
 } else {
     // Gradle 6.+
     gradle.settingsEvaluated { settings ->
-        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each {
-            buildScanPublishedAction(settings[it.name].buildScan)
+        if (autoApplyGe && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
+            settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
+        }
+
+        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
+            buildScanPublishedAction(ext.buildScan)
+            ext.server = geUrl ?: ext.server
+            ext.buildScan {
+                publishAlwaysIf(autoApplyGe)
+            }
         }
     }
 }
 
 static def extensionsWithPublicType(def container, String publicType) {
-    container.extensions.extensionsSchema.elements.findAll { it.publicType.concreteClass.name == publicType }
+    container.extensions.extensionsSchema.elements
+            .findAll { it.publicType.concreteClass.name == publicType }
+            .collect { container[it.name] }
 }
 
 static String generateBuildScanLifeCycleMessage(def attribute) {
