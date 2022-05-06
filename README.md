@@ -70,6 +70,17 @@ previously downloaded plugin `.zip` file.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
+## Automatic Gradle Enterprise Plugin Setup
+
+1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 2 configuration parameters
+
+   - `GRADLE_ENTERPRISE_URL` - the URL of the Gradle Enterprise instance to which you want to publish build scans. If set, this will override the definition of an existing Gradle Enterprise server url.
+   - `GRADLE_ENTERPRISE_PLUGIN_VERSION` - the version of the Gradle Enterprise plugin to apply to the build.
+
+1. Trigger your Gradle build.
+   
+1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
+
 ## Slack Integration
 
 1. In Slack, create a webhook and keep track of the created URL.
