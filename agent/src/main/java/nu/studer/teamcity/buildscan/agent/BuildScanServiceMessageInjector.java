@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself
@@ -27,6 +28,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
+    private static final String GRADLE_ENTERPRISE_URL_PARAMETER = "GRADLE_ENTERPRISE_URL";
+
+    private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle.enterprise.url";
+
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
         eventDispatcher.addListener(this);
     }
@@ -34,10 +39,12 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            String existingParams = getOrDefault(GRADLE_CMD_PARAMS, runner);
-            String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
+            getOptionalConfigParam(runner, GRADLE_ENTERPRISE_URL_PARAMETER).ifPresent(geUrl ->
+                    addGradleSysProp(GE_URL_GRADLE_PROPERTY, geUrl, runner)
+            );
 
-            runner.addRunnerParameter(GRADLE_CMD_PARAMS, initScriptParam + " " + existingParams);
+            String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
+            addGradleCmdParam(initScriptParam, runner);
             runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
             String existingParams = getOrDefault(MAVEN_CMD_PARAMS, runner);
@@ -64,6 +71,22 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static String getOrDefault(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
         Map<String, String> runnerParameters = runner.getRunnerParameters();
         return runnerParameters.containsKey(paramName) ? runnerParameters.get(paramName) : "";
+    }
+
+    private static Optional<String> getOptionalConfigParam(@NotNull BuildRunnerContext runner, @NotNull String paramName) {
+        return Optional.ofNullable(runner.getConfigParameters().get(paramName))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty());
+    }
+
+    private static void addGradleSysProp(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
+        String systemProp = String.format("-D%s=%s", key, value);
+        addGradleCmdParam(systemProp, runner);
+    }
+
+    private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
+        String existingParams = getOrDefault(GRADLE_CMD_PARAMS, runner);
+        runner.addRunnerParameter(GRADLE_CMD_PARAMS, param + " " + existingParams);
     }
 
 }
