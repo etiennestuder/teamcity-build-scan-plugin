@@ -10,7 +10,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import javax.inject.Inject;
 
-@Component(role = AbstractMavenLifecycleParticipant.class, hint = "build-scan-service-message")
+@Component(role = AbstractMavenLifecycleParticipant.class, hint = "build-scan-service-message", description = "Interacts with Maven builds invoked from TeamCity")
 public final class BuildScanServiceMessageMavenExtension extends AbstractMavenLifecycleParticipant {
 
     private final PlexusContainer container;
