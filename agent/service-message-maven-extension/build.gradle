@@ -4,6 +4,10 @@ plugins {
     id 'java-base'
 }
 
+ext {
+    CI = System.getenv().containsKey('CI') || project.properties.containsKey('CI')
+}
+
 tasks.register('buildExtension', Exec).configure {
     def toolchain = project.getExtensions().getByType(JavaToolchainService.class)
     def launcherFor = toolchain.launcherFor { it.languageVersion.set(JavaLanguageVersion.of(8)) }
@@ -16,6 +20,11 @@ tasks.register('buildExtension', Exec).configure {
 
     def mvnw = DefaultNativePlatform.currentOperatingSystem.isWindows() ? './mvnw.cmd' : './mvnw'
     commandLine mvnw, 'clean', 'package'
+
+    if (CI) {
+        args '-B'
+    }
+
     environment 'JAVA_HOME', cmdLineArgProvider.javaLauncher.metadata.installationPath.asFile.absolutePath
 }
 
