@@ -86,14 +86,15 @@ githubRelease {
     targetCommitish = 'master'
     releaseName = gitHubReleaseName()
     tagName = gitReleaseTag()
-    prerelease = false
-    overwrite = false
+    prerelease = !RELEASE
+    overwrite = !RELEASE
     body = layout.projectDirectory.file('release/changes.md').asFile.text.trim()
     releaseAssets(tasks.named('serverPlugin'))
 }
 
 tasks.register('createReleaseTag', CreateGitTag) {
     tagName = gitReleaseTag()
+    overwriteExisting = !RELEASE
 }
 
 tasks.named('githubRelease') {
@@ -101,11 +102,11 @@ tasks.named('githubRelease') {
 }
 
 def gitHubReleaseName() {
-    return version.toString()
+    return RELEASE ? version.toString() : 'Development Build'
 }
 
 def gitReleaseTag() {
-    return "v${version}"
+    return RELEASE ? "v${version}" : 'development-latest'
 }
 
 static timestamp(Date date) {
