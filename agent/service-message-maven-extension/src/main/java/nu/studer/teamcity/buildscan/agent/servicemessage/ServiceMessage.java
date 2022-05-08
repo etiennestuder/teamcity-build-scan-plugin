@@ -37,22 +37,23 @@ final class ServiceMessage {
         return sb.toString();
     }
 
-    private String escape(final char c) {
+    private String escape(char c) {
+        String escapeCharacter = "|";
         switch (c) {
             case '\n':
-                return "n";
+                return escapeCharacter + "n";
             case '\r':
-                return "r";
+                return escapeCharacter + "r";
             case '|':
-                return "|";
+                return escapeCharacter + "|";
             case '\'':
-                return "\'";
+                return escapeCharacter + "\'";
             case '[':
-                return "[";
+                return escapeCharacter + "[";
             case ']':
-                return "]";
+                return escapeCharacter + "]";
             default:
-                return c < 128 ? Character.toString(c) : String.format("0x%04x", (int) c);
+                return c < 128 ? Character.toString(c) : escapeCharacter + String.format("0x%04x", (int) c);
         }
     }
 
