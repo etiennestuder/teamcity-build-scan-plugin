@@ -89,6 +89,7 @@ githubRelease {
     prerelease = false
     overwrite = false
     body = layout.projectDirectory.file('release/changes.md').asFile.text.trim()
+    releaseAssets(tasks.named('serverPlugin'))
 }
 
 tasks.register('createReleaseTag', CreateGitTag) {
