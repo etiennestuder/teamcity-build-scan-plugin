@@ -43,7 +43,7 @@ test {
 }
 
 teamcity {
-    version = '2020.2' // TeamCity API version
+    version = '2020.1' // TeamCity API version
 
     server {
         descriptor {
