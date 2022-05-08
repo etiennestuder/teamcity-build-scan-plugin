@@ -81,6 +81,7 @@ previously downloaded plugin `.zip` file.
 Both feedback and contributions are very welcome.
 
 # Acknowledgements
++ [madlexa](https://github.com/madlexa) (pr #47 that adds TeamCity 2022.04 compatibility)
 + [facewindu](https://github.com/facewindu) (pr #21 that includes init script test coverage)
 + [dmitry-treskunov](https://github.com/dmitry-treskunov) (bug report and proposed fix)
 + [pbielicki](https://github.com/pbielicki) (pr #17 that adds a hint to the BuildScanServiceMessageMavenExtension @Component)
