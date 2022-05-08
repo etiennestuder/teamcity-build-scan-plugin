@@ -62,7 +62,7 @@ teamcity {
 
         publish {
             channels = ['Stable']
-            token = findProperty('teamCityPluginPublishToken')
+            token = System.getenv('TEAMCITY_PLUGIN_PUBLISH_TOKEN')
         }
     }
 
