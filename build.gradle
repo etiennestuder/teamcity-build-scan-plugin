@@ -23,15 +23,6 @@ def snapshotVersion = RELEASE ? '' : buildTimestamp
 group = 'nu.studer'
 version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 
-println "isCi: " + CI
-println "RELEASE: " + RELEASE
-println "baseVersion: " + baseVersion
-println "buildTime: " + buildTime
-println "buildTimestamp: " + buildTimestamp
-println "snapshotVersion: " + snapshotVersion
-println "group: " + group
-println "version: " + version
-
 dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.google.guava:guava:31.1-jre'
