@@ -12,15 +12,10 @@ configurations {
         canBeConsumed = false
         canBeResolved = true
     }
-    teamCityInitClasspath {
-        canBeConsumed = false
-        canBeResolved = true
-    }
 }
 
 dependencies {
     mvnExtension project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
-    teamCityInitClasspath 'org.jetbrains.teamcity:serviceMessages:2020.2.1'
 
     testImplementation gradleTestKit()
     testImplementation ('io.ratpack:ratpack-groovy-test:1.9.0') {
@@ -47,10 +42,6 @@ tasks.withType(JavaCompile).configureEach {
     }
 }
 
-test {
-    jvmArgumentProviders.add(new TeamCityInitClasspathCommandLineArgumentProvider(teamCityInitClasspath: configurations.teamCityInitClasspath))
-}
-
 teamcity {
     agent {
         archiveName = 'teamcity-build-scan-plugin-agent.zip'
@@ -60,16 +51,4 @@ teamcity {
             }
         }
     }
-}
-
-final class TeamCityInitClasspathCommandLineArgumentProvider implements CommandLineArgumentProvider {
-
-    @Classpath
-    FileCollection teamCityInitClasspath
-
-    @Override
-    Iterable<String> asArguments() {
-        ["-DteamCityInitClasspath=$teamCityInitClasspath.asPath"]
-    }
-
 }

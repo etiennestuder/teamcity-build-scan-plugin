@@ -18,8 +18,6 @@ import static nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 
 class BaseInitScriptTest extends Specification {
 
-    static final String TEAMCITY_BUILD_INIT_CLASS_PATH_SYS_PROP = 'teamCityInitClasspath'
-
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'
 
@@ -134,7 +132,6 @@ class BaseInitScriptTest extends Specification {
             .withGradleVersion(gradleVersion.version)
             .withProjectDir(testProjectDir)
             .withArguments(args)
-            .withEnvironment(['TEAMCITY_BUILD_INIT_PATH': System.getProperty(TEAMCITY_BUILD_INIT_CLASS_PATH_SYS_PROP)])
             .build()
     }
 
