@@ -12,13 +12,13 @@ final class BuildScanServiceMessageSender {
         System.out.println(ServiceMessage.of(
             BUILD_SCAN_SERVICE_MESSAGE_NAME,
             BUILD_SCAN_SERVICE_STARTED_MESSAGE_ARGUMENT
-        ).toString());
+        ));
 
         buildScan.buildScanPublished(publishedBuildScan ->
             System.out.println(ServiceMessage.of(
                 BUILD_SCAN_SERVICE_MESSAGE_NAME,
                 BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX + publishedBuildScan.getBuildScanUri().toString()
-            ).toString())
+            ))
         );
     }
 

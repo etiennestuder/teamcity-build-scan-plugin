@@ -1,36 +1,29 @@
 package nu.studer.teamcity.buildscan.agent.servicemessage;
 
-import com.gradle.maven.extension.api.scan.BuildScanApi;
-import org.apache.maven.AbstractMavenLifecycleParticipant;
-import org.apache.maven.MavenExecutionException;
+import com.gradle.maven.extension.api.GradleEnterpriseApi;
+import com.gradle.maven.extension.api.GradleEnterpriseListener;
 import org.apache.maven.execution.MavenSession;
-import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.annotations.Component;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+@SuppressWarnings("unused")
+@Component(
+    role = GradleEnterpriseListener.class,
+    hint = "build-scan-service-message",
+    description = "Interacts with Maven builds invoked from TeamCity"
+)
+public final class BuildScanServiceMessageMavenExtension implements GradleEnterpriseListener {
 
-@Component(role = AbstractMavenLifecycleParticipant.class, hint = "build-scan-service-message", description = "Interacts with Maven builds invoked from TeamCity")
-public final class BuildScanServiceMessageMavenExtension extends AbstractMavenLifecycleParticipant {
-
-    private final PlexusContainer container;
-    private final Logger logger;
-
-    @Inject
-    public BuildScanServiceMessageMavenExtension(PlexusContainer container, Logger logger) {
-        this.container = container;
-        this.logger = logger;
-    }
+    private final Logger logger = LoggerFactory.getLogger(BuildScanServiceMessageMavenExtension.class);
 
     @Override
-    public void afterProjectsRead(MavenSession session) throws MavenExecutionException {
+    public void configure(GradleEnterpriseApi api, MavenSession session) {
         logger.debug("Executing extension: " + getClass().getSimpleName());
-        BuildScanApi buildScan = BuildScanApiAccessor.lookup(container, getClass());
-        if (buildScan != null) {
-            logger.debug("Registering listener capturing build scan link");
-            BuildScanServiceMessageSender.register(buildScan);
-            logger.debug("Finished registering listener capturing build scan link");
-        }
+
+        logger.debug("Registering listener capturing build scan link");
+        BuildScanServiceMessageSender.register(api.getBuildScan());
+        logger.debug("Finished registering listener capturing build scan link");
     }
 
 }
