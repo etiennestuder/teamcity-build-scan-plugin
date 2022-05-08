@@ -1,1 +1,1 @@
-Adds compatibility with TeamCity 2022.04.
+Leverage new GradleEnterpriseApi to hook into life-cycle.
