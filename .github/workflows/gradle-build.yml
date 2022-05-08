@@ -11,7 +11,11 @@ jobs:
                 uses: actions/setup-java@v1
                 with:
                     java-version: '8'
-            -   name: Build with Gradle
+            -   name: Build and bundle plugin artifact
                 uses: gradle/gradle-build-action@v2
                 with:
                     arguments: build -Pteamcity-build-scan-plugin.acceptGradleTOS=true
+            -   name: Upload plugin artifact
+                uses: actions/upload-artifact@v3
+                with:
+                    path: build/distributions/teamcity-build-scan-plugin-*.zip
