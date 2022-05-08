@@ -17,7 +17,7 @@ The plugin is available from the [JetBrains Plugins Repository](https://plugins.
 
 ## Build scan
 
-Recent build scan: https://scans.gradle.com/s/cv4z5js6g6xga
+Recent build scan: https://gradle.com/s/yevfzaz2bvvh4
 
 Find out more about build scans for Gradle and Maven at https://scans.gradle.com.
 
