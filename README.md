@@ -72,10 +72,11 @@ previously downloaded plugin `.zip` file.
 
 ## Automatic Gradle Enterprise Plugin Setup
 
-1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 2 configuration parameters
+1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 3 configuration parameters:
 
    - `GRADLE_ENTERPRISE_URL` - the URL of the Gradle Enterprise instance to which you want to publish build scans. If set, this will override the definition of an existing Gradle Enterprise server url.
    - `GRADLE_ENTERPRISE_PLUGIN_VERSION` - the version of the Gradle Enterprise plugin to apply to the build.
+   - `CCUD_PLUGIN_VERSION` - the version of the [Common Custom User Data](https://github.com/gradle/common-custom-user-data-gradle-plugin) plugin to apply to the build.
 
 1. Trigger your Gradle build.
    
