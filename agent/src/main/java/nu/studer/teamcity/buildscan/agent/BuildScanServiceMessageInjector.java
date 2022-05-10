@@ -32,9 +32,13 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GRADLE_ENTERPRISE_PLUGIN_VERSION_PARAMETER = "GRADLE_ENTERPRISE_PLUGIN_VERSION";
 
+    private static final String CCUD_PLUGIN_VERSION_PARAMETER = "CCUD_PLUGIN_VERSION";
+
     private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle.enterprise.url";
 
     private static final String GE_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle.enterprise.plugin.version";
+
+    private static final String CCUD_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.ccud.version";
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
         eventDispatcher.addListener(this);
@@ -45,6 +49,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
             addGradleSysPropIfSet(GRADLE_ENTERPRISE_URL_PARAMETER, GE_URL_GRADLE_PROPERTY, runner);
             addGradleSysPropIfSet(GRADLE_ENTERPRISE_PLUGIN_VERSION_PARAMETER, GE_VERSION_GRADLE_PROPERTY, runner);
+            addGradleSysPropIfSet(CCUD_PLUGIN_VERSION_PARAMETER, CCUD_VERSION_GRADLE_PROPERTY, runner);
 
             String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
             addGradleCmdParam(initScriptParam, runner);

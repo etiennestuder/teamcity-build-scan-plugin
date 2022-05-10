@@ -7,14 +7,21 @@ if (GradleVersion.current() < GradleVersion.version('4.1')) {
 
 initscript {
     def geVersion = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version')
+    def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
+    def ccudVersion = System.getProperty('teamCityBuildScanPlugin.ccud.version')
+
     if (geVersion && !gradle.getParent()) {
         repositories {
             maven { url 'https://plugins.gradle.org/m2' }
         }
         dependencies {
-            classpath GradleVersion.current() >= GradleVersion.version('5.0') ?
+            classpath atLeastGradle5 ?
                     "com.gradle:gradle-enterprise-gradle-plugin:$geVersion" :
                     "com.gradle:build-scan-plugin:$geVersion"
+
+            if (atLeastGradle5 && ccudVersion) {
+                classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudVersion"
+            }
         }
     }
 }
@@ -24,12 +31,16 @@ logger.quiet(generateBuildScanLifeCycleMessage('BUILD_STARTED'))
 def BUILD_SCAN_PLUGIN_ID = 'com.gradle.build-scan'
 def BUILD_SCAN_PLUGIN_CLASS = 'com.gradle.scan.plugin.BuildScanPlugin'
 
+def CCUD_PLUGIN_ID = 'com.gradle.common-custom-user-data-gradle-plugin'
+def CCUD_PLUGIN_CLASS = 'com.gradle.CommonCustomUserDataGradlePlugin'
+
 def GRADLE_ENTERPRISE_PLUGIN_ID = 'com.gradle.enterprise'
 def GRADLE_ENTERPRISE_PLUGIN_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin'
 def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterpriseExtension'
 
 def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.url')
 def autoApplyGe = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && !gradle.getParent()
+def autoApplyCcud = System.getProperty('teamCityBuildScanPlugin.ccud.version') && GradleVersion.current() >= GradleVersion.version('5.0')
 
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
@@ -44,6 +55,10 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     rootProject {
         if (autoApplyGe && !pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
             pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
+        }
+
+        if (autoApplyCcud && !pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+            pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
         }
 
         pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
@@ -61,6 +76,10 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     gradle.settingsEvaluated { settings ->
         if (autoApplyGe && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
+        }
+
+        if (autoApplyCcud && !settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+            settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
         }
 
         extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
