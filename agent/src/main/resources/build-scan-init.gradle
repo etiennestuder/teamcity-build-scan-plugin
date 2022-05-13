@@ -6,21 +6,21 @@ if (GradleVersion.current() < GradleVersion.version('4.1')) {
 }
 
 initscript {
-    def geVersion = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version')
+    def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version')
+    def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
     def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
-    def ccudVersion = System.getProperty('teamCityBuildScanPlugin.ccud.version')
 
-    if (geVersion && !gradle.getParent()) {
+    if (gePluginVersion && !gradle.getParent()) {
         repositories {
             maven { url 'https://plugins.gradle.org/m2' }
         }
         dependencies {
             classpath atLeastGradle5 ?
-                    "com.gradle:gradle-enterprise-gradle-plugin:$geVersion" :
-                    "com.gradle:build-scan-plugin:$geVersion"
+                    "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
+                    "com.gradle:build-scan-plugin:$gePluginVersion"
 
-            if (atLeastGradle5 && ccudVersion) {
-                classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudVersion"
+            if (atLeastGradle5 && ccudPluginVersion) {
+                classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
             }
         }
     }
@@ -39,8 +39,8 @@ def GRADLE_ENTERPRISE_PLUGIN_CLASS = 'com.gradle.enterprise.gradleplugin.GradleE
 def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterpriseExtension'
 
 def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.url')
-def autoApplyGe = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && !gradle.getParent()
-def autoApplyCcud = System.getProperty('teamCityBuildScanPlugin.ccud.version') && GradleVersion.current() >= GradleVersion.version('5.0')
+def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && !gradle.getParent()
+def autoApplyCcudPlugin = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version') && GradleVersion.current() >= GradleVersion.version('5.0')
 
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
@@ -53,11 +53,11 @@ def buildScanPublishedAction = { def buildScan ->
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
     // Gradle 4.1+ and 5.+
     rootProject {
-        if (autoApplyGe && !pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
+        if (autoApplyGePlugin && !pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
             pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
         }
 
-        if (autoApplyCcud && !pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+        if (autoApplyCcudPlugin && !pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
             pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
         }
 
@@ -66,7 +66,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             buildScan {
                 afterEvaluate {
                     server = geUrl ?: server
-                    publishAlwaysIf(autoApplyGe)
+                    publishAlwaysIf(autoApplyGePlugin)
                 }
             }
         }
@@ -74,11 +74,11 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 } else {
     // Gradle 6.+
     gradle.settingsEvaluated { settings ->
-        if (autoApplyGe && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
+        if (autoApplyGePlugin && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
         }
 
-        if (autoApplyCcud && !settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+        if (autoApplyCcudPlugin && !settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
         }
 
@@ -86,7 +86,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             buildScanPublishedAction(ext.buildScan)
             ext.server = geUrl ?: ext.server
             ext.buildScan {
-                publishAlwaysIf(autoApplyGe)
+                publishAlwaysIf(autoApplyGePlugin)
             }
         }
     }
