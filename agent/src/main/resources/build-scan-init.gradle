@@ -64,10 +64,8 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
         pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
             buildScanPublishedAction(buildScan)
             buildScan {
-                afterEvaluate {
-                    server = geUrl ?: server
-                    publishAlwaysIf(autoApplyGePlugin)
-                }
+                server = geUrl
+                publishAlwaysIf(autoApplyGePlugin)
             }
         }
     }
@@ -84,7 +82,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 
         extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
             buildScanPublishedAction(ext.buildScan)
-            ext.server = geUrl ?: ext.server
+            ext.server = ext.server ?: geUrl
             ext.buildScan {
                 publishAlwaysIf(autoApplyGePlugin)
             }
