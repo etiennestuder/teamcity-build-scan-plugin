@@ -9,19 +9,25 @@ initscript {
     def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version')
     def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
     def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
+    def isTopLevelBuild = !gradle.parent
+    def addGePluginToClasspath = gePluginVersion && isTopLevelBuild
+    def addCcudPluginToClasspath = ccudPluginVersion && atLeastGradle5 && isTopLevelBuild
 
-    if (gePluginVersion && !gradle.getParent()) {
+    if (addGePluginToClasspath || addCcudPluginToClasspath) {
         repositories {
             maven { url 'https://plugins.gradle.org/m2' }
         }
-        dependencies {
+    }
+
+    dependencies {
+        if (addGePluginToClasspath) {
             classpath atLeastGradle5 ?
                     "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
                     "com.gradle:build-scan-plugin:$gePluginVersion"
+        }
 
-            if (atLeastGradle5 && ccudPluginVersion) {
-                classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
-            }
+        if (addCcudPluginToClasspath) {
+            classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
         }
     }
 }
@@ -38,9 +44,11 @@ def GRADLE_ENTERPRISE_PLUGIN_ID = 'com.gradle.enterprise'
 def GRADLE_ENTERPRISE_PLUGIN_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin'
 def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterpriseExtension'
 
+def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
+def isTopLevelBuild = !gradle.parent
 def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.url')
-def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && !gradle.getParent()
-def autoApplyCcudPlugin = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version') && GradleVersion.current() >= GradleVersion.version('5.0')
+def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && isTopLevelBuild
+def autoApplyCcudPlugin = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version') && isTopLevelBuild && atLeastGradle5
 
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
@@ -55,6 +63,13 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     rootProject {
         if (autoApplyGePlugin && !pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
             pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
+
+            pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+                buildScan {
+                    server = geUrl
+                    publishAlways()
+                }
+            }
         }
 
         if (autoApplyCcudPlugin && !pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
@@ -63,10 +78,6 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 
         pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
             buildScanPublishedAction(buildScan)
-            buildScan {
-                server = geUrl
-                publishAlwaysIf(autoApplyGePlugin)
-            }
         }
     }
 } else {
@@ -74,6 +85,13 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     gradle.settingsEvaluated { settings ->
         if (autoApplyGePlugin && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
+
+            extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
+                ext.server = ext.server ?: geUrl
+                ext.buildScan {
+                    publishAlways()
+                }
+            }
         }
 
         if (autoApplyCcudPlugin && !settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
@@ -82,10 +100,6 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 
         extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
             buildScanPublishedAction(ext.buildScan)
-            ext.server = ext.server ?: geUrl
-            ext.buildScan {
-                publishAlwaysIf(autoApplyGePlugin)
-            }
         }
     }
 }
