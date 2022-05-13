@@ -86,7 +86,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
         if (autoApplyGePlugin && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
 
-            extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
+            extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect{ settings[it.name] }.each { ext ->
                 ext.server = ext.server ?: geUrl
                 ext.buildScan {
                     publishAlways()
@@ -98,16 +98,14 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
         }
 
-        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each { ext ->
-            buildScanPublishedAction(ext.buildScan)
+        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each {
+            buildScanPublishedAction(settings[it.name].buildScan)
         }
     }
 }
 
 static def extensionsWithPublicType(def container, String publicType) {
-    container.extensions.extensionsSchema.elements
-            .findAll { it.publicType.concreteClass.name == publicType }
-            .collect { container[it.name] }
+    container.extensions.extensionsSchema.elements.findAll { it.publicType.concreteClass.name == publicType }
 }
 
 static String generateBuildScanLifeCycleMessage(def attribute) {
