@@ -91,7 +91,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 
                 pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
                     buildScan {
-                        server = geUrl
+                        server = server ?: geUrl
                         publishAlways()
                     }
                 }
