@@ -3,7 +3,8 @@ name: Verify Build
 on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-    build:
+    verification:
+        name: Verification
         runs-on: ubuntu-latest
         steps:
             -   name: Check out project
