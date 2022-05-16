@@ -6,7 +6,7 @@ if (GradleVersion.current() < GradleVersion.version('4.1')) {
 }
 
 initscript {
-    def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version')
+    def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
     def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
     def isTopLevelBuild = !gradle.parent
@@ -47,7 +47,7 @@ def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.Grad
 def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
 def isTopLevelBuild = !gradle.parent
 def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.url')
-def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.plugin.version') && isTopLevelBuild
+def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version') && isTopLevelBuild
 def autoApplyCcudPlugin = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version') && isTopLevelBuild && atLeastGradle5
 
 def buildScanPublishedAction = { def buildScan ->
@@ -119,12 +119,12 @@ static String escape(String value) {
 static String escapeChar(char ch) {
     String escapeCharacter = "|"
     switch (ch) {
-        case '\n': return escapeCharacter + "n";
-        case '\r': return escapeCharacter + "r";
-        case '|': return escapeCharacter + "|";
-        case '\'': return escapeCharacter + "\'";
-        case '[': return escapeCharacter + "[";
-        case ']': return escapeCharacter + "]";
-        default: return ch < 128 ? ch as String : escapeCharacter + String.format("0x%04x", (int)ch);
+        case '\n': return escapeCharacter + "n"
+        case '\r': return escapeCharacter + "r"
+        case '|': return escapeCharacter + "|"
+        case '\'': return escapeCharacter + "\'"
+        case '[': return escapeCharacter + "["
+        case ']': return escapeCharacter + "]"
+        default: return ch < 128 ? ch as String : escapeCharacter + String.format("0x%04x", (int)ch)
     }
 }
