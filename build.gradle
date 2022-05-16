@@ -22,9 +22,13 @@ def snapshotVersion = RELEASE ? '' : buildTimestamp
 group = 'nu.studer'
 version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 
+def teamCityApiVersion = '2020.1'
+
 dependencies {
     implementation 'com.google.code.gson:gson:2.9.0'
     implementation 'com.google.guava:guava:31.1-jre'
+
+    provided "org.jetbrains.teamcity:oauth:$teamCityApiVersion"
 
     agent project(path: ':agent', configuration: 'plugin')
 
@@ -42,7 +46,7 @@ test {
 }
 
 teamcity {
-    version = '2020.1' // TeamCity API version
+    version = teamCityApiVersion
 
     server {
         descriptor {
@@ -71,8 +75,8 @@ teamcity {
         baseHomeDir = mkdir('.teamcity/servers')
         baseDataDir = mkdir('.teamcity/data')
 
-        teamcity2020_2 {
-            version = '2020.2.2'
+        teamcity2022_4 {
+            version = '2022.04'
             serverOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005'
             agentOptions '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5006'
         }

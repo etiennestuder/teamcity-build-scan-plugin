@@ -62,4 +62,16 @@
           class="nu.studer.teamcity.buildscan.internal.CustomDataStorageBuildScanCleaner">
     </bean>
 
+    <bean id="gradleEnterpriseConnectionProvider"
+          class = "nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionProvider">
+    </bean>
+
+    <bean id="gradleEnterpriseParametersProvider"
+          class = "nu.studer.teamcity.buildscan.connection.GradleEnterpriseParametersProvider">
+    </bean>
+
+    <bean id="gradleEnterprisePasswordProvider"
+          class = "nu.studer.teamcity.buildscan.connection.GradleEnterprisePasswordProvider">
+    </bean>
+
 </beans>
