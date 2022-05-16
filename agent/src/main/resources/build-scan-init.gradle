@@ -1,10 +1,12 @@
 import org.gradle.util.GradleVersion
 
+// finish early if the build is not run with the minimum supported Gradle version
 if (GradleVersion.current() < GradleVersion.version('4.1')) {
     logger.warn("TeamCity Build Scan plugin requires at least Gradle 4.1. Build uses Gradle ${GradleVersion.current()}.")
     return
 }
 
+// conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
     def isTopLevelBuild = !gradle.parent
     def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
@@ -34,24 +36,26 @@ initscript {
     }
 }
 
+// send a message to the server that the build has started
 logger.quiet(generateBuildScanLifeCycleMessage('BUILD_STARTED'))
 
 def BUILD_SCAN_PLUGIN_ID = 'com.gradle.build-scan'
 def BUILD_SCAN_PLUGIN_CLASS = 'com.gradle.scan.plugin.BuildScanPlugin'
 
-def CCUD_PLUGIN_ID = 'com.gradle.common-custom-user-data-gradle-plugin'
-def CCUD_PLUGIN_CLASS = 'com.gradle.CommonCustomUserDataGradlePlugin'
-
 def GRADLE_ENTERPRISE_PLUGIN_ID = 'com.gradle.enterprise'
 def GRADLE_ENTERPRISE_PLUGIN_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin'
 def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.GradleEnterpriseExtension'
 
-def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
-def isTopLevelBuild = !gradle.parent
-def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.url')
-def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version') && isTopLevelBuild
-def autoApplyCcudPlugin = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version') && isTopLevelBuild && atLeastGradle5
+def CCUD_PLUGIN_ID = 'com.gradle.common-custom-user-data-gradle-plugin'
+def CCUD_PLUGIN_CLASS = 'com.gradle.CommonCustomUserDataGradlePlugin'
 
+def isTopLevelBuild = !gradle.parent
+def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
+def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.url')
+def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
+def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
+
+// add a buildScanPublished listener that captures the build scan URL and sends it in a message to the server
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
         buildScan.buildScanPublished { scan ->
@@ -61,9 +65,27 @@ def buildScanPublishedAction = { def buildScan ->
 }
 
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
-    // Gradle 4.1+ and 5.+
     rootProject {
-        if (autoApplyGePlugin && !pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
+        pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+            buildScanPublishedAction(buildScan)
+        }
+    }
+} else {
+    gradle.settingsEvaluated { settings ->
+        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each {
+            buildScanPublishedAction(settings[it.name].buildScan)
+        }
+    }
+}
+
+if (!isTopLevelBuild) {
+    return
+}
+
+// conditionally apply the GE / Build Scan plugin to the classpath
+if (GradleVersion.current() < GradleVersion.version('6.0')) {
+    rootProject {
+        if (!pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID) && gePluginVersion) {
             pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
 
             pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
@@ -74,18 +96,13 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             }
         }
 
-        if (autoApplyCcudPlugin && !pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+        if (!pluginManager.hasPlugin(CCUD_PLUGIN_ID) && ccudPluginVersion && atLeastGradle5) {
             pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
-        }
-
-        pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
-            buildScanPublishedAction(buildScan)
         }
     }
 } else {
-    // Gradle 6.+
     gradle.settingsEvaluated { settings ->
-        if (autoApplyGePlugin && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
+        if (!settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) && gePluginVersion) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
 
             extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
@@ -96,12 +113,8 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             }
         }
 
-        if (autoApplyCcudPlugin && !settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+        if (!settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID) && ccudPluginVersion && atLeastGradle5) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
-        }
-
-        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each {
-            buildScanPublishedAction(settings[it.name].buildScan)
         }
     }
 }
