@@ -72,8 +72,8 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     }
 } else {
     gradle.settingsEvaluated { settings ->
-        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).each {
-            buildScanPublishedAction(settings[it.name].buildScan)
+        extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
+            buildScanPublishedAction(ext.buildScan)
         }
     }
 }
