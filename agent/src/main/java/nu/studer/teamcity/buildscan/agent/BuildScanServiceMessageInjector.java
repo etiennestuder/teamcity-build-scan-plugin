@@ -53,13 +53,15 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
             String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
             addGradleCmdParam(initScriptParam, runner);
-            runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
+
+            addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
             String existingParams = getOrDefault(MAVEN_CMD_PARAMS, runner);
             String extJarParam = "-Dmaven.ext.class.path=" + getExtensionJar(runner).getAbsolutePath();
 
             runner.addRunnerParameter(MAVEN_CMD_PARAMS, extJarParam + " " + existingParams);
-            runner.addEnvironmentVariable(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1");
+
+            addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         }
     }
 
@@ -73,6 +75,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_EXT_MAVEN);
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_EXT_MAVEN, extensionJar);
         return extensionJar;
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void addEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
+        runner.addEnvironmentVariable(key, value);
     }
 
     private static void addGradleSysPropIfSet(@NotNull String configParameter, @NotNull String gradleProperty, @NotNull BuildRunnerContext runner) {
