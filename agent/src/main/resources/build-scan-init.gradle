@@ -46,7 +46,7 @@ def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.Grad
 
 def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
 def isTopLevelBuild = !gradle.parent
-def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle.enterprise.url')
+def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.url')
 def autoApplyGePlugin = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version') && isTopLevelBuild
 def autoApplyCcudPlugin = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version') && isTopLevelBuild && atLeastGradle5
 
