@@ -70,17 +70,33 @@ previously downloaded plugin `.zip` file.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-## Automatic Gradle Enterprise Plugin Setup
+## Gradle Enterprise Integration
+
+### Gradle Builds
 
 1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 3 configuration parameters:
 
    - `GRADLE_ENTERPRISE_URL` - the URL of the Gradle Enterprise instance to which you want to publish build scans.
    - `GRADLE_ENTERPRISE_PLUGIN_VERSION` - the version of the Gradle Enterprise plugin to apply to the build.
-   - `CCUD_PLUGIN_VERSION` - the version of the [Common Custom User Data](https://github.com/gradle/common-custom-user-data-gradle-plugin) plugin to apply to the build.
+   - `CCUD_PLUGIN_VERSION` - the version of the [Common Custom User Data Gradle Plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) plugin to apply to the build.
 
 1. Trigger your Gradle build.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
+
+### Maven Builds
+
+1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create 3 configuration parameters:
+
+   - `GRADLE_ENTERPRISE_URL` - the URL of the Gradle Enterprise instance to which you want to publish build scans. If set, this will override the definition of an existing Gradle Enterprise server url.
+   - `GRADLE_ENTERPRISE_EXTENSION_VERSION` - the version of the Gradle Enterprise extension to apply to the build.
+   - `CCUD_EXTENSION_VERSION` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply to the build.
+
+1. Trigger your Maven build.
+
+1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
+
+_Note: The Gradle Enterprise and Common Custom User Data Maven extensions are currently hard-coded to versions 1.14 and 1.10.1, respectively._
 
 ## Slack Integration
 

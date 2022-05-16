@@ -15,6 +15,9 @@ import java.util.Map;
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself
  * registers a callback on the build scan plugin for any published build scans and emits a TeamCity
  * {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
+ *
+ * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom
+ * User Data Plugins and Extensions into Gradle and Maven builds.
  */
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
@@ -29,6 +32,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
+    private static final String GRADLE_ENTERPRISE_EXT_MAVEN = "gradle-enterprise-maven-extension-1.14.jar";
+    private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-1.10.1.jar";
 
     // Gradle TeamCity Build Scan plugin
 
@@ -42,11 +47,23 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
 
+    private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "GRADLE_ENTERPRISE_EXTENSION_VERSION";
+
+    private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "CCUD_EXTENSION_VERSION";
+
     private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.url";
 
     private static final String GE_PLUGIN_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.plugin.version";
 
     private static final String CCUD_PLUGIN_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.ccud.plugin.version";
+
+    private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
+
+    private static final String GRADLE_EXTENSIONS_GROUP_ID = "com.gradle";
+
+    private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates(GRADLE_EXTENSIONS_GROUP_ID, "gradle-enterprise-maven-extension");
+
+    private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates(GRADLE_EXTENSIONS_GROUP_ID, "common-custom-user-data-maven-extension");
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
         eventDispatcher.addListener(this);
@@ -64,9 +81,14 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            String extJarParam = "-Dmaven.ext.class.path=" + getExtensionJar(runner).getAbsolutePath();
-            addMavenCmdParam(extJarParam, runner);
+            addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
 
+            // For now, this intentionally ignores the configured extension versions and applies the bundled jars
+            String extJarParam = "-Dmaven.ext.class.path=" +
+                    getExtensionJarFromResource(runner, BUILD_SCAN_EXT_MAVEN).getAbsolutePath() +
+                    generateGeCcudExtensionsClasspath(runner, getExtensions(runner));
+
+            addMavenCmdParam(extJarParam, runner);
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         }
     }
@@ -77,10 +99,40 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return initScript;
     }
 
-    private File getExtensionJar(BuildRunnerContext runner) {
-        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_EXT_MAVEN);
-        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_EXT_MAVEN, extensionJar);
+    private File getExtensionJarFromResource(BuildRunnerContext runner, String jar) {
+        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), jar);
+        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + jar, extensionJar);
         return extensionJar;
+    }
+
+    private MavenExtensions getExtensions(BuildRunnerContext runner) {
+        String checkoutDir = getOrDefault("teamcity.build.checkoutDir", runner);
+        File extensionFile = new File(checkoutDir, ".mvn/extensions.xml");
+        return MavenExtensions.fromFile(extensionFile);
+    }
+
+    private String generateGeCcudExtensionsClasspath(BuildRunnerContext runner, @Nullable MavenExtensions extensions) {
+        String classpath = "";
+
+        if (needsExtension(runner, extensions, GE_EXTENSION_VERSION_CONFIG_PARAM, GE_EXTENSION_MAVEN_COORDINATES)) {
+            classpath += appendToClassPath(classpath, getExtensionJarFromResource(runner, GRADLE_ENTERPRISE_EXT_MAVEN));
+        }
+
+        if (needsExtension(runner, extensions, CCUD_EXTENSION_VERSION_CONFIG_PARAM, CCUD_EXTENSION_MAVEN_COORDINATES)) {
+            classpath += appendToClassPath(classpath, getExtensionJarFromResource(runner, COMMON_CUSTOM_USER_DATA_EXT_MAVEN));
+        }
+
+        return classpath;
+    }
+
+    private boolean needsExtension(BuildRunnerContext runner, MavenExtensions extensions, String configParam, MavenCoordinates extension) {
+        String version = getOptionalConfigParam(runner, configParam);
+        boolean isVersionConfigured = version != null && !version.isEmpty();
+        return isVersionConfigured && !extensions.hasExtension(extension);
+    }
+
+    private static String appendToClassPath(@NotNull String classpath, @NotNull File file) {
+        return String.format("%s:%s", classpath, file.getAbsolutePath());
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -88,10 +140,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         runner.addEnvironmentVariable(key, value);
     }
 
-    private static void addGradleSysPropIfSet(@NotNull String configParameter, @NotNull String gradleProperty, @NotNull BuildRunnerContext runner) {
+    private static void addGradleSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(runner, configParameter);
         if (value != null) {
-            addGradleSysProp(gradleProperty, value, runner);
+            addGradleSysProp(property, value, runner);
         }
     }
 
@@ -103,6 +155,18 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
         String existingParams = getOrDefault(GRADLE_CMD_PARAMS, runner);
         runner.addRunnerParameter(GRADLE_CMD_PARAMS, param + " " + existingParams);
+    }
+
+    private static void addMavenSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull BuildRunnerContext runner) {
+        String value = getOptionalConfigParam(runner, configParameter);
+        if (value != null) {
+            addMavenSysProp(property, value, runner);
+        }
+    }
+
+    private static void addMavenSysProp(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
+        String systemProp = String.format("-D%s=%s", key, value);
+        addMavenCmdParam(systemProp, runner);
     }
 
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
