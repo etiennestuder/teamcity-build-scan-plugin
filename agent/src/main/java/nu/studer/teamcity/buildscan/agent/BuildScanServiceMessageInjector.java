@@ -34,7 +34,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "CCUD_PLUGIN_VERSION";
 
-    private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle.enterprise.url";
+    private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.url";
 
     private static final String GE_PLUGIN_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.plugin.version";
 
