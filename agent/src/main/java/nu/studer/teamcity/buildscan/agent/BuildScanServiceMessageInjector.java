@@ -56,10 +56,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            String existingParams = getOrDefault(MAVEN_CMD_PARAMS, runner);
             String extJarParam = "-Dmaven.ext.class.path=" + getExtensionJar(runner).getAbsolutePath();
-
-            runner.addRunnerParameter(MAVEN_CMD_PARAMS, extJarParam + " " + existingParams);
+            addMavenCmdParam(extJarParam, runner);
 
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         }
@@ -97,6 +95,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
         String existingParams = getOrDefault(GRADLE_CMD_PARAMS, runner);
         runner.addRunnerParameter(GRADLE_CMD_PARAMS, param + " " + existingParams);
+    }
+
+    private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
+        String existingParams = getOrDefault(MAVEN_CMD_PARAMS, runner);
+        runner.addRunnerParameter(MAVEN_CMD_PARAMS, param + " " + existingParams);
     }
 
     @Nullable
