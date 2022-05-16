@@ -6,27 +6,29 @@ if (GradleVersion.current() < GradleVersion.version('4.1')) {
 }
 
 initscript {
+    def isTopLevelBuild = !gradle.parent
+    def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
     def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
-    def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
-    def isTopLevelBuild = !gradle.parent
-    def addGePluginToClasspath = gePluginVersion && isTopLevelBuild
-    def addCcudPluginToClasspath = ccudPluginVersion && atLeastGradle5 && isTopLevelBuild
 
-    if (addGePluginToClasspath || addCcudPluginToClasspath) {
+    if (!isTopLevelBuild) {
+        return
+    }
+
+    if (gePluginVersion || ccudPluginVersion && atLeastGradle5) {
         repositories {
             maven { url 'https://plugins.gradle.org/m2' }
         }
     }
 
     dependencies {
-        if (addGePluginToClasspath) {
+        if (gePluginVersion) {
             classpath atLeastGradle5 ?
-                    "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
-                    "com.gradle:build-scan-plugin:$gePluginVersion"
+                "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
+                "com.gradle:build-scan-plugin:1.16"
         }
 
-        if (addCcudPluginToClasspath) {
+        if (ccudPluginVersion && atLeastGradle5) {
             classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
         }
     }
@@ -86,7 +88,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
         if (autoApplyGePlugin && !settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
             settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
 
-            extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect{ settings[it.name] }.each { ext ->
+            extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
                 ext.server = ext.server ?: geUrl
                 ext.buildScan {
                     publishAlways()
@@ -113,7 +115,7 @@ static String generateBuildScanLifeCycleMessage(def attribute) {
 }
 
 static String escape(String value) {
-    return value?.toCharArray()?.collect{ch -> escapeChar(ch) }?.join()
+    return value?.toCharArray()?.collect { ch -> escapeChar(ch) }?.join()
 }
 
 static String escapeChar(char ch) {
@@ -125,6 +127,6 @@ static String escapeChar(char ch) {
         case '\'': return escapeCharacter + "\'"
         case '[': return escapeCharacter + "["
         case ']': return escapeCharacter + "]"
-        default: return ch < 128 ? ch as String : escapeCharacter + String.format("0x%04x", (int)ch)
+        default: return ch < 128 ? ch as String : escapeCharacter + String.format("0x%04x", (int) ch)
     }
 }
