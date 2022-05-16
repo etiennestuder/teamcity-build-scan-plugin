@@ -1,8 +1,16 @@
-name: "Release Gradle project"
-on: [ workflow_dispatch ]
+name: Create Production Release
+
+on:
+    workflow_dispatch:
+        inputs:
+            confirmation:
+                description: Enter the confirmation phrase 'PRODUCTION' (without quotes) if you are sure you want to trigger a release.
+                required: true
 
 jobs:
-    build:
+    production_release:
+        if: github.event.inputs.confirmation == 'PRODUCTION'
+        name: Release
         runs-on: ubuntu-latest
         steps:
             -   name: Check out project
