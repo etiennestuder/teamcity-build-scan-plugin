@@ -75,12 +75,6 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return extensionJar;
     }
 
-    @SuppressWarnings("Java8MapApi") // support JDK6
-    private static String getOrDefault(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
-        Map<String, String> runnerParameters = runner.getRunnerParameters();
-        return runnerParameters.containsKey(paramName) ? runnerParameters.get(paramName) : "";
-    }
-
     private static void addGradleSysPropIfSet(@NotNull String configParameter, @NotNull String gradleProperty, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(runner, configParameter);
         if (value != null) {
@@ -108,4 +102,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         String value = configParameters.get(paramName).trim();
         return value.isEmpty() ? null : value;
     }
+
+    @SuppressWarnings("Java8MapApi") // support JDK6
+    private static String getOrDefault(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
+        Map<String, String> runnerParameters = runner.getRunnerParameters();
+        return runnerParameters.containsKey(paramName) ? runnerParameters.get(paramName) : "";
+    }
+
 }
