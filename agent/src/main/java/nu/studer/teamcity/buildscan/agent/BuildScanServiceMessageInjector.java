@@ -28,9 +28,9 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
-    private static final String GRADLE_ENTERPRISE_URL_CONFIG_PARAM = "GRADLE_ENTERPRISE_URL";
+    private static final String GE_URL_CONFIG_PARAM = "GRADLE_ENTERPRISE_URL";
 
-    private static final String GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM = "GRADLE_ENTERPRISE_PLUGIN_VERSION";
+    private static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "GRADLE_ENTERPRISE_PLUGIN_VERSION";
 
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "CCUD_PLUGIN_VERSION";
 
@@ -47,8 +47,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            addGradleSysPropIfSet(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, GE_URL_GRADLE_PROPERTY, runner);
-            addGradleSysPropIfSet(GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_GRADLE_PROPERTY, runner);
+            addGradleSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_GRADLE_PROPERTY, runner);
+            addGradleSysPropIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_GRADLE_PROPERTY, runner);
             addGradleSysPropIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_GRADLE_PROPERTY, runner);
 
             String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
