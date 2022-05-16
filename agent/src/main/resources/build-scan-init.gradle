@@ -78,43 +78,51 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     }
 }
 
+// conditionally apply the GE / Build Scan plugin to the classpath
 if (!isTopLevelBuild) {
     return
 }
 
-// conditionally apply the GE / Build Scan plugin to the classpath
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
     rootProject {
-        if (!pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID) && gePluginVersion) {
-            pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
+        if (gePluginVersion) {
+            if (!pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
+                pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
 
-            pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
-                buildScan {
-                    server = geUrl
-                    publishAlways()
+                pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+                    buildScan {
+                        server = geUrl
+                        publishAlways()
+                    }
                 }
             }
         }
 
-        if (!pluginManager.hasPlugin(CCUD_PLUGIN_ID) && ccudPluginVersion && atLeastGradle5) {
-            pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
+        if (ccudPluginVersion && atLeastGradle5) {
+            if (!pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+                pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
+            }
         }
     }
 } else {
     gradle.settingsEvaluated { settings ->
-        if (!settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID) && gePluginVersion) {
-            settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
+        if (gePluginVersion) {
+            if (!settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
+                settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
 
-            extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
-                ext.server = ext.server ?: geUrl
-                ext.buildScan {
-                    publishAlways()
+                extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
+                    ext.server = ext.server ?: geUrl
+                    ext.buildScan {
+                        publishAlways()
+                    }
                 }
             }
         }
 
-        if (!settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID) && ccudPluginVersion && atLeastGradle5) {
-            settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
+        if (ccudPluginVersion && atLeastGradle5) {
+            if (!settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+                settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
+            }
         }
     }
 }
