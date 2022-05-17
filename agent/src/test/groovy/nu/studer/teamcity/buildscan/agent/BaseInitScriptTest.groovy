@@ -126,8 +126,9 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current()) {
-        def args = ['tasks', '-I', initScriptFile.absolutePath]
+    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), extraArgs = []) {
+        def args = ['tasks', '-I', initScriptFile.absolutePath] + extraArgs
+
         GradleRunner.create()
             .withGradleVersion(gradleVersion.version)
             .withProjectDir(testProjectDir)
