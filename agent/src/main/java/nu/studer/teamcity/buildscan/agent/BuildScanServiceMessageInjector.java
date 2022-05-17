@@ -1,10 +1,12 @@
 package nu.studer.teamcity.buildscan.agent;
 
+import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter;
 import jetbrains.buildServer.agent.AgentLifeCycleListener;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.util.EventDispatcher;
 import jetbrains.buildServer.util.FileUtil;
+import org.apache.maven.shared.invoker.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,6 +23,8 @@ import java.util.Map;
  */
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
+    private static final Logger LOG = Logger.getInstance(BuildScanServiceMessageInjector.class.getName());
+
     private static final String GRADLE_RUNNER = "gradle-runner";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
     private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
@@ -28,8 +32,6 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
-    private static final String GRADLE_ENTERPRISE_EXT_MAVEN = "gradle-enterprise-maven-extension-1.14.jar";
-    private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-1.10.1.jar";
 
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
@@ -74,8 +76,6 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
             addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
-
-            // For now, this intentionally ignores the configured extension versions and applies the bundled jars
             String extJarParam = "-Dmaven.ext.class.path=" +
                     getExtensionJarFromResource(runner, BUILD_SCAN_EXT_MAVEN).getAbsolutePath() +
                     generateGeCcudExtensionsClasspath(runner, getExtensions(runner));
@@ -107,14 +107,43 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         String classpath = "";
 
         if (needsExtension(runner, extensions, GE_EXTENSION_VERSION_CONFIG_PARAM, GE_EXTENSION_MAVEN_COORDINATES)) {
-            classpath += appendToClassPath(classpath, getExtensionJarFromResource(runner, GRADLE_ENTERPRISE_EXT_MAVEN));
+            classpath = addExtensionToClassPath(runner, classpath, GE_EXTENSION_VERSION_CONFIG_PARAM, GE_EXTENSION_MAVEN_COORDINATES);
         }
 
         if (needsExtension(runner, extensions, CCUD_EXTENSION_VERSION_CONFIG_PARAM, CCUD_EXTENSION_MAVEN_COORDINATES)) {
-            classpath += appendToClassPath(classpath, getExtensionJarFromResource(runner, COMMON_CUSTOM_USER_DATA_EXT_MAVEN));
+            classpath = addExtensionToClassPath(runner, classpath, CCUD_EXTENSION_VERSION_CONFIG_PARAM, CCUD_EXTENSION_MAVEN_COORDINATES);
         }
 
         return classpath;
+    }
+
+    @NotNull
+    private String addExtensionToClassPath(BuildRunnerContext runner, String classpath, String configParam, MavenCoordinates extension) {
+        String version = getOptionalConfigParam(runner, configParam);
+        File extensionJar = resolveExtensionJar(runner, extension.withVersion(version));
+        classpath += appendToClassPath(classpath, extensionJar);
+        return classpath;
+    }
+
+    @Nullable
+    private File resolveExtensionJar(BuildRunnerContext runner, MavenCoordinates extension) {
+        String tempDirectory = runner.getBuild().getAgentTempDirectory().getAbsolutePath();
+        InvocationRequest request = new DefaultInvocationRequest();
+        request.setMavenHome(new File(getOrDefault("maven.path", runner)));
+        request.addArg("org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy");
+        request.addArg(String.format("-Dartifact=%s", extension.getGavFormat()));
+        request.addArg(String.format("-DoutputDirectory=%s", tempDirectory));
+
+        try {
+            new DefaultInvoker().execute(request);
+        } catch (MavenInvocationException e) {
+            LOG.warn("Failed to invoke maven", e);
+            return null;
+        }
+
+        // todo: the output of this task will print where it dropped the file. could regex this rather than assuming the path?
+        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), extension.getDefaultFilename());
+        return extensionJar.exists() ? extensionJar : null;
     }
 
     private boolean needsExtension(BuildRunnerContext runner, MavenExtensions extensions, String configParam, MavenCoordinates extension) {
@@ -123,7 +152,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return isVersionConfigured && !extensions.hasExtension(extension);
     }
 
-    private static String appendToClassPath(@NotNull String classpath, @NotNull File file) {
+    private static String appendToClassPath(@NotNull String classpath, @Nullable File file) {
+        if (file == null) {
+            return classpath;
+        }
         return String.format("%s:%s", classpath, file.getAbsolutePath());
     }
 

@@ -30,8 +30,20 @@ final class MavenCoordinates {
         return version;
     }
 
+    public MavenCoordinates withVersion(String version) {
+        return new MavenCoordinates(groupId, artifactId, version);
+    }
+
+    public String getGavFormat() {
+        return String.format("%s:%s:%s", groupId, artifactId, version);
+    }
+
+    public String getDefaultFilename() {
+        return String.format("%s-%s.jar", artifactId, version);
+    }
+
     @Override
     public String toString() {
-        return String.format("%s:%s:%s", groupId, artifactId, version);
+        return String.format("%s:%s:%s", groupId, artifactId, version == null ? "unspecified" : version);
     }
 }
