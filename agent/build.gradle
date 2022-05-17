@@ -35,6 +35,10 @@ java {
     }
 }
 
+test {
+    useJUnitPlatform()
+}
+
 tasks.withType(JavaCompile).configureEach {
     javaCompiler = javaToolchains.compilerFor {
         String javaCompilerVersion = findProperty('javaCompilerVersion') ?: '8'

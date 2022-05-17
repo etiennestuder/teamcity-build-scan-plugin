@@ -17,7 +17,9 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
         new JdkCompatibleGradleVersion(GradleVersion.version('5.1.1'), 8, 11),
         new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12),
         new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13),
-        new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15)
+        new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15),
+        new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16),
+        new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17),
     ]
 
     def "does not fail build when using a Gradle version older than minimum version 4.1 (#jdkCompatibleGradleVersion)"() {
@@ -55,6 +57,28 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
 
         when:
         def result = run(jdkCompatibleGradleVersion.gradleVersion)
+
+        then:
+        outputContainsTeamCityServiceMessageBuildStarted(result)
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "sends build scan url service message when auto applying Build Scan / Gradle Enterprise plugin (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << ''
+        buildFile << ''
+
+        when:
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
+                "-DteamCityBuildScanPlugin.gradle-enterprise.url=$mockScansServer.address".toString(),
+                '-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=3.10',
+                '-DteamCityBuildScanPlugin.ccud.plugin.version=1.6.5',
+        ])
 
         then:
         outputContainsTeamCityServiceMessageBuildStarted(result)
