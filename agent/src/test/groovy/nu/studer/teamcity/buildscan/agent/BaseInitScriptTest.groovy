@@ -6,6 +6,7 @@ import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import jetbrains.buildServer.util.FileUtil
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.gradle.testkit.runner.internal.DefaultGradleRunner
 import org.gradle.util.GradleVersion
 import ratpack.groovy.test.embed.GroovyEmbeddedApp
 import spock.lang.AutoCleanup
@@ -126,14 +127,15 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), extraArgs = []) {
-        def args = ['tasks', '-I', initScriptFile.absolutePath] + extraArgs
+    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
+        def args = ['tasks', '-I', initScriptFile.absolutePath]
 
-        GradleRunner.create()
-            .withGradleVersion(gradleVersion.version)
-            .withProjectDir(testProjectDir)
-            .withArguments(args)
-            .build()
+        ((DefaultGradleRunner) GradleRunner.create())
+                .withJvmArguments(jvmArgs)
+                .withGradleVersion(gradleVersion.version)
+                .withProjectDir(testProjectDir)
+                .withArguments(args)
+                .build()
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
