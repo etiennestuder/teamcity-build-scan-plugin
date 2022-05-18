@@ -79,7 +79,7 @@ class BaseInitScriptTest extends Specification {
         FileUtil.copyResource(BuildScanServiceMessageInjector.class, '/' + BUILD_SCAN_INIT_GRADLE, initScriptFile)
     }
 
-    String maybeAddGradleEnterprisePlugin(GradleVersion gradleVersion) {
+    String maybeAddGradleEnterprisePlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
         if (gradleVersion < GradleVersion.version('5.0')) {
             '' // applied in build.gradle
         } else if (gradleVersion < GradleVersion.version('6.0')) {
@@ -90,7 +90,7 @@ class BaseInitScriptTest extends Specification {
                 id 'com.gradle.enterprise' version '3.4.1'
               }
               gradleEnterprise {
-                server = '${mockScansServer.address}'
+                server = '$server'
                 buildScan {
                   publishAlways()
                 }
@@ -99,14 +99,14 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    String maybeAddBuildScanPlugin(GradleVersion gradleVersion) {
+    String maybeAddBuildScanPlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
         if (gradleVersion < GradleVersion.version('5.0')) {
             """
               plugins {
                 id 'com.gradle.build-scan' version '1.16'
               }
               buildScan {
-                server = '${mockScansServer.address}'
+                server = '$server'
                 publishAlways()
               }
             """
@@ -116,7 +116,7 @@ class BaseInitScriptTest extends Specification {
                 id 'com.gradle.build-scan' version '3.4.1'
               }
               gradleEnterprise {
-                server = '${mockScansServer.address}'
+                server = '$server'
                 buildScan {
                   publishAlways()
                 }
