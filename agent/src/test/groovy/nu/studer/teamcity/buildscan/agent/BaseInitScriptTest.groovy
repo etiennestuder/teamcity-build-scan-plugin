@@ -38,32 +38,32 @@ class BaseInitScriptTest extends Specification {
             post('in/:gradleVersion/:pluginVersion') {
                 def scanUrlString = "${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID"
                 def body = [
-                    id     : PUBLIC_BUILD_SCAN_ID,
-                    scanUrl: scanUrlString.toString(),
+                        id     : PUBLIC_BUILD_SCAN_ID,
+                        scanUrl: scanUrlString.toString(),
                 ]
                 context.response
-                    .contentType('application/vnd.gradle.scan-ack')
-                    .send(gzip(smileWriter.writeValueAsBytes(body)))
+                        .contentType('application/vnd.gradle.scan-ack')
+                        .send(gzip(smileWriter.writeValueAsBytes(body)))
             }
             prefix('scans/publish') {
                 post('gradle/:pluginVersion/token') {
                     def pluginVersion = context.pathTokens.pluginVersion
                     def scanUrlString = "${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID"
                     def body = [
-                        id             : PUBLIC_BUILD_SCAN_ID,
-                        scanUrl        : scanUrlString.toString(),
-                        scanUploadUrl  : "${mockScansServer.address.toString()}scans/publish/gradle/$pluginVersion/upload".toString(),
-                        scanUploadToken: DEFAULT_SCAN_UPLOAD_TOKEN
+                            id             : PUBLIC_BUILD_SCAN_ID,
+                            scanUrl        : scanUrlString.toString(),
+                            scanUploadUrl  : "${mockScansServer.address.toString()}scans/publish/gradle/$pluginVersion/upload".toString(),
+                            scanUploadToken: DEFAULT_SCAN_UPLOAD_TOKEN
                     ]
                     context.response
-                        .contentType('application/vnd.gradle.scan-ack+json')
-                        .send(jsonWriter.writeValueAsBytes(body))
+                            .contentType('application/vnd.gradle.scan-ack+json')
+                            .send(jsonWriter.writeValueAsBytes(body))
                 }
                 post('gradle/:pluginVersion/upload') {
                     context.request.getBody(1024 * 1024 * 10).then {
                         context.response
-                            .contentType('application/vnd.gradle.scan-upload-ack+json')
-                            .send()
+                                .contentType('application/vnd.gradle.scan-upload-ack+json')
+                                .send()
                     }
                 }
                 notFound()
@@ -135,6 +135,7 @@ class BaseInitScriptTest extends Specification {
                 .withGradleVersion(gradleVersion.version)
                 .withProjectDir(testProjectDir)
                 .withArguments(args)
+                .forwardOutput()
                 .build()
     }
 
@@ -146,7 +147,7 @@ class BaseInitScriptTest extends Specification {
         assert result.output.contains("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
     }
 
-    private static byte[] gzip(byte[] bytes) {
+    static byte[] gzip(byte[] bytes) {
         def out = new ByteArrayOutputStream()
         new GZIPOutputStream(out).withStream { it.write(bytes) }
         out.toByteArray()
