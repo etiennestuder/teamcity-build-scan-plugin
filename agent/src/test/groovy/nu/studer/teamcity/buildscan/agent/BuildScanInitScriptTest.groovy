@@ -130,30 +130,7 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS.findAll {
-            it.gradleVersion >= GradleVersion.version('6.0')
-        }
-    }
-
-    def "url system property does not override gradle enterprise configuration (#jdkCompatibleGradleVersion)"() {
-        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
-
-        given:
-        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
-
-        when:
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
-                "-DteamCityBuildScanPlugin.gradle-enterprise.url=https://ge-server.invalid/".toString(),
-        ])
-
-        then:
-        outputContainsTeamCityServiceMessageBuildScanUrl(result)
-
-        where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS.findAll {
-            it.gradleVersion < GradleVersion.version('6.0')
-        }
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
     static final class JdkCompatibleGradleVersion {
