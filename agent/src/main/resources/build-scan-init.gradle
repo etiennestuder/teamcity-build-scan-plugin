@@ -27,8 +27,8 @@ initscript {
     dependencies {
         if (gePluginVersion) {
             classpath atLeastGradle5 ?
-                "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
-                "com.gradle:build-scan-plugin:1.16"
+                    "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
+                    "com.gradle:build-scan-plugin:1.16"
         }
 
         if (ccudPluginVersion && atLeastGradle5) {
@@ -67,29 +67,36 @@ def buildScanPublishedAction = { def buildScan ->
 // register buildScanPublished listener and optionally apply the GE / Build Scan plugin
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
     rootProject {
-        afterEvaluate {
+        buildscript.configurations.getByName("classpath").incoming.afterResolve { ResolvableDependencies incoming ->
+            def resolutionResult = incoming.resolutionResult
+
             if (gePluginVersion) {
-                if (!pluginManager.hasPlugin(BUILD_SCAN_PLUGIN_ID)) {
+                def scanPluginComponent = resolutionResult.allComponents.find {
+                    it.moduleVersion.with { group == "com.gradle" && name == "build-scan-plugin" }
+                }
+                if (!scanPluginComponent) {
                     pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
-                    pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
-                        buildScan.publishAlways()
-                    }
+                    buildScan.publishAlways()
                 }
             }
 
             if (ccudPluginVersion && atLeastGradle5) {
-                if (!pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
+                def ccudPluginComponent = resolutionResult.allComponents.find {
+                    it.moduleVersion.with { group == "com.gradle" && name == "common-custom-user-data-gradle-plugin" }
+                }
+
+                if (!ccudPluginComponent) {
                     pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
                 }
             }
+        }
 
-            pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
-                if (geUrl) {
-                    buildScan.server = geUrl
-                }
-
-                buildScanPublishedAction(buildScan)
+        pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+            if (geUrl) {
+                buildScan.server = geUrl
             }
+
+            buildScanPublishedAction(buildScan)
         }
     }
 } else {
