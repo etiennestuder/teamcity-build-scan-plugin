@@ -144,7 +144,7 @@ class BaseInitScriptTest extends Specification {
     }
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(BuildResult result) {
-        assert result.output.contains("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
+        assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
     }
 
     static byte[] gzip(byte[] bytes) {
