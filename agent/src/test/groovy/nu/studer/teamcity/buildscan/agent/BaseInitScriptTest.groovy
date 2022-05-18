@@ -173,7 +173,7 @@ class BaseInitScriptTest extends Specification {
         assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
     }
 
-    static byte[] gzip(byte[] bytes) {
+    private static byte[] gzip(byte[] bytes) {
         def out = new ByteArrayOutputStream()
         new GZIPOutputStream(out).withStream { it.write(bytes) }
         out.toByteArray()
