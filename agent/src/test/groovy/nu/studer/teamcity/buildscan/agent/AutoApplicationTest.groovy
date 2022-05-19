@@ -4,6 +4,9 @@ import static org.junit.Assume.assumeTrue
 
 class AutoApplicationTest extends BaseInitScriptTest {
 
+    private static final String GE_VERSION = '3.10'
+    private static final String CCUD_VERSION = '1.6.6'
+
     def "sends build scan url service message when auto applying Build Scan / Gradle Enterprise plugin (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
@@ -14,8 +17,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         when:
         def result = run(jdkCompatibleGradleVersion.gradleVersion, [
                 "-DteamCityBuildScanPlugin.gradle-enterprise.url=$mockScansServer.address".toString(),
-                '-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=3.10',
-                '-DteamCityBuildScanPlugin.ccud.plugin.version=1.6.5',
+                "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$GE_VERSION".toString(),
+                "-DteamCityBuildScanPlugin.ccud.plugin.version=$CCUD_VERSION".toString(),
         ])
 
         then:
@@ -36,8 +39,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         when:
         def result = run(jdkCompatibleGradleVersion.gradleVersion, [
                 "-DteamCityBuildScanPlugin.gradle-enterprise.url=$mockScansServer.address".toString(),
-                '-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=3.10',
-                '-DteamCityBuildScanPlugin.ccud.plugin.version=1.6.5',
+                "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$GE_VERSION".toString(),
+                "-DteamCityBuildScanPlugin.ccud.plugin.version=$CCUD_VERSION".toString(),
         ])
 
         then:
