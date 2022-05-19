@@ -91,12 +91,14 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             }
         }
 
-        pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
-            if (geUrl) {
-                buildScan.server = geUrl
-            }
+        afterEvaluate {
+            pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+                if (geUrl) {
+                    buildScan.server = geUrl
+                }
 
-            buildScanPublishedAction(buildScan)
+                buildScanPublishedAction(buildScan)
+            }
         }
     }
 } else {
