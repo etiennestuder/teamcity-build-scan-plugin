@@ -22,6 +22,11 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
         new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17),
     ]
 
+    def setup () {
+        settingsFile << ""
+        buildFile << ""
+    }
+
     def "does not fail build when using a Gradle version older than minimum version 4.1 (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
