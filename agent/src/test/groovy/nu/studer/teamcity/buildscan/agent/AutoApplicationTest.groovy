@@ -17,11 +17,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         buildFile << ''
 
         when:
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
-                "-DteamCityBuildScanPlugin.gradle-enterprise.url=$mockScansServer.address".toString(),
-                "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$GE_VERSION".toString(),
-                "-DteamCityBuildScanPlugin.ccud.plugin.version=$CCUD_VERSION".toString(),
-        ])
+        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -38,11 +35,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
-                "-DteamCityBuildScanPlugin.gradle-enterprise.url=$mockScansServer.address".toString(),
-                "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$GE_VERSION".toString(),
-                "-DteamCityBuildScanPlugin.ccud.plugin.version=$CCUD_VERSION".toString(),
-        ])
+        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -59,9 +53,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion, 'https://ge-server.invalid/')
 
         when:
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
-                "-DteamCityBuildScanPlugin.gradle-enterprise.url=$mockScansServer.address".toString(),
-        ])
+        def jvmArgs = generateJvmArgs(mockScansServer.address, null, null)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -78,16 +71,32 @@ class AutoApplicationTest extends BaseInitScriptTest {
         buildFile << ''
 
         when:
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
-                "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$GE_VERSION".toString(),
-                "-DteamCityBuildScanPlugin.ccud.plugin.version=$CCUD_VERSION".toString(),
-        ])
+        def jvmArgs = generateJvmArgs(null, GE_VERSION, null)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
         outputContainsTermsOfServiceDenial(result)
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    ArrayList<String> generateJvmArgs(URI geUrl, String gePluginVersion, String ccudPluginVersion) {
+        def jvmArgs = []
+
+        if (geUrl) {
+            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.url=$geUrl".toString()
+        }
+
+        if (gePluginVersion) {
+            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$gePluginVersion".toString()
+        }
+
+        if (ccudPluginVersion) {
+            jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
+        }
+
+        jvmArgs
     }
 
     void outputContainsTermsOfServiceDenial(BuildResult result) {
