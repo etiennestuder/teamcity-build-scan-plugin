@@ -146,7 +146,15 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
+    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
+        createRunner(gradleVersion, jvmArgs).buildAndFail()
+    }
+
     BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
+        createRunner(gradleVersion, jvmArgs).build()
+    }
+
+    GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
         def args = ['tasks', '-I', initScriptFile.absolutePath]
 
         ((DefaultGradleRunner) GradleRunner.create())
@@ -155,7 +163,6 @@ class BaseInitScriptTest extends Specification {
                 .withProjectDir(testProjectDir)
                 .withArguments(args)
                 .forwardOutput()
-                .build()
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {

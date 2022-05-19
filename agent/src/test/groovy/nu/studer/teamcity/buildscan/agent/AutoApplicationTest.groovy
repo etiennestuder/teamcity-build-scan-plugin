@@ -1,6 +1,8 @@
 package nu.studer.teamcity.buildscan.agent
 
 import org.gradle.testkit.runner.BuildResult
+import org.gradle.util.GradleVersion
+import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
 
@@ -9,7 +11,43 @@ class AutoApplicationTest extends BaseInitScriptTest {
     private static final String GE_VERSION = '3.10'
     private static final String CCUD_VERSION = '1.6.6'
 
-    def "sends build scan url service message when auto applying Build Scan / Gradle Enterprise plugin (#jdkCompatibleGradleVersion)"() {
+    def "sends build scan url service message when GE plugin is applied by init script (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << ''
+        buildFile << ''
+
+        when:
+        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, null)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+
+        then:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "sends build scan url service message when GE plugin is applied by project and init script (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
+        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
+
+        when:
+        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, null)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+
+        then:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "sends build scan url service message when GE and CCUD plugins are applied by init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -27,7 +65,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "sends build scan url service message when Build Scan / Gradle Enterprise plugin is configured and auto-applied (#jdkCompatibleGradleVersion)"() {
+    def "sends build scan url service message when GE and CCUD plugins are applied by project init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -45,7 +83,65 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "url system property overrides gradle enterprise configuration (#jdkCompatibleGradleVersion)"() {
+    @Ignore(value = "This behavior is desired but not yet implemented")
+    def "degrades gracefully project applies GE and init script applies CCUD <= 1.6.5 (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
+        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
+
+        when:
+        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, '1.6.5')
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+
+        then:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "build succeeds when URL is set without applied GE plugin (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << ''
+        buildFile << ''
+
+        when:
+        def jvmArgs = generateJvmArgs(mockScansServer.address, null, null)
+
+        then:
+        run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "build doesn't apply CCUD is applied without GE plugin (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << ''
+        buildFile << ''
+
+        when:
+        def jvmArgs = generateJvmArgs(mockScansServer.address, null, CCUD_VERSION)
+
+        then:
+        if (jdkCompatibleGradleVersion.gradleVersion < GradleVersion.version('5.2')) {
+            run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        } else {
+            def result = runAndFail(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+            result.output.contains("Could not create plugin of type 'CommonCustomUserDataGradlePlugin'.")
+        }
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "url system property overrides project server url (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -63,7 +159,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "sends build scan to scans.gradle.com no URL is given (#jdkCompatibleGradleVersion)"() {
+    def "sends build scan to scans.gradle.com if no URL is given (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
