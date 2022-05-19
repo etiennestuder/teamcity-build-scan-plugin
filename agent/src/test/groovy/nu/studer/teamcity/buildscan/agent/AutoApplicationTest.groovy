@@ -1,5 +1,7 @@
 package nu.studer.teamcity.buildscan.agent
 
+import org.gradle.testkit.runner.BuildResult
+
 import static org.junit.Assume.assumeTrue
 
 class AutoApplicationTest extends BaseInitScriptTest {
@@ -22,7 +24,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
         ])
 
         then:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -44,7 +45,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
         ])
 
         then:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -70,4 +70,27 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
+    def "sends build scan to scans.gradle.com no URL is given (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        settingsFile << ''
+        buildFile << ''
+
+        when:
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, [
+                "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$GE_VERSION".toString(),
+                "-DteamCityBuildScanPlugin.ccud.plugin.version=$CCUD_VERSION".toString(),
+        ])
+
+        then:
+        outputContainsTermsOfServiceDenial(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    void outputContainsTermsOfServiceDenial(BuildResult result) {
+        assert 1 == result.output.count('The Gradle Terms of Service have not been agreed to.')
+    }
 }
