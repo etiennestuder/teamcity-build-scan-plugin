@@ -26,13 +26,13 @@ class BaseInitScriptTest extends Specification {
     ]
 
     static final List<JdkCompatibleGradleVersion> SUPPORTED_GRADLE_VERSIONS = [
-        new JdkCompatibleGradleVersion(GradleVersion.version('4.1'), 7, 9),
-        new JdkCompatibleGradleVersion(GradleVersion.version('4.10.3'), 7, 10),
-        new JdkCompatibleGradleVersion(GradleVersion.version('5.1.1'), 8, 11),
-        new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12),
-        new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13),
-        new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15),
-        new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('4.1'), 7, 9),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('4.10.3'), 7, 10),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('5.1.1'), 8, 11),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15),
+//        new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16),
         new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17),
     ]
 
@@ -96,8 +96,8 @@ class BaseInitScriptTest extends Specification {
         buildFile = new File(testProjectDir, 'build.gradle')
 
         FileUtil.copyResource(BuildScanServiceMessageInjector.class, '/' + BUILD_SCAN_INIT_GRADLE, initScriptFile)
-        settingsFile << ""
-        buildFile << ""
+        settingsFile << ''
+        buildFile << ''
     }
 
     String maybeAddGradleEnterprisePlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
