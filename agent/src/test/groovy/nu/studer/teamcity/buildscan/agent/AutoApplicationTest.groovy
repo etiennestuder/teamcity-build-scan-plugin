@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.agent
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.util.GradleVersion
+import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
 
@@ -50,16 +51,15 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        settingsFile << maybeAddCcudVerificationSettingsEvaluated(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddCcudVerificationTask(jdkCompatibleGradleVersion.gradleVersion)
+        settingsFile << ''
+        buildFile << ''
 
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
-        def result = runWithCcudVerificationTask(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
-        outputContainsCcudPlugin(result, jdkCompatibleGradleVersion.gradleVersion)
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
@@ -70,23 +70,21 @@ class AutoApplicationTest extends BaseInitScriptTest {
 
         given:
         settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
-        settingsFile << maybeAddCcudVerificationSettingsEvaluated(jdkCompatibleGradleVersion.gradleVersion)
         buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddCcudVerificationTask(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
-        def result = runWithCcudVerificationTask(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
-        outputContainsCcudPlugin(result, jdkCompatibleGradleVersion.gradleVersion)
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "warns when project applies GE and init script applies CCUD <= 1.6.5 (#jdkCompatibleGradleVersion)"() {
+    @Ignore(value = "This behavior is desired but not yet implemented")
+    def "degrades gracefully project applies GE and init script applies CCUD <= 1.6.5 (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -94,17 +92,14 @@ class AutoApplicationTest extends BaseInitScriptTest {
         buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def oldCcudVersion = '1.6.5'
-        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, oldCcudVersion)
+        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, '1.6.5')
         def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
-        assert result.output.contains("Cannot apply com.gradle.common-custom-user-data-gradle-plugin versions less than 1.6.6 in init scripts when project applied Build Scan / Gradle Enterprise plugin (attempted version 1.6.5)")
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS.findAll {
-            it.gradleVersion >= GradleVersion.version('5.0')
-        }
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
     def "build succeeds when URL is set without applied GE plugin (#jdkCompatibleGradleVersion)"() {
@@ -182,36 +177,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    BuildResult runWithCcudVerificationTask(GradleVersion gradleVersion, ArrayList<String> jvmArgs) {
-        def runner = createRunner(gradleVersion, jvmArgs)
-        runner = gradleVersion < GradleVersion.version('6.0') ?
-                runner.withArguments(runner.getArguments() + ['hasCcudPlugin']) :
-                runner
-        runner.build()
-    }
-
-    String maybeAddCcudVerificationSettingsEvaluated(GradleVersion gradleVersion) {
-        if (gradleVersion >= GradleVersion.version('6.0')) {
-            """gradle.settingsEvaluated { settings ->
-                    println "hasCCUD = \${settings.plugins.hasPlugin('com.gradle.common-custom-user-data-gradle-plugin')}"
-               }"""
-        } else {
-            ''
-        }
-    }
-
-    String maybeAddCcudVerificationTask(GradleVersion gradleVersion) {
-        if (gradleVersion < GradleVersion.version('6.0')) {
-            """task(hasCcudPlugin) {
-                doLast {
-                    println "hasCCUD = \${plugins.hasPlugin('com.gradle.common-custom-user-data-gradle-plugin')}"
-                }
-            }"""
-        } else {
-            ''
-        }
-    }
-
     ArrayList<String> generateJvmArgs(URI geUrl, String gePluginVersion, String ccudPluginVersion) {
         def jvmArgs = []
 
@@ -232,9 +197,5 @@ class AutoApplicationTest extends BaseInitScriptTest {
 
     void outputContainsTermsOfServiceDenial(BuildResult result) {
         assert 1 == result.output.count('The Gradle Terms of Service have not been agreed to.')
-    }
-
-    void outputContainsCcudPlugin(BuildResult result, GradleVersion gradleVersion) {
-        assert result.output.contains("hasCCUD = ${gradleVersion >= GradleVersion.version('5.0')}")
     }
 }
