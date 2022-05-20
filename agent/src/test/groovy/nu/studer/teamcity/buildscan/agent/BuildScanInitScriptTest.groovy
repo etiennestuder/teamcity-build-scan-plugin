@@ -20,10 +20,6 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
     def "sends build started service message even without declaring Build Scan / Gradle Enterprise plugin (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
-        given:
-        settingsFile << ""
-        buildFile << ""
-
         when:
         def result = run(jdkCompatibleGradleVersion.gradleVersion)
 
