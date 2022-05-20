@@ -92,10 +92,9 @@ class BaseInitScriptTest extends Specification {
         settingsFile = new File(testProjectDir, 'settings.gradle')
         buildFile = new File(testProjectDir, 'build.gradle')
 
+        FileUtil.copyResource(BuildScanServiceMessageInjector.class, '/' + BUILD_SCAN_INIT_GRADLE, initScriptFile)
         settingsFile << ""
         buildFile << ""
-
-        FileUtil.copyResource(BuildScanServiceMessageInjector.class, '/' + BUILD_SCAN_INIT_GRADLE, initScriptFile)
     }
 
     String maybeAddGradleEnterprisePlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
@@ -146,12 +145,12 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
-        createRunner(gradleVersion, jvmArgs).buildAndFail()
-    }
-
     BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
         createRunner(gradleVersion, jvmArgs).build()
+    }
+
+    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
+        createRunner(gradleVersion, jvmArgs).buildAndFail()
     }
 
     GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {

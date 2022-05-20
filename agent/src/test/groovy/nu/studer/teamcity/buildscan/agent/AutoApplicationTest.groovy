@@ -7,8 +7,8 @@ import static org.junit.Assume.assumeTrue
 
 class AutoApplicationTest extends BaseInitScriptTest {
 
-    private static final String GE_VERSION = '3.10'
-    private static final String CCUD_VERSION = '1.6.6'
+    private static final String GE_VERSION = '3.10.1'
+    private static final String CCUD_VERSION = '1.7'
 
     def "sends build scan url service message when GE plugin is applied by init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
