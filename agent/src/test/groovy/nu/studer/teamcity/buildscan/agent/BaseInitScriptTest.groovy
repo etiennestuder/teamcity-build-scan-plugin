@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.agent
 
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import jetbrains.buildServer.util.FileUtil
 import org.gradle.testkit.runner.BuildResult
@@ -57,9 +58,11 @@ class BaseInitScriptTest extends Specification {
                         id     : PUBLIC_BUILD_SCAN_ID,
                         scanUrl: scanUrlString.toString(),
                 ]
+                def out = new ByteArrayOutputStream()
+                new GZIPOutputStream(out).withStream { smileWriter.writeValue(it, body) }
                 context.response
                         .contentType('application/vnd.gradle.scan-ack')
-                        .send(gzip(smileWriter.writeValueAsBytes(body)))
+                        .send(out.toByteArray())
             }
             prefix('scans/publish') {
                 post('gradle/:pluginVersion/token') {
@@ -170,12 +173,6 @@ class BaseInitScriptTest extends Specification {
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(BuildResult result) {
         assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
-    }
-
-    private static byte[] gzip(byte[] bytes) {
-        def out = new ByteArrayOutputStream()
-        new GZIPOutputStream(out).withStream { it.write(bytes) }
-        out.toByteArray()
     }
 
     static final class JdkCompatibleGradleVersion {
