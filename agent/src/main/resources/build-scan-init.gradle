@@ -14,11 +14,11 @@ if (!isTopLevelBuild) {
 
 // conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
-    def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
     def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
+    def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
 
-    if (gePluginVersion || ccudPluginVersion && atLeastGradle5) {
+    if (gePluginVersion || ccudPluginVersion) {
         repositories {
             maven { url 'https://plugins.gradle.org/m2' }
         }
@@ -27,11 +27,11 @@ initscript {
     dependencies {
         if (gePluginVersion) {
             classpath atLeastGradle5 ?
-                    "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
-                    "com.gradle:build-scan-plugin:1.16"
+                "com.gradle:gradle-enterprise-gradle-plugin:$gePluginVersion" :
+                "com.gradle:build-scan-plugin:1.16"
         }
 
-        if (ccudPluginVersion && atLeastGradle5) {
+        if (ccudPluginVersion) {
             classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
         }
     }
@@ -47,7 +47,6 @@ def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.Grad
 def CCUD_PLUGIN_ID = 'com.gradle.common-custom-user-data-gradle-plugin'
 def CCUD_PLUGIN_CLASS = 'com.gradle.CommonCustomUserDataGradlePlugin'
 
-def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
 def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.url')
 def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
 def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
@@ -80,7 +79,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 }
             }
 
-            if (ccudPluginVersion && atLeastGradle5) {
+            if (ccudPluginVersion) {
                 def ccudPluginComponent = resolutionResult.allComponents.find {
                     it.moduleVersion.with { group == "com.gradle" && name == "common-custom-user-data-gradle-plugin" }
                 }
@@ -112,7 +111,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
             }
         }
 
-        if (ccudPluginVersion && atLeastGradle5) {
+        if (ccudPluginVersion) {
             if (!settings.pluginManager.hasPlugin(CCUD_PLUGIN_ID)) {
                 settings.pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
             }
