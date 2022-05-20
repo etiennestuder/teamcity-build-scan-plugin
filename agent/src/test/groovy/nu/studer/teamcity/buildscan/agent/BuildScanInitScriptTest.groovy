@@ -51,4 +51,5 @@ class BuildScanInitScriptTest extends BaseInitScriptTest {
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
+
 }

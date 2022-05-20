@@ -21,19 +21,19 @@ import static nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 class BaseInitScriptTest extends Specification {
 
     static final List<JdkCompatibleGradleVersion> NOT_SUPPORTED_GRADLE_VERSIONS = [
-            new JdkCompatibleGradleVersion(GradleVersion.version('3.5.1'), 7, 9),
-            new JdkCompatibleGradleVersion(GradleVersion.version('4.0.2'), 7, 9)
+        new JdkCompatibleGradleVersion(GradleVersion.version('3.5.1'), 7, 9),
+        new JdkCompatibleGradleVersion(GradleVersion.version('4.0.2'), 7, 9)
     ]
 
     static final List<JdkCompatibleGradleVersion> SUPPORTED_GRADLE_VERSIONS = [
-            new JdkCompatibleGradleVersion(GradleVersion.version('4.1'), 7, 9),
-            new JdkCompatibleGradleVersion(GradleVersion.version('4.10.3'), 7, 10),
-            new JdkCompatibleGradleVersion(GradleVersion.version('5.1.1'), 8, 11),
-            new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12),
-            new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13),
-            new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15),
-            new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16),
-            new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17),
+        new JdkCompatibleGradleVersion(GradleVersion.version('4.1'), 7, 9),
+        new JdkCompatibleGradleVersion(GradleVersion.version('4.10.3'), 7, 10),
+        new JdkCompatibleGradleVersion(GradleVersion.version('5.1.1'), 8, 11),
+        new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12),
+        new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13),
+        new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15),
+        new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16),
+        new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17),
     ]
 
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
@@ -55,34 +55,34 @@ class BaseInitScriptTest extends Specification {
             post('in/:gradleVersion/:pluginVersion') {
                 def scanUrlString = "${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID"
                 def body = [
-                        id     : PUBLIC_BUILD_SCAN_ID,
-                        scanUrl: scanUrlString.toString(),
+                    id     : PUBLIC_BUILD_SCAN_ID,
+                    scanUrl: scanUrlString.toString(),
                 ]
                 def out = new ByteArrayOutputStream()
                 new GZIPOutputStream(out).withStream { smileWriter.writeValue(it, body) }
                 context.response
-                        .contentType('application/vnd.gradle.scan-ack')
-                        .send(out.toByteArray())
+                    .contentType('application/vnd.gradle.scan-ack')
+                    .send(out.toByteArray())
             }
             prefix('scans/publish') {
                 post('gradle/:pluginVersion/token') {
                     def pluginVersion = context.pathTokens.pluginVersion
                     def scanUrlString = "${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID"
                     def body = [
-                            id             : PUBLIC_BUILD_SCAN_ID,
-                            scanUrl        : scanUrlString.toString(),
-                            scanUploadUrl  : "${mockScansServer.address.toString()}scans/publish/gradle/$pluginVersion/upload".toString(),
-                            scanUploadToken: DEFAULT_SCAN_UPLOAD_TOKEN
+                        id             : PUBLIC_BUILD_SCAN_ID,
+                        scanUrl        : scanUrlString.toString(),
+                        scanUploadUrl  : "${mockScansServer.address.toString()}scans/publish/gradle/$pluginVersion/upload".toString(),
+                        scanUploadToken: DEFAULT_SCAN_UPLOAD_TOKEN
                     ]
                     context.response
-                            .contentType('application/vnd.gradle.scan-ack+json')
-                            .send(jsonWriter.writeValueAsBytes(body))
+                        .contentType('application/vnd.gradle.scan-ack+json')
+                        .send(jsonWriter.writeValueAsBytes(body))
                 }
                 post('gradle/:pluginVersion/upload') {
                     context.request.getBody(1024 * 1024 * 10).then {
                         context.response
-                                .contentType('application/vnd.gradle.scan-upload-ack+json')
-                                .send()
+                            .contentType('application/vnd.gradle.scan-upload-ack+json')
+                            .send()
                     }
                 }
                 notFound()
@@ -160,11 +160,11 @@ class BaseInitScriptTest extends Specification {
         def args = ['tasks', '-I', initScriptFile.absolutePath]
 
         ((DefaultGradleRunner) GradleRunner.create())
-                .withJvmArguments(jvmArgs)
-                .withGradleVersion(gradleVersion.version)
-                .withProjectDir(testProjectDir)
-                .withArguments(args)
-                .forwardOutput()
+            .withJvmArguments(jvmArgs)
+            .withGradleVersion(gradleVersion.version)
+            .withProjectDir(testProjectDir)
+            .withArguments(args)
+            .forwardOutput()
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
@@ -204,9 +204,11 @@ class BaseInitScriptTest extends Specification {
         @Override
         String toString() {
             return "JdkCompatibleGradleVersion{" +
-                    "Gradle " + gradleVersion.version +
-                    ", JDK " + jdkMin + "-" + jdkMax +
-                    '}'
+                "Gradle " + gradleVersion.version +
+                ", JDK " + jdkMin + "-" + jdkMax +
+                '}'
         }
+
     }
+
 }

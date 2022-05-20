@@ -14,10 +14,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
     def "sends build scan url service message when GE plugin is applied by init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
-        given:
-        settingsFile << ''
-        buildFile << ''
-
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, null)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
@@ -50,10 +46,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
     def "sends build scan url service message when GE and CCUD plugins are applied by init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
-        given:
-        settingsFile << ''
-        buildFile << ''
-
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
@@ -65,7 +57,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "sends build scan url service message when GE and CCUD plugins are applied by project init script (#jdkCompatibleGradleVersion)"() {
+    def "sends build scan url service message when GE and CCUD plugins are applied by project and init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -105,10 +97,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
     def "build succeeds when URL is set without applied GE plugin (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
-        given:
-        settingsFile << ''
-        buildFile << ''
-
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, null, null)
 
@@ -121,10 +109,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
 
     def "build doesn't apply CCUD is applied without GE plugin (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
-
-        given:
-        settingsFile << ''
-        buildFile << ''
 
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, null, CCUD_VERSION)
@@ -162,10 +146,6 @@ class AutoApplicationTest extends BaseInitScriptTest {
     def "sends build scan to scans.gradle.com if no URL is given (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
-        given:
-        settingsFile << ''
-        buildFile << ''
-
         when:
         def jvmArgs = generateJvmArgs(null, GE_VERSION, null)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
@@ -198,4 +178,5 @@ class AutoApplicationTest extends BaseInitScriptTest {
     void outputContainsTermsOfServiceDenial(BuildResult result) {
         assert 1 == result.output.count('The Gradle Terms of Service have not been agreed to.')
     }
+
 }
