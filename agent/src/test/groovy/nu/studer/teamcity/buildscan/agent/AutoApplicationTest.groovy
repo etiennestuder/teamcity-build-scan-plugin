@@ -129,11 +129,11 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion, 'https://ge-server.invalid/')
-        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion, 'https://ge-server.invalid/')
+        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
+        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, null, null)
+        def jvmArgs = generateJvmArgs(URI.create('https://ge-server.invalid'), null, null)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
 
         then:
