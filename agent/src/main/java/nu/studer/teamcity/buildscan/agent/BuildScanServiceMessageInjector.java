@@ -18,21 +18,29 @@ import java.util.Map;
  */
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
+    // TeamCity Gradle runner
+
     private static final String GRADLE_RUNNER = "gradle-runner";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
     private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
+
+    // TeamCity Maven runner
 
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
 
+    // Gradle TeamCity Build Scan plugin
+
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
-    private static final String GE_URL_CONFIG_PARAM = "GRADLE_ENTERPRISE_URL";
+    // TeamCity GE configuration parameters
 
-    private static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "GRADLE_ENTERPRISE_PLUGIN_VERSION";
+    private static final String GE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";
 
-    private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "CCUD_PLUGIN_VERSION";
+    private static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.plugin.version";
+
+    private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
 
     private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.url";
 
