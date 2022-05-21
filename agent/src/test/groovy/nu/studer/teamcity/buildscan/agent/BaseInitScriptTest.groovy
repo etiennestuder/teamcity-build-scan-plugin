@@ -101,6 +101,11 @@ class BaseInitScriptTest extends Specification {
         buildFile << ''
     }
 
+    def declareGePluginApplication(GradleVersion gradleVersion) {
+        settingsFile << maybeAddGradleEnterprisePlugin(gradleVersion)
+        buildFile << maybeAddBuildScanPlugin(gradleVersion)
+    }
+
     String maybeAddGradleEnterprisePlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
         if (gradleVersion < GradleVersion.version('5.0')) {
             '' // applied in build.gradle

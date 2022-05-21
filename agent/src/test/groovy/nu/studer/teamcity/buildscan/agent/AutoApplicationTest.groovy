@@ -29,8 +29,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, null)
@@ -61,8 +60,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
@@ -80,8 +78,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
         def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, '1.6.5')
@@ -129,8 +126,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        settingsFile << maybeAddGradleEnterprisePlugin(jdkCompatibleGradleVersion.gradleVersion)
-        buildFile << maybeAddBuildScanPlugin(jdkCompatibleGradleVersion.gradleVersion)
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
         def jvmArgs = generateJvmArgs(URI.create('https://ge-server.invalid'), null, null)
