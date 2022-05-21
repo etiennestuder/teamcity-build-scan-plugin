@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.agent
 
 import org.gradle.testkit.runner.BuildResult
+import org.gradle.util.GradleVersion
 import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
@@ -10,6 +11,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
     private static final String GE_VERSION = '3.10.1'
     private static final String CCUD_VERSION = '1.7'
 
+    private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
+
     def "sends build scan url service message when GE plugin is applied by init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
@@ -18,6 +21,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -133,6 +137,20 @@ class AutoApplicationTest extends BaseInitScriptTest {
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
+        def pluginApplicationLogMsgGradle4And5 = 'Applying com.gradle.scan.plugin.BuildScanPlugin via init script'
+        def pluginApplicationLogMsgGradle6AndHigher = 'Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script'
+        if (gradleVersion < GRADLE_6) {
+            assert result.output.contains(pluginApplicationLogMsgGradle4And5)
+            assert 1 == result.output.count(pluginApplicationLogMsgGradle4And5)
+            assert !result.output.contains(pluginApplicationLogMsgGradle6AndHigher)
+        } else {
+            assert result.output.contains(pluginApplicationLogMsgGradle6AndHigher)
+            assert 1 == result.output.count(pluginApplicationLogMsgGradle6AndHigher)
+            assert !result.output.contains(pluginApplicationLogMsgGradle4And5)
+        }
     }
 
     void outputContainsTermsOfServiceDenial(BuildResult result) {
