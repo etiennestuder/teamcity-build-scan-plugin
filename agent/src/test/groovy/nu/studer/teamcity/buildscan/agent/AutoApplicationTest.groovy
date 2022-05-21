@@ -1,7 +1,6 @@
 package nu.studer.teamcity.buildscan.agent
 
 import org.gradle.testkit.runner.BuildResult
-import org.gradle.util.GradleVersion
 import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
@@ -15,8 +14,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, null)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -32,8 +31,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, null)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -46,8 +45,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION, ccudPluginVersion: CCUD_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -63,8 +62,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, CCUD_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION, ccudPluginVersion: CCUD_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -81,8 +80,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, GE_VERSION, '1.6.5')
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION, ccudPluginVersion: '1.6.5')
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -95,28 +94,11 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, null, null)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
-        run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
-
-        where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
-    }
-
-    def "build doesn't apply CCUD is applied without GE plugin (#jdkCompatibleGradleVersion)"() {
-        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
-
-        when:
-        def jvmArgs = generateJvmArgs(mockScansServer.address, null, CCUD_VERSION)
-
-        then:
-        if (jdkCompatibleGradleVersion.gradleVersion < GradleVersion.version('5.2')) {
-            run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
-        } else {
-            def result = runAndFail(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
-            result.output.contains("Could not create plugin of type 'CommonCustomUserDataGradlePlugin'.")
-        }
+        result
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
@@ -129,8 +111,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def jvmArgs = generateJvmArgs(URI.create('https://ge-server.invalid'), null, null)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(geUrl: URI.create('https://ge-server.invalid'))
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
@@ -143,8 +125,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def jvmArgs = generateJvmArgs(null, GE_VERSION, null)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, jvmArgs)
+        def gePluginConfig = new TcPluginConfig(gePluginVersion: GE_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
         outputContainsTermsOfServiceDenial(result)
@@ -153,26 +135,32 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    List<String> generateJvmArgs(URI geUrl, String gePluginVersion, String ccudPluginVersion) {
-        def jvmArgs = []
-
-        if (geUrl) {
-            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.url=$geUrl".toString()
-        }
-
-        if (gePluginVersion) {
-            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$gePluginVersion".toString()
-        }
-
-        if (ccudPluginVersion) {
-            jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
-        }
-
-        jvmArgs
+    void outputContainsTermsOfServiceDenial(BuildResult result) {
+        def tosWarning = 'The Gradle Terms of Service have not been agreed to.'
+        assert result.output.contains(tosWarning)
+        assert 1 == result.output.count(tosWarning)
     }
 
-    void outputContainsTermsOfServiceDenial(BuildResult result) {
-        assert 1 == result.output.count('The Gradle Terms of Service have not been agreed to.')
+    static final class TcPluginConfig {
+
+        URI geUrl
+        String gePluginVersion
+        String ccudPluginVersion
+
+        List<String> toJvmArgs() {
+            def jvmArgs = []
+            if (geUrl) {
+                jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.url=$geUrl".toString()
+            }
+            if (gePluginVersion) {
+                jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$gePluginVersion".toString()
+            }
+            if (ccudPluginVersion) {
+                jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
+            }
+            jvmArgs
+        }
+
     }
 
 }
