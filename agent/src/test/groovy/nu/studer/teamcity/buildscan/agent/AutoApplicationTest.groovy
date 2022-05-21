@@ -2,7 +2,6 @@ package nu.studer.teamcity.buildscan.agent
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.util.GradleVersion
-import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
 
@@ -12,6 +11,24 @@ class AutoApplicationTest extends BaseInitScriptTest {
     private static final String CCUD_PLUGIN_VERSION = '1.7'
 
     private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
+
+    def "does not apply GE / CCUD plugins when not defined in project and not requested via TC config (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig()
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+
+        then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
 
     def "applies GE plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
@@ -91,12 +108,12 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "applies CCUD plugin via project when defined in project where GE plugin defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies CCUD plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
         declareGePluginAndCcudPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
-        
+
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
@@ -112,95 +129,56 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "sends build scan url service message when GE and CCUD plugins are applied by init script (#jdkCompatibleGradleVersion)"() {
-        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
-
-        when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
-
-        then:
-        outputContainsTeamCityServiceMessageBuildScanUrl(result)
-
-        where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
-    }
-
-    def "sends build scan url service message when GE and CCUD plugins are applied by project and init script (#jdkCompatibleGradleVersion)"() {
+    def "ignores GE URL requested via TC config when GE plugin is not applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(geUrl: URI.create('https://ge-server.invalid'), gePluginVersion: GE_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    @Ignore(value = "This behavior is desired but not yet implemented")
-    def "degrades gracefully project applies GE and init script applies CCUD <= 1.6.5 (#jdkCompatibleGradleVersion)"() {
+    def "configures GE URL requested via TC config when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
-        given:
-        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
-
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.6.5')
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "build succeeds when URL is set without applied GE plugin (#jdkCompatibleGradleVersion)"() {
+    def "stops gracefully when CCUD plugin version injected via init script is <1.7 (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.6.6')
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
-        result
-
-        where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
-    }
-
-    def "url system property overrides project server url (#jdkCompatibleGradleVersion)"() {
-        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
-
-        given:
-        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
-
-        when:
-        def gePluginConfig = new TcPluginConfig(geUrl: URI.create('https://ge-server.invalid'))
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
-
-        then:
-        outputContainsTeamCityServiceMessageBuildScanUrl(result)
-
-        where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
-    }
-
-    def "sends build scan to scans.gradle.com if no URL is given (#jdkCompatibleGradleVersion)"() {
-        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
-
-        when:
-        def gePluginConfig = new TcPluginConfig(gePluginVersion: GE_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
-
-        then:
-        outputContainsTermsOfServiceDenial(result)
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+        result.output.contains('Common Custom User Data Gradle plugin must be at least 1.7. Configured version is 1.6.6.')
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
