@@ -8,8 +8,8 @@ import static org.junit.Assume.assumeTrue
 
 class AutoApplicationTest extends BaseInitScriptTest {
 
-    private static final String GE_VERSION = '3.10.1'
-    private static final String CCUD_VERSION = '1.7'
+    private static final String GE_PLUGIN_VERSION = '3.10.1'
+    private static final String CCUD_PLUGIN_VERSION = '1.7'
 
     private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
 
@@ -17,7 +17,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
@@ -35,7 +35,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
@@ -49,7 +49,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION, ccudPluginVersion: CCUD_VERSION)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
@@ -66,7 +66,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION, ccudPluginVersion: CCUD_VERSION)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
@@ -84,7 +84,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_VERSION, ccudPluginVersion: '1.6.5')
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.6.5')
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
@@ -129,7 +129,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(gePluginVersion: GE_VERSION)
+        def gePluginConfig = new TcPluginConfig(gePluginVersion: GE_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
