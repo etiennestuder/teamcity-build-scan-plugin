@@ -95,6 +95,7 @@ class BaseInitScriptTest extends Specification {
         settingsFile = new File(testProjectDir, 'settings.gradle')
         buildFile = new File(testProjectDir, 'build.gradle')
 
+        //noinspection GroovyAccessibility
         FileUtil.copyResource(BuildScanServiceMessageInjector.class, '/' + BUILD_SCAN_INIT_GRADLE, initScriptFile)
         settingsFile << ''
         buildFile << ''
@@ -168,10 +169,14 @@ class BaseInitScriptTest extends Specification {
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
-        assert result.output.contains("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']")
+        def serviceMessage = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
+        assert result.output.contains(serviceMessage)
+        assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']")
     }
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(BuildResult result) {
+        def serviceMessage = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']"
+        assert result.output.contains(serviceMessage)
         assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
     }
 

@@ -157,7 +157,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    ArrayList<String> generateJvmArgs(URI geUrl, String gePluginVersion, String ccudPluginVersion) {
+    List<String> generateJvmArgs(URI geUrl, String gePluginVersion, String ccudPluginVersion) {
         def jvmArgs = []
 
         if (geUrl) {
