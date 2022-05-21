@@ -2,7 +2,6 @@ package nu.studer.teamcity.buildscan.agent
 
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectWriter
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import jetbrains.buildServer.util.FileUtil
 import org.gradle.testkit.runner.BuildResult
@@ -174,15 +173,15 @@ class BaseInitScriptTest extends Specification {
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
-        def serviceMessage = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert result.output.contains(serviceMessage)
-        assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']")
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
+        assert result.output.contains(serviceMsg)
+        assert 1 == result.output.count(serviceMsg)
     }
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(BuildResult result) {
-        def serviceMessage = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']"
-        assert result.output.contains(serviceMessage)
-        assert 1 == result.output.count("##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']")
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']"
+        assert result.output.contains(serviceMsg)
+        assert 1 == result.output.count(serviceMsg)
     }
 
     static final class JdkCompatibleGradleVersion {
