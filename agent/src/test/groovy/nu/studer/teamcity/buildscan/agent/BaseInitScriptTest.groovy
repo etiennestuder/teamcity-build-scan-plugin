@@ -101,11 +101,16 @@ class BaseInitScriptTest extends Specification {
     }
 
     def declareGePluginApplication(GradleVersion gradleVersion) {
-        settingsFile << maybeAddGradleEnterprisePlugin(gradleVersion)
-        buildFile << maybeAddBuildScanPlugin(gradleVersion)
+        settingsFile << maybeAddPluginsToSettings(gradleVersion)
+        buildFile << maybeAddPluginsToRootProject(gradleVersion)
     }
 
-    String maybeAddGradleEnterprisePlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
+    def declareGePluginAndCcudPluginApplication(GradleVersion gradleVersion) {
+        settingsFile << maybeAddPluginsToSettings(gradleVersion, '1.7')
+        buildFile << maybeAddPluginsToRootProject(gradleVersion, '1.7')
+    }
+
+    String maybeAddPluginsToSettings(GradleVersion gradleVersion, String ccudPluginVersion = null) {
         if (gradleVersion < GradleVersion.version('5.0')) {
             '' // applied in build.gradle
         } else if (gradleVersion < GradleVersion.version('6.0')) {
@@ -114,9 +119,10 @@ class BaseInitScriptTest extends Specification {
             """
               plugins {
                 id 'com.gradle.enterprise' version '3.4.1'
+                ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
               gradleEnterprise {
-                server = '$server'
+                server = '$mockScansServer.address'
                 buildScan {
                   publishAlways()
                 }
@@ -125,14 +131,15 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    String maybeAddBuildScanPlugin(GradleVersion gradleVersion, String server = mockScansServer.address) {
+    String maybeAddPluginsToRootProject(GradleVersion gradleVersion, String ccudPluginVersion = null) {
         if (gradleVersion < GradleVersion.version('5.0')) {
             """
               plugins {
                 id 'com.gradle.build-scan' version '1.16'
+                ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
               buildScan {
-                server = '$server'
+                server = '$mockScansServer.address'
                 publishAlways()
               }
             """
@@ -140,9 +147,10 @@ class BaseInitScriptTest extends Specification {
             """
               plugins {
                 id 'com.gradle.build-scan' version '3.4.1'
+                ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
               gradleEnterprise {
-                server = '$server'
+                server = '$mockScansServer.address'
                 buildScan {
                   publishAlways()
                 }

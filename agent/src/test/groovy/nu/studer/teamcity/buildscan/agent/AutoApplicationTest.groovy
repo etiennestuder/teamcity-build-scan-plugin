@@ -13,7 +13,7 @@ class AutoApplicationTest extends BaseInitScriptTest {
 
     private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
 
-    def "sends build scan url service message when GE plugin is applied by init script (#jdkCompatibleGradleVersion)"() {
+    def "applies GE plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
@@ -22,13 +22,16 @@ class AutoApplicationTest extends BaseInitScriptTest {
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
         jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
     }
 
-    def "sends build scan url service message when GE plugin is applied by project and init script (#jdkCompatibleGradleVersion)"() {
+    def "applies GE plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -39,6 +42,70 @@ class AutoApplicationTest extends BaseInitScriptTest {
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
 
         then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "applies CCUD plugin via init script when not defined in project where GE plugin not defined in project (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+
+        then:
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "applies CCUD plugin via init script when not defined in project where GE plugin defined in project (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+
+        then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputContainsCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+    }
+
+    def "applies CCUD plugin via project when defined in project where GE plugin defined in project (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        declareGePluginAndCcudPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+        
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+
+        then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -140,8 +207,8 @@ class AutoApplicationTest extends BaseInitScriptTest {
     }
 
     void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
-        def pluginApplicationLogMsgGradle4And5 = 'Applying com.gradle.scan.plugin.BuildScanPlugin via init script'
-        def pluginApplicationLogMsgGradle6AndHigher = 'Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script'
+        def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
+        def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
         if (gradleVersion < GRADLE_6) {
             assert result.output.contains(pluginApplicationLogMsgGradle4And5)
             assert 1 == result.output.count(pluginApplicationLogMsgGradle4And5)
@@ -151,6 +218,24 @@ class AutoApplicationTest extends BaseInitScriptTest {
             assert 1 == result.output.count(pluginApplicationLogMsgGradle6AndHigher)
             assert !result.output.contains(pluginApplicationLogMsgGradle4And5)
         }
+    }
+
+    void outputMissesGePluginApplicationViaInitScript(BuildResult result) {
+        def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
+        def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
+        assert !result.output.contains(pluginApplicationLogMsgGradle4And5)
+        assert !result.output.contains(pluginApplicationLogMsgGradle6AndHigher)
+    }
+
+    void outputContainsCcudPluginApplicationViaInitScript(BuildResult result) {
+        def pluginApplicationLogMsg = "Applying com.gradle.CommonCustomUserDataGradlePlugin via init script"
+        assert result.output.contains(pluginApplicationLogMsg)
+        assert 1 == result.output.count(pluginApplicationLogMsg)
+    }
+
+    void outputMissesCcudPluginApplicationViaInitScript(BuildResult result) {
+        def pluginApplicationLogMsg = "Applying com.gradle.CommonCustomUserDataGradlePlugin via init script"
+        assert !result.output.contains(pluginApplicationLogMsg)
     }
 
     void outputContainsTermsOfServiceDenial(BuildResult result) {
