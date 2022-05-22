@@ -5,7 +5,7 @@ import org.gradle.util.GradleVersion
 
 import static org.junit.Assume.assumeTrue
 
-class AutoApplicationTest extends BaseInitScriptTest {
+class BuildScanPluginApplicationTest extends BaseInitScriptTest {
 
     private static final String GE_PLUGIN_VERSION = '3.10.1'
     private static final String CCUD_PLUGIN_VERSION = '1.7'

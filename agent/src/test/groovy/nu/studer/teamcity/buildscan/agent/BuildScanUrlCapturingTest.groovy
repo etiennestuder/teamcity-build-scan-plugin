@@ -2,7 +2,7 @@ package nu.studer.teamcity.buildscan.agent
 
 import static org.junit.Assume.assumeTrue
 
-class BuildScanInitScriptTest extends BaseInitScriptTest {
+class BuildScanUrlCapturingTest extends BaseInitScriptTest {
 
     def "does not fail build when using a Gradle version older than minimum version 4.1 (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
