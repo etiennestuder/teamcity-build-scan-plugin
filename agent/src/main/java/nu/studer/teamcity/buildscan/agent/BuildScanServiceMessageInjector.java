@@ -12,15 +12,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
- * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself
- * registers a callback on the build scan plugin for any published build scans and emits a TeamCity
- * {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
- *
- * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and
- * Common Custom User Data plugins and extensions into Gradle and Maven builds.
+ * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself registers a callback on the build scan plugin for any
+ * published build scans and emits a TeamCity {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
+ * <p>
+ * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
+ * builds.
  */
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
@@ -99,7 +97,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private String getExtensionsClasspath(BuildRunnerContext runner) {
-        List<File> extensionJars = new ArrayList<>();
+        List<File> extensionJars = new ArrayList<File>();
 
         // add extension to capture build scan URL
         extensionJars.add(getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner));
@@ -121,7 +119,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             }
         }
 
-        return extensionJars.stream().map(File::getAbsolutePath).collect(Collectors.joining(File.pathSeparator));
+        return asClassPath(extensionJars);
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
@@ -134,11 +132,6 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         String checkoutDir = getOrDefault("teamcity.build.checkoutDir", runner);
         File extensionFile = new File(checkoutDir, ".mvn/extensions.xml");
         return MavenExtensions.fromFile(extensionFile);
-    }
-
-    private boolean needsExtension(String configParam, MavenCoordinates extension, MavenExtensions extensions, BuildRunnerContext runner) {
-        String version = getOptionalConfigParam(configParam, runner);
-        return version != null && !extensions.hasExtension(extension);
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -191,10 +184,21 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return value.isEmpty() ? null : value;
     }
 
-    @SuppressWarnings("Java8MapApi") // support JDK6
     private static String getOrDefault(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
         Map<String, String> runnerParameters = runner.getRunnerParameters();
         return runnerParameters.containsKey(paramName) ? runnerParameters.get(paramName) : "";
+    }
+
+    @NotNull
+    private static String asClassPath(List<File> files) {
+        StringBuilder sb = new StringBuilder();
+        for (File file : files) {
+            if (sb.length() > 0) {
+                sb.append(File.pathSeparator);
+            }
+            sb.append(file.getAbsolutePath());
+        }
+        return sb.toString();
     }
 
 }
