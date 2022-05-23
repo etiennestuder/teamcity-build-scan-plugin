@@ -84,9 +84,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
-
-            // For now, this intentionally ignores the configured extension versions and applies the bundled jars
+            // for now, this intentionally ignores the configured extension versions and applies the bundled jars
             String extJarParam = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
             addMavenCmdParam(extJarParam, runner);
 
@@ -112,6 +110,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         if (geExtensionVersion != null) {
             if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES)) {
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
+                addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
             }
         }
 
