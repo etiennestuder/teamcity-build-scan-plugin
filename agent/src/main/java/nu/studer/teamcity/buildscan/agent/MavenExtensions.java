@@ -18,13 +18,15 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Detects Maven Extensions in {@code .mvn/extensions.xml} files by matching their groupId and artifactId
+ * Detects Maven Extensions in {@code .mvn/extensions.xml} files by matching their groupId and artifactId.
  */
 final class MavenExtensions {
 
     private static final Logger LOG = Logger.getInstance(MavenExtensions.class.getName());
 
-    private static final XPath xPath = XPathFactory.newInstance().newXPath();
+    private static final XPath XPATH = XPathFactory.newInstance().newXPath();
+
+    private static final String EXTENSION_XPATH_EXPR = "/extensions/extension[groupId = '%s' and artifactId = '%s']";
 
     @Nullable
     private final Document document;
@@ -42,30 +44,29 @@ final class MavenExtensions {
             return MavenExtensions.empty();
         }
 
-        Document document;
         try {
-            document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(extensionsFile);
+            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(extensionsFile);
             document.normalizeDocument();
             return new MavenExtensions(document);
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            LOG.warn("Failed to parse extensions from file " + extensionsFile.getAbsolutePath(), e);
+            LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
             return MavenExtensions.empty();
         }
     }
 
     boolean hasExtension(@NotNull MavenCoordinates coordinates) {
-        return document != null && getExtension(document, coordinates).getLength() > 0;
-    }
+        if (document == null) {
+            return false;
+        }
 
-    private NodeList getExtension(Document doc, MavenCoordinates extension) {
-        String expr = String.format("/extensions/extension[groupId = '%s' and artifactId = '%s']", extension.getGroupId(), extension.getArtifactId());
-
+        String expr = String.format(EXTENSION_XPATH_EXPR, coordinates.getGroupId(), coordinates.getArtifactId());
         try {
-            XPathExpression xPathExpr = xPath.compile(expr);
-            return (NodeList) xPathExpr.evaluate(doc, XPathConstants.NODESET);
+            XPathExpression exprCompiled = XPATH.compile(expr);
+            NodeList extension = (NodeList) exprCompiled.evaluate(document, XPathConstants.NODESET);
+            return extension != null && extension.getLength() > 0;
         } catch (XPathExpressionException e) {
-            String message = String.format("Could not compile/evaluate XPath Expression : %s", expr);
-            throw new IllegalArgumentException(message, e);
+            LOG.warn(String.format("Could not apply XPath expression: %s", expr), e);
+            return false;
         }
     }
 
