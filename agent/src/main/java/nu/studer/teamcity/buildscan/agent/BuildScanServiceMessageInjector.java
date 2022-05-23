@@ -84,11 +84,9 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
 
             // For now, this intentionally ignores the configured extension versions and applies the bundled jars
-            String extJarParam = "-Dmaven.ext.class.path=" +
-                    getExtensionJarFromResource(runner, BUILD_SCAN_EXT_MAVEN).getAbsolutePath() +
-                    generateGeCcudExtensionsClasspath(runner, getExtensions(runner));
-
+            String extJarParam = "-Dmaven.ext.class.path=" + getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner).getAbsolutePath() + generateGeCcudExtensionsClasspath(runner);
             addMavenCmdParam(extJarParam, runner);
+
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         }
     }
@@ -99,30 +97,32 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return initScript;
     }
 
-    private File getExtensionJarFromResource(BuildRunnerContext runner, String jar) {
-        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), jar);
-        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + jar, extensionJar);
+    private File getExtensionJar(String name, BuildRunnerContext runner) {
+        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), name);
+        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + name, extensionJar);
         return extensionJar;
+    }
+
+    private String generateGeCcudExtensionsClasspath(BuildRunnerContext runner) {
+        MavenExtensions extensions = getExtensions(runner);
+
+        String classpath = "";
+
+        if (needsExtension(runner, extensions, GE_EXTENSION_VERSION_CONFIG_PARAM, GE_EXTENSION_MAVEN_COORDINATES)) {
+            classpath += appendToClassPath(classpath, getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
+        }
+
+        if (needsExtension(runner, extensions, CCUD_EXTENSION_VERSION_CONFIG_PARAM, CCUD_EXTENSION_MAVEN_COORDINATES)) {
+            classpath += appendToClassPath(classpath, getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
+        }
+
+        return classpath;
     }
 
     private MavenExtensions getExtensions(BuildRunnerContext runner) {
         String checkoutDir = getOrDefault("teamcity.build.checkoutDir", runner);
         File extensionFile = new File(checkoutDir, ".mvn/extensions.xml");
         return MavenExtensions.fromFile(extensionFile);
-    }
-
-    private String generateGeCcudExtensionsClasspath(BuildRunnerContext runner, @Nullable MavenExtensions extensions) {
-        String classpath = "";
-
-        if (needsExtension(runner, extensions, GE_EXTENSION_VERSION_CONFIG_PARAM, GE_EXTENSION_MAVEN_COORDINATES)) {
-            classpath += appendToClassPath(classpath, getExtensionJarFromResource(runner, GRADLE_ENTERPRISE_EXT_MAVEN));
-        }
-
-        if (needsExtension(runner, extensions, CCUD_EXTENSION_VERSION_CONFIG_PARAM, CCUD_EXTENSION_MAVEN_COORDINATES)) {
-            classpath += appendToClassPath(classpath, getExtensionJarFromResource(runner, COMMON_CUSTOM_USER_DATA_EXT_MAVEN));
-        }
-
-        return classpath;
     }
 
     private boolean needsExtension(BuildRunnerContext runner, MavenExtensions extensions, String configParam, MavenCoordinates extension) {
