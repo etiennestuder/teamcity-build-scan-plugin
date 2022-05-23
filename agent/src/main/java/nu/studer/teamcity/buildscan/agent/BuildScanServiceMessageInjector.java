@@ -133,10 +133,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
         String workingDirParam = parameters.get("teamcity.build.workingDir");
         String pomLocation = parameters.get("pomLocation");
+        String checkoutDirParam = parameters.get("teamcity.build.checkoutDir");
 
         File workingDir;
-        if (pomLocation != null) {
-            String checkoutDirParam = parameters.get("teamcity.build.checkoutDir");
+        if (pomLocation != null && checkoutDirParam != null && !checkoutDirParam.isEmpty()) {
             File checkoutDir = new File(checkoutDirParam);
             workingDir = new File(checkoutDir, pomLocation).getParentFile();
         } else {
