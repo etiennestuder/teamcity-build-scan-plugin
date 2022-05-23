@@ -8,8 +8,13 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
-import java.io.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Detects Maven Extensions in {@code .mvn/extensions.xml} files by matching their groupId and artifactId
@@ -30,7 +35,7 @@ final class MavenExtensions {
         this.document = document;
     }
 
-    public static MavenExtensions fromFile(@NotNull File extensionsFile) {
+    static MavenExtensions fromFile(@NotNull File extensionsFile) {
         if (!extensionsFile.exists()) {
             return MavenExtensions.empty();
         }
@@ -54,11 +59,11 @@ final class MavenExtensions {
         return new MavenExtensions(document);
     }
 
-    public static MavenExtensions empty() {
+    static MavenExtensions empty() {
         return new MavenExtensions();
     }
 
-    public boolean hasExtension(@NotNull MavenCoordinates coordinates) {
+    boolean hasExtension(@NotNull MavenCoordinates coordinates) {
         return document != null && getExtension(document, coordinates).getLength() > 0;
     }
 
@@ -73,4 +78,5 @@ final class MavenExtensions {
             throw new IllegalArgumentException(message, e);
         }
     }
+
 }

@@ -8,25 +8,25 @@ final class MavenCoordinates {
 
     private final String version;
 
-    public MavenCoordinates(String groupId, String artifactId) {
+    MavenCoordinates(String groupId, String artifactId) {
         this(groupId, artifactId, "unspecified");
     }
 
-    public MavenCoordinates(String groupId, String artifactId, String version) {
+    MavenCoordinates(String groupId, String artifactId, String version) {
         this.groupId = groupId;
         this.artifactId = artifactId;
         this.version = version;
     }
 
-    public String getGroupId() {
+    String getGroupId() {
         return groupId;
     }
 
-    public String getArtifactId() {
+    String getArtifactId() {
         return artifactId;
     }
 
-    public String getVersion() {
+    String getVersion() {
         return version;
     }
 
@@ -34,4 +34,5 @@ final class MavenCoordinates {
     public String toString() {
         return String.format("%s:%s:%s", groupId, artifactId, version);
     }
+
 }
