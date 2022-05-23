@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.agent;
 
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -25,14 +26,15 @@ final class MavenExtensions {
 
     private static final XPath xPath = XPathFactory.newInstance().newXPath();
 
+    @Nullable
     private final Document document;
 
-    private MavenExtensions() {
-        this(null);
+    private MavenExtensions(@Nullable Document document) {
+        this.document = document;
     }
 
-    private MavenExtensions(Document document) {
-        this.document = document;
+    static MavenExtensions empty() {
+        return new MavenExtensions(null);
     }
 
     static MavenExtensions fromFile(@NotNull File extensionsFile) {
@@ -41,26 +43,14 @@ final class MavenExtensions {
         }
 
         Document document;
-
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(extensionsFile);
             document.normalizeDocument();
-        } catch (ParserConfigurationException e) {
-            LOG.warn("Failed to parse extensions from: " + extensionsFile.getAbsolutePath(), e);
-            return MavenExtensions.empty();
-        } catch (IOException e) {
-            LOG.warn("Failed to parse extensions from: " + extensionsFile.getAbsolutePath(), e);
-            return MavenExtensions.empty();
-        } catch (SAXException e) {
-            LOG.warn("Failed to parse extensions from: " + extensionsFile.getAbsolutePath(), e);
+            return new MavenExtensions(document);
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            LOG.warn("Failed to parse extensions from file " + extensionsFile.getAbsolutePath(), e);
             return MavenExtensions.empty();
         }
-
-        return new MavenExtensions(document);
-    }
-
-    static MavenExtensions empty() {
-        return new MavenExtensions();
     }
 
     boolean hasExtension(@NotNull MavenCoordinates coordinates) {
