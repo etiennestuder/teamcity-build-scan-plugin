@@ -16,8 +16,8 @@ import java.util.Map;
  * registers a callback on the build scan plugin for any published build scans and emits a TeamCity
  * {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
  *
- * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom
- * User Data plugins and extensions into Gradle and Maven builds.
+ * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and
+ * Common Custom User Data plugins and extensions into Gradle and Maven builds.
  */
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
@@ -47,9 +47,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
 
-    private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "GRADLE_ENTERPRISE_EXTENSION_VERSION";
+    private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
 
-    private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "CCUD_EXTENSION_VERSION";
+    private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
+
+    // Gradle properties and Maven system properties passed to the artifact instrumenting the Gradle / Maven build
 
     private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.url";
 
@@ -59,11 +61,9 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
 
-    private static final String GRADLE_EXTENSIONS_GROUP_ID = "com.gradle";
+    private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
 
-    private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates(GRADLE_EXTENSIONS_GROUP_ID, "gradle-enterprise-maven-extension");
-
-    private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates(GRADLE_EXTENSIONS_GROUP_ID, "common-custom-user-data-maven-extension");
+    private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
         eventDispatcher.addListener(this);
