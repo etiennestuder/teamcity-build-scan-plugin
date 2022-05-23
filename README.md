@@ -78,7 +78,7 @@ previously downloaded plugin `.zip` file.
 
    - `GRADLE_ENTERPRISE_URL` - the URL of the Gradle Enterprise instance to which you want to publish build scans.
    - `GRADLE_ENTERPRISE_PLUGIN_VERSION` - the version of the Gradle Enterprise plugin to apply to the build.
-   - `CCUD_PLUGIN_VERSION` - the version of the [Common Custom User Data Gradle Plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) plugin to apply to the build.
+   - `CCUD_PLUGIN_VERSION` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply to the build.
 
 1. Trigger your Gradle build.
 
