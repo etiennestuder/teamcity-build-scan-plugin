@@ -107,12 +107,19 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         extensionJars.add(getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner));
 
         // optionally add extensions that connect the Maven build with Gradle Enterprise
-        MavenExtensions extensions = getExtensions(runner);
-        if (needsExtension(GE_EXTENSION_VERSION_CONFIG_PARAM, GE_EXTENSION_MAVEN_COORDINATES, extensions, runner)) {
-            extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
+        MavenExtensions extensions = getMavenExtensions(runner);
+        String geExtensionVersion = getOptionalConfigParam(GE_EXTENSION_VERSION_CONFIG_PARAM, runner);
+        if (geExtensionVersion != null) {
+            if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES)) {
+                extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
+            }
         }
-        if (needsExtension(CCUD_EXTENSION_VERSION_CONFIG_PARAM, CCUD_EXTENSION_MAVEN_COORDINATES, extensions, runner)) {
-            extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
+
+        String ccudExtensionVersion = getOptionalConfigParam(CCUD_EXTENSION_VERSION_CONFIG_PARAM, runner);
+        if (ccudExtensionVersion != null) {
+            if (!extensions.hasExtension(CCUD_EXTENSION_MAVEN_COORDINATES)) {
+                extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
+            }
         }
 
         return extensionJars.stream().map(File::getAbsolutePath).collect(Collectors.joining(File.pathSeparator));
@@ -124,7 +131,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return extensionJar;
     }
 
-    private MavenExtensions getExtensions(BuildRunnerContext runner) {
+    private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {
         String checkoutDir = getOrDefault("teamcity.build.checkoutDir", runner);
         File extensionFile = new File(checkoutDir, ".mvn/extensions.xml");
         return MavenExtensions.fromFile(extensionFile);
@@ -132,8 +139,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private boolean needsExtension(String configParam, MavenCoordinates extension, MavenExtensions extensions, BuildRunnerContext runner) {
         String version = getOptionalConfigParam(configParam, runner);
-        boolean isVersionConfigured = version != null && !version.isEmpty();
-        return isVersionConfigured && !extensions.hasExtension(extension);
+        return version != null && !extensions.hasExtension(extension);
     }
 
     @SuppressWarnings("SameParameterValue")
