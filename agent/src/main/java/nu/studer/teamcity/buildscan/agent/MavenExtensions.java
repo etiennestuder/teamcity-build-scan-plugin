@@ -65,7 +65,7 @@ final class MavenExtensions {
             NodeList extension = (NodeList) exprCompiled.evaluate(document, XPathConstants.NODESET);
             return extension != null && extension.getLength() > 0;
         } catch (XPathExpressionException e) {
-            LOG.warn(String.format("Could not apply XPath expression: %s", expr), e);
+            LOG.warn("Could not apply XPath expression: " + expr, e);
             return false;
         }
     }
