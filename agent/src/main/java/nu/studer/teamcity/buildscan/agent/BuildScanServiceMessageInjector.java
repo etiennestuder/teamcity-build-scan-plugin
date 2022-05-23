@@ -129,8 +129,21 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {
-        String checkoutDir = getOrDefault("teamcity.build.checkoutDir", runner);
-        File extensionFile = new File(checkoutDir, ".mvn/extensions.xml");
+        Map<String, String> parameters = runner.getRunnerParameters();
+
+        String workingDirParam = parameters.get("teamcity.build.workingDir");
+        String checkoutDirParam = parameters.get("teamcity.build.checkoutDir");
+        File checkoutDir = new File(checkoutDirParam);
+
+        String pomLocation = parameters.get("pomLocation");
+        File workingDir;
+        if (pomLocation != null) {
+            workingDir = new File(checkoutDir, pomLocation).getParentFile();
+        } else {
+            workingDir = new File(workingDirParam != null ? workingDirParam : checkoutDirParam);
+        }
+
+        File extensionFile = new File(workingDir, ".mvn/extensions.xml");
         return MavenExtensions.fromFile(extensionFile);
     }
 
