@@ -44,11 +44,18 @@ final class MavenExtensions {
             return MavenExtensions.empty();
         }
 
+        //noinspection TryWithIdenticalCatches
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(extensionsFile);
             document.normalizeDocument();
             return new MavenExtensions(document);
-        } catch (ParserConfigurationException | IOException | SAXException e) {
+        } catch (ParserConfigurationException e) {
+            LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
+            return MavenExtensions.empty();
+        } catch (IOException e) {
+            LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
+            return MavenExtensions.empty();
+        } catch (SAXException e) {
             LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
             return MavenExtensions.empty();
         }
