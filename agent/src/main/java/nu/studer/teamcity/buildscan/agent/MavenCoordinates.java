@@ -1,5 +1,8 @@
 package nu.studer.teamcity.buildscan.agent;
 
+/**
+ * Describes a set of Maven coordinates, represented as a GAV.
+ */
 final class MavenCoordinates {
 
     private final String groupId;

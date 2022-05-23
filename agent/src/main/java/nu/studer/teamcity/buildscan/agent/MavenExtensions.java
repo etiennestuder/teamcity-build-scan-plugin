@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Detects Maven Extensions in {@code .mvn/extensions.xml} files by matching their groupId and artifactId.
+ * Represents a Maven extensions XML file, typically present at {@code .mvn/extensions.xml}.
  */
 final class MavenExtensions {
 
