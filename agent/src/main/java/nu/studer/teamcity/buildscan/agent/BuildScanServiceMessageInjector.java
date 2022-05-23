@@ -17,7 +17,7 @@ import java.util.Map;
  * {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
  *
  * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom
- * User Data Plugins and Extensions into Gradle and Maven builds.
+ * User Data plugins and extensions into Gradle and Maven builds.
  */
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
