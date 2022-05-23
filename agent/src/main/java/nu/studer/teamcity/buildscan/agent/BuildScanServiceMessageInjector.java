@@ -119,7 +119,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             }
         }
 
-        return asClassPath(extensionJars);
+        return asClasspath(extensionJars);
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
@@ -190,7 +190,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     @NotNull
-    private static String asClassPath(List<File> files) {
+    private static String asClasspath(List<File> files) {
         StringBuilder sb = new StringBuilder();
         for (File file : files) {
             if (sb.length() > 0) {
