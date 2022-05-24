@@ -66,7 +66,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         wrapperDir = new File(dotMvn, 'wrapper')
         wrapperDir.mkdirs()
 
-        ['maven-wrapper.jar', 'MavenWrapperDownloader.java'].each {
+        ['maven-wrapper.jar'].each {
             new File(wrapperDir, it) << getClass().getResourceAsStream("/maven-test-project/.mvn/wrapper/$it")
         }
     }
