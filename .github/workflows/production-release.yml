@@ -32,6 +32,7 @@ jobs:
                 env:
                     TEAMCITY_PLUGIN_PUBLISH_TOKEN: ${{ secrets.TEAMCITY_PLUGIN_PUBLISH_TOKEN }}
                     TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GE_URL_FOR_MAVEN_TEST: https://ge.solutions-team.gradle.com
             -   name: Upload plugin artifact
                 uses: actions/upload-artifact@v3
                 with:
