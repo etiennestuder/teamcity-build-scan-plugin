@@ -43,7 +43,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         configParameters = new HashMap<String, String>()
         runnerParameters = new HashMap<String, String>()
 
-        runnerParameters.put('teamcity.build.checkoutDir', testProjectDir.absolutePath)
+        runnerParameters.put('teamcity.build.workingDir', testProjectDir.absolutePath)
 
         context = new TestContext(agentTempDir, configParameters, runnerParameters)
 
