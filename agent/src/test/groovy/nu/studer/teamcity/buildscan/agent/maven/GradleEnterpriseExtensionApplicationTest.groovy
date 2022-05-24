@@ -18,7 +18,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.8.5', 7, 11)
     ]
 
-    static final String GE_URL_FOR_MAVEN_TEST = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
+    static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
     static final String GE_EXTENSION_VERSION = '1.14.1'
     static final String CCUD_EXTENSION_VERSION = '1.10.1'
 
@@ -73,7 +73,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
@@ -92,11 +92,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies GE extension via classpath when not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
 
         when:
@@ -114,13 +114,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies GE extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
 
         when:
@@ -138,7 +138,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies GE extension via project when defined in project and pomLocation set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
@@ -146,7 +146,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         runnerParameters.put("teamcity.build.checkoutDir", testProjectDir.absolutePath)
         runnerParameters.put("pomLocation", "pom.xml")
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
 
         when:
@@ -164,12 +164,12 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies GE extension via classpath when workingDir not set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         runnerParameters.remove("teamcity.build.workingDir")
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
 
         when:
@@ -187,11 +187,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies CCUD extension via classpath when not defined in project where GE extension not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.ccud.extension.version", CCUD_EXTENSION_VERSION)
 
         when:
@@ -207,13 +207,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies CCUD extension via classpath when not defined in project where GE extension defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
         configParameters.put("buildScanPlugin.ccud.extension.version", CCUD_EXTENSION_VERSION)
 
@@ -232,13 +232,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "applies CCUD extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, CCUD_EXTENSION_VERSION)
         setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("CCUD_EXTENSION_VERSION", CCUD_EXTENSION_VERSION)
 
         when:
@@ -256,13 +256,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "ignores GE URL requested via TC config when GE extension is not applied via the classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
 
         when:
@@ -280,11 +280,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     def "configures GE URL requested via TC config when GE extension is applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
 
         when:
@@ -326,7 +326,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         extensionsXml << """</extensions>"""
     }
 
-    void setProjectDefinedGeConfiguration(String geUrl = GE_URL_FOR_MAVEN_TEST) {
+    void setProjectDefinedGeConfiguration(String geUrl = GE_URL) {
         File geConfig = new File(dotMvn, "gradle-enterprise.xml")
         geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
             <gradleEnterprise
@@ -358,7 +358,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     void systemPropertiesPropertiesContainsGeUrl(Map<String, String> runnerParameters, boolean contains = true) {
         assert runnerParameters.containsKey("runnerArgs")
-        assert contains == runnerParameters.get('runnerArgs').contains("-Dgradle.enterprise.url=$GE_URL_FOR_MAVEN_TEST")
+        assert contains == runnerParameters.get('runnerArgs').contains("-Dgradle.enterprise.url=$GE_URL")
     }
 
     void systemPropertiesPropertiesOmitsGeUrl(Map<String, String> runnerParameters) {
@@ -380,7 +380,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     }
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL_FOR_MAVEN_TEST}/s/"
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
         assert output.contains(serviceMsg)
         assert 1 == output.count(serviceMsg)
     }
