@@ -129,21 +129,23 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {
+        String checkoutDirParam = getOptionalRunnerParam("teamcity.build.checkoutDir", runner);
         String workingDirParam = getOptionalRunnerParam("teamcity.build.workingDir", runner);
         String pomLocation = getOptionalRunnerParam("pomLocation", runner);
 
         File workingDir;
-        if (pomLocation != null) {
-            String checkoutDirParam = getOptionalRunnerParam("teamcity.build.checkoutDir", runner);
+        if (checkoutDirParam != null && pomLocation != null) {
+            // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
             workingDir = new File(checkoutDirParam, pomLocation).getParentFile();
         } else if (workingDirParam != null) {
+            // either the working dir is set explicitly in the TC config, or it is set implicitly as the value of the checkout dir
             workingDir = new File(workingDirParam);
         } else {
-            return MavenExtensions.empty();
+            // should never be the case
+            workingDir = null;
         }
 
-        File extensionFile = new File(workingDir, ".mvn/extensions.xml");
-        return MavenExtensions.fromFile(extensionFile);
+        return workingDir != null ? MavenExtensions.fromFile(new File(workingDir, ".mvn/extensions.xml")) : MavenExtensions.empty();
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -164,8 +166,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
-        String existingParams = getOrDefault(GRADLE_CMD_PARAMS, runner);
-        runner.addRunnerParameter(GRADLE_CMD_PARAMS, param + " " + existingParams);
+        String gradleCmdParam = getOptionalRunnerParam(GRADLE_CMD_PARAMS, runner);
+        runner.addRunnerParameter(GRADLE_CMD_PARAMS, gradleCmdParam != null ? param + " " + gradleCmdParam : param);
     }
 
     private static void addMavenSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull BuildRunnerContext runner) {
@@ -181,8 +183,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
-        String existingParams = getOrDefault(MAVEN_CMD_PARAMS, runner);
-        runner.addRunnerParameter(MAVEN_CMD_PARAMS, param + " " + existingParams);
+        String mavenCmdParam = getOptionalRunnerParam(MAVEN_CMD_PARAMS, runner);
+        runner.addRunnerParameter(MAVEN_CMD_PARAMS, mavenCmdParam != null ? param + " " + mavenCmdParam : param);
     }
 
     @Nullable
@@ -203,11 +205,6 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
         String value = params.get(paramName).trim();
         return value.isEmpty() ? null : value;
-    }
-
-    private static String getOrDefault(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
-        Map<String, String> runnerParameters = runner.getRunnerParameters();
-        return runnerParameters.containsKey(paramName) ? runnerParameters.get(paramName) : "";
     }
 
     @NotNull
