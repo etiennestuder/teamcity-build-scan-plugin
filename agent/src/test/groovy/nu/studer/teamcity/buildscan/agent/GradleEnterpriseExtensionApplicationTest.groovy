@@ -135,6 +135,55 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "applies GE extension via project when defined in project and pomLocation set (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+
+        given:
+        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
+        setProjectDefinedGeConfiguration()
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        runnerParameters.put("teamcity.build.checkoutDir", testProjectDir.absolutePath)
+        runnerParameters.put("pomLocation", "pom.xml")
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters, ['-f', "${new File(testProjectDir, 'pom.xml')}".toString()])
+
+        then:
+        extensionClasspathOmitsGeExtension(runnerParameters)
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
+    def "applies GE extension via classpath when workingDir not set (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
+
+        given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        runnerParameters.remove("teamcity.build.workingDir")
+        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters)
+
+        then:
+        classpathContainsGeExtension(runnerParameters)
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
     def "applies CCUD extension via classpath when not defined in project where GE extension not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
@@ -378,7 +427,7 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
 """
     }
 
-    String run(Map<String, String> runnerParameters) {
+    String run(Map<String, String> runnerParameters, ArrayList<String> arguments = []) {
         def mvnw = System.getProperty('os.name').startsWith("Windows") ? "./mvnw.cmd" : './mvnw'
         def runnerArgs = runnerParameters.get('runnerArgs')
 
@@ -386,6 +435,7 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
         runnerArgs.split(' ').each {
             command += it
         }
+        command += arguments
         new ProcessBuilder(command)
                 .directory(testProjectDir)
                 .start()
