@@ -82,7 +82,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
+        extensionClasspathOmitsGeExtension(runnerParameters)
         classpathOmitsCcudExtension(runnerParameters)
 
         where:
@@ -116,8 +116,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
 
         given:
-        setExtensionVersions(GE_EXTENSION_VERSION, null)
-        createGeConfiguration()
+        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
+        setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
@@ -127,7 +127,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
+        extensionClasspathOmitsGeExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -142,7 +142,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
         configParameters.put("buildScanPlugin.ccud.extension.version", CCUD_EXTENSION_VERSION)
 
         when:
@@ -150,10 +149,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathContainsGeExtension(runnerParameters)
         classpathContainsCcudExtension(runnerParameters)
-        outputContainsTeamCityServiceMessageBuildStarted(output)
-        outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -164,10 +160,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
 
         given:
-        setExtensionVersions(GE_EXTENSION_VERSION, null)
-        createGeConfiguration()
+        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
+        setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
+        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
         configParameters.put("buildScanPlugin.ccud.extension.version", CCUD_EXTENSION_VERSION)
 
         when:
@@ -183,13 +180,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies CCUD extension via via project when defined in project (#jdkCompatibleMavenVersion)"() {
+    def "applies CCUD extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
 
         given:
-        setExtensionVersions(GE_EXTENSION_VERSION, CCUD_EXTENSION_VERSION)
-        createGeConfiguration()
+        setProjectDefinedExtensions(GE_EXTENSION_VERSION, CCUD_EXTENSION_VERSION)
+        setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
         configParameters.put("CCUD_EXTENSION_VERSION", CCUD_EXTENSION_VERSION)
@@ -212,8 +209,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeNotNull([GE_URL_FOR_MAVEN_TEST] as Object[])
 
         given:
-        setExtensionVersions(GE_EXTENSION_VERSION, null)
-        createGeConfiguration()
+        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
+        setProjectDefinedGeConfiguration()
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
         configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL_FOR_MAVEN_TEST)
         configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
@@ -254,7 +251,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    void setExtensionVersions(String geExtensionVersion, String ccudExtensionVersion) {
+    void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion) {
         def extensionsXml = new File(dotMvn, 'extensions.xml')
         extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
 
@@ -279,7 +276,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         extensionsXml << """</extensions>"""
     }
 
-    void createGeConfiguration(String geUrl = GE_URL_FOR_MAVEN_TEST) {
+    void setProjectDefinedGeConfiguration(String geUrl = GE_URL_FOR_MAVEN_TEST) {
         File geConfig = new File(dotMvn, "gradle-enterprise.xml")
         geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
             <gradleEnterprise
@@ -296,7 +293,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assert contains == runnerParameters.get("runnerArgs").contains(new File(agentTempDir, "gradle-enterprise-maven-extension-${GE_EXTENSION_VERSION}.jar").absolutePath)
     }
 
-    void classpathOmitsGeExtension(Map<String, String> runnerParameters) {
+    void extensionClasspathOmitsGeExtension(Map<String, String> runnerParameters) {
         classpathContainsGeExtension(runnerParameters, false)
     }
 
