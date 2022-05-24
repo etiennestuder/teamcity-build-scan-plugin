@@ -67,7 +67,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         wrapperDir.mkdirs()
 
         ['maven-wrapper.jar'].each {
-            new File(wrapperDir, it) << getClass().getResourceAsStream("/maven-test-project/.mvn/wrapper/$it")
+            def file = new File(wrapperDir, it)
+            file << getClass().getResourceAsStream("/maven-test-project/.mvn/wrapper/$it")
         }
     }
 
@@ -83,7 +84,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         run(runnerParameters)
 
         then:
-        extensionClasspathOmitsGeExtension(runnerParameters)
+        classpathOmitsGeExtension(runnerParameters)
         classpathOmitsCcudExtension(runnerParameters)
 
         where:
@@ -96,8 +97,10 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+
+        and:
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
@@ -105,6 +108,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         then:
         classpathContainsGeExtension(runnerParameters)
+        classpathOmitsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -117,18 +121,21 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
 
         given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
         def output = run(runnerParameters)
 
         then:
-        extensionClasspathOmitsGeExtension(runnerParameters)
+        classpathOmitsGeExtension(runnerParameters)
+        classpathOmitsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -141,20 +148,23 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
 
         given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        runnerParameters.put("teamcity.build.checkoutDir", testProjectDir.absolutePath)
-        runnerParameters.put("pomLocation", "pom.xml")
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+        runnerParameters.put('teamcity.build.checkoutDir', testProjectDir.absolutePath)
+        runnerParameters.put('pomLocation', 'pom.xml')
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
         def output = run(runnerParameters, ['-f', "${new File(testProjectDir, 'pom.xml')}".toString()])
 
         then:
-        extensionClasspathOmitsGeExtension(runnerParameters)
+        classpathOmitsGeExtension(runnerParameters)
+        classpathOmitsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -168,9 +178,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        runnerParameters.remove("teamcity.build.workingDir")
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+
+        and:
+        runnerParameters.remove('teamcity.build.workingDir')
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
@@ -178,6 +190,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         then:
         classpathContainsGeExtension(runnerParameters)
+        classpathOmitsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -191,14 +204,17 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.ccud.extension.version", CCUD_EXTENSION_VERSION)
+
+        and:
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
         def output = run(runnerParameters)
 
         then:
+        classpathOmitsGeExtension(runnerParameters)
         classpathContainsCcudExtension(runnerParameters)
 
         where:
@@ -210,18 +226,21 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
 
         given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
-        configParameters.put("buildScanPlugin.ccud.extension.version", CCUD_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
         def output = run(runnerParameters)
 
         then:
+        classpathContainsGeExtension(runnerParameters)
         classpathContainsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
@@ -235,17 +254,21 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
 
         given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, CCUD_EXTENSION_VERSION)
         setProjectDefinedGeConfiguration()
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("CCUD_EXTENSION_VERSION", CCUD_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
         def output = run(runnerParameters)
 
         then:
+        classpathOmitsGeExtension(runnerParameters)
         classpathOmitsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
@@ -259,17 +282,21 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
 
         given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
         setProjectDefinedGeConfiguration()
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', 'https://ge-server.invalid')
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
         def output = run(runnerParameters)
 
         then:
+        classpathOmitsGeExtension(runnerParameters)
+        classpathOmitsCcudExtension(runnerParameters)
         systemPropertiesPropertiesOmitsGeUrl(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
@@ -284,8 +311,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-        configParameters.put("buildScanPlugin.gradle-enterprise.url", GE_URL)
-        configParameters.put("buildScanPlugin.gradle-enterprise.extension.version", GE_EXTENSION_VERSION)
+
+        and:
+        setProjectDefinedGeConfiguration('https://ge-server.invalid')
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
         injector.beforeRunnerStart(context)
@@ -293,6 +323,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         then:
         classpathContainsGeExtension(runnerParameters)
+        classpathOmitsCcudExtension(runnerParameters)
         systemPropertiesPropertiesContainsGeUrl(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
@@ -343,7 +374,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assert contains == runnerParameters.get("runnerArgs").contains(new File(agentTempDir, "gradle-enterprise-maven-extension-${GE_EXTENSION_VERSION}.jar").absolutePath)
     }
 
-    void extensionClasspathOmitsGeExtension(Map<String, String> runnerParameters) {
+    void classpathOmitsGeExtension(Map<String, String> runnerParameters) {
         classpathContainsGeExtension(runnerParameters, false)
     }
 
@@ -375,10 +406,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assert 1 == output.count(serviceMsg)
     }
 
-    void outputContainsTeamCityServiceMessageBuildScanUrl(BuildResult result) {
-        outputContainsTeamCityServiceMessageBuildScanUrl(result.output)
-    }
-
     void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
         assert output.contains(serviceMsg)
@@ -387,7 +414,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     static final class JdkCompatibleMavenVersion {
 
-        final String mavenVersion
+        private final String mavenVersion
         private final Integer jdkMin
         private final Integer jdkMax
 
@@ -428,18 +455,20 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
 """
     }
 
-    String run(Map<String, String> runnerParameters, ArrayList<String> arguments = []) {
-        def mvnw = System.getProperty('os.name').startsWith("Windows") ? "./mvnw.cmd" : './mvnw'
+    String run(Map<String, String> runnerParameters, List<String> arguments = []) {
+        def mvnExecutable = System.getProperty('os.name').startsWith('Windows') ? './mvnw.cmd' : './mvnw'
         def runnerArgs = runnerParameters.get('runnerArgs')
 
-        def command = [mvnw, 'clean', 'package']
+        def command = [mvnExecutable, 'clean', 'package']
         runnerArgs.split(' ').each {
             command += it
         }
         command += arguments
+
         new ProcessBuilder(command)
             .directory(testProjectDir)
             .start()
             .text
     }
+
 }
