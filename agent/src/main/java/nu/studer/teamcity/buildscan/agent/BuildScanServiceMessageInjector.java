@@ -129,8 +129,20 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {
-        String checkoutDir = getOrDefault("teamcity.build.checkoutDir", runner);
-        File extensionFile = new File(checkoutDir, ".mvn/extensions.xml");
+        String workingDirParam = getOptionalRunnerParam("teamcity.build.workingDir", runner);
+        String pomLocation = getOptionalRunnerParam("pomLocation", runner);
+
+        File workingDir;
+        if (pomLocation != null) {
+            String checkoutDirParam = getOptionalRunnerParam("teamcity.build.checkoutDir", runner);
+            workingDir = new File(checkoutDirParam, pomLocation).getParentFile();
+        } else if (workingDirParam != null) {
+            workingDir = new File(workingDirParam);
+        } else {
+            return MavenExtensions.empty();
+        }
+
+        File extensionFile = new File(workingDir, ".mvn/extensions.xml");
         return MavenExtensions.fromFile(extensionFile);
     }
 
@@ -175,12 +187,21 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @Nullable
     private static String getOptionalConfigParam(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
-        Map<String, String> configParameters = runner.getConfigParameters();
-        if (!configParameters.containsKey(paramName)) {
+        return getOptionalParam(paramName, runner.getConfigParameters());
+    }
+
+    @Nullable
+    private static String getOptionalRunnerParam(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
+        return getOptionalParam(paramName, runner.getRunnerParameters());
+    }
+
+    @Nullable
+    private static String getOptionalParam(@NotNull String paramName, @NotNull Map<String, String> params) {
+        if (!params.containsKey(paramName)) {
             return null;
         }
 
-        String value = configParameters.get(paramName).trim();
+        String value = params.get(paramName).trim();
         return value.isEmpty() ? null : value;
     }
 
