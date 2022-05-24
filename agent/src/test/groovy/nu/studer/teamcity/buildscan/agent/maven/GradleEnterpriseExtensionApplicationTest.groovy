@@ -1,8 +1,9 @@
-package nu.studer.teamcity.buildscan.agent
+package nu.studer.teamcity.buildscan.agent.maven
 
 import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
+import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import org.gradle.testkit.runner.BuildResult
 import spock.lang.Specification
 import spock.lang.TempDir
@@ -13,8 +14,8 @@ import static org.junit.Assume.assumeTrue
 class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     static final List<JdkCompatibleMavenVersion> SUPPORTED_MAVEN_VERSIONS = [
-            new JdkCompatibleMavenVersion('3.6.3', 7, 11),
-            new JdkCompatibleMavenVersion('3.8.5', 7, 11)
+        new JdkCompatibleMavenVersion('3.6.3', 7, 11),
+        new JdkCompatibleMavenVersion('3.8.5', 7, 11)
     ]
 
     static final String GE_URL_FOR_MAVEN_TEST = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
@@ -413,9 +414,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         @Override
         String toString() {
             return "JdkCompatibleMavenVersion{" +
-                    "Maven " + mavenVersion +
-                    ", JDK " + jdkMin + "-" + jdkMax +
-                    '}'
+                "Maven " + mavenVersion +
+                ", JDK " + jdkMin + "-" + jdkMax +
+                '}'
         }
 
     }
@@ -437,8 +438,8 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
         }
         command += arguments
         new ProcessBuilder(command)
-                .directory(testProjectDir)
-                .start()
-                .text
+            .directory(testProjectDir)
+            .start()
+            .text
     }
 }

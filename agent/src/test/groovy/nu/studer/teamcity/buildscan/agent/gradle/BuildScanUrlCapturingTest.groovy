@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.agent
+package nu.studer.teamcity.buildscan.agent.gradle
 
 import static org.junit.Assume.assumeTrue
 

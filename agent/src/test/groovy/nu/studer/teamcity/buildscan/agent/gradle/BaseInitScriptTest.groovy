@@ -1,9 +1,10 @@
-package nu.studer.teamcity.buildscan.agent
+package nu.studer.teamcity.buildscan.agent.gradle
 
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import jetbrains.buildServer.util.FileUtil
+import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.internal.DefaultGradleRunner

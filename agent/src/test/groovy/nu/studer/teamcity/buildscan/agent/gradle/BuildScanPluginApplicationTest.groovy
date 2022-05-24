@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.agent
+package nu.studer.teamcity.buildscan.agent.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.util.GradleVersion

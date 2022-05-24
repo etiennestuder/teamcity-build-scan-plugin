@@ -1,7 +1,6 @@
-package nu.studer.teamcity.buildscan.agent
+package nu.studer.teamcity.buildscan.agent.maven
 
 import jetbrains.buildServer.agent.AgentBuildFeature
-import jetbrains.buildServer.agent.AgentBuildRunner
 import jetbrains.buildServer.agent.AgentCheckoutMode
 import jetbrains.buildServer.agent.AgentRunningBuild
 import jetbrains.buildServer.agent.BuildAgentConfiguration
@@ -368,7 +367,7 @@ class TestContext implements BuildRunnerContext {
         }
 
         @Override
-        def <T> T getBuildTypeOptionValue(@NotNull Option<T> option) {
+        <T> T getBuildTypeOptionValue(@NotNull Option<T> option) {
             return null
         }
 
