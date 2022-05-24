@@ -19,21 +19,35 @@ import static nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 
 class BaseInitScriptTest extends Specification {
 
-    static final List<JdkCompatibleGradleVersion> NOT_SUPPORTED_GRADLE_VERSIONS = [
-        new JdkCompatibleGradleVersion(GradleVersion.version('3.5.1'), 7, 9),
-        new JdkCompatibleGradleVersion(GradleVersion.version('4.0.2'), 7, 9)
-    ]
+    static final JdkCompatibleGradleVersion GRADLE_2_6 = new JdkCompatibleGradleVersion(GradleVersion.version('2.6'), 6, 8)
+    static final JdkCompatibleGradleVersion GRADLE_2_14 = new JdkCompatibleGradleVersion(GradleVersion.version('2.14.1'), 6, 8)
+    static final JdkCompatibleGradleVersion GRADLE_3_0 = new JdkCompatibleGradleVersion(GradleVersion.version('3.0'), 7, 9)
+    static final JdkCompatibleGradleVersion GRADLE_3_5 = new JdkCompatibleGradleVersion(GradleVersion.version('3.5.1'), 7, 9)
+    static final JdkCompatibleGradleVersion GRADLE_4_0 = new JdkCompatibleGradleVersion(GradleVersion.version('4.0.2'), 7, 9)
+    static final JdkCompatibleGradleVersion GRADLE_4_10 = new JdkCompatibleGradleVersion(GradleVersion.version('4.10.3'), 7, 10)
+    static final JdkCompatibleGradleVersion GRADLE_5_0 = new JdkCompatibleGradleVersion(GradleVersion.version('5.0'), 8, 11)
+    static final JdkCompatibleGradleVersion GRADLE_5_6 = new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12)
+    static final JdkCompatibleGradleVersion GRADLE_6_0 = new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13)
+    static final JdkCompatibleGradleVersion GRADLE_6_7 = new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15)
+    static final JdkCompatibleGradleVersion GRADLE_7_0 = new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16)
+    static final JdkCompatibleGradleVersion GRADLE_7_4 = new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17)
 
-    static final List<JdkCompatibleGradleVersion> SUPPORTED_GRADLE_VERSIONS = [
-        new JdkCompatibleGradleVersion(GradleVersion.version('4.1'), 7, 9),
-        new JdkCompatibleGradleVersion(GradleVersion.version('4.10.3'), 7, 10),
-        new JdkCompatibleGradleVersion(GradleVersion.version('5.1.1'), 8, 11),
-        new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12),
-        new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13),
-        new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15),
-        new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16),
-        new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17),
+    static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_2_AND_HIGHER = [
+        GRADLE_2_6, // first version supported byTestKit
+        GRADLE_2_14,
+        GRADLE_3_0,
+        GRADLE_3_5,
+        GRADLE_4_0,
+        GRADLE_4_10,
+        GRADLE_5_0,
+        GRADLE_5_6,
+        GRADLE_6_0,
+        GRADLE_6_7,
+        GRADLE_7_0,
+        GRADLE_7_4,
     ]
+    static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_4_AND_HIGHER =
+        GRADLE_VERSIONS_2_AND_HIGHER - [GRADLE_2_6, GRADLE_2_14, GRADLE_3_0, GRADLE_3_5]
 
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'

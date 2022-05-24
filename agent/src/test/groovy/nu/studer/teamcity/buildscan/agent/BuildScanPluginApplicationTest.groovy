@@ -27,7 +27,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildStarted(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     def "applies GE plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
@@ -45,7 +45,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     def "applies GE plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
@@ -66,7 +66,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     def "applies CCUD plugin via init script when not defined in project where GE plugin not defined in project (#jdkCompatibleGradleVersion)"() {
@@ -84,7 +84,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
     def "applies CCUD plugin via init script when not defined in project where GE plugin defined in project (#jdkCompatibleGradleVersion)"() {
@@ -105,7 +105,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
     def "applies CCUD plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
@@ -126,7 +126,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
     def "ignores GE URL requested via TC config when GE plugin is not applied by the init script (#jdkCompatibleGradleVersion)"() {
@@ -147,7 +147,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     def "configures GE URL requested via TC config when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
@@ -165,7 +165,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     def "stops gracefully when CCUD plugin version injected via init script is <1.7 (#jdkCompatibleGradleVersion)"() {
@@ -181,7 +181,7 @@ class BuildScanPluginApplicationTest extends BaseInitScriptTest {
         result.output.contains('Common Custom User Data Gradle plugin must be at least 1.7. Configured version is 1.6.6.')
 
         where:
-        jdkCompatibleGradleVersion << SUPPORTED_GRADLE_VERSIONS
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {

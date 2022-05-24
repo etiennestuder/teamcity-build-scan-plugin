@@ -1,11 +1,5 @@
 import org.gradle.util.GradleVersion
 
-// finish early if the build is not run with the minimum supported Gradle version
-if (GradleVersion.current() < GradleVersion.version('4.1')) {
-    logger.warn("TeamCity Build Scan plugin requires at least Gradle 4.1. Build uses Gradle ${GradleVersion.current()}.")
-    return
-}
-
 // finish early if the build is an included build of a composite build
 def isTopLevelBuild = !gradle.parent
 if (!isTopLevelBuild) {
@@ -24,8 +18,9 @@ initscript {
     def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
     def atLeastGradle5 = GradleVersion.current() >= GradleVersion.version('5.0')
+    def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
 
-    if (gePluginVersion || ccudPluginVersion) {
+    if (gePluginVersion || ccudPluginVersion && atLeastGradle4) {
         repositories {
             maven { url 'https://plugins.gradle.org/m2' }
         }
@@ -38,7 +33,7 @@ initscript {
                 "com.gradle:build-scan-plugin:1.16"
         }
 
-        if (ccudPluginVersion) {
+        if (ccudPluginVersion && atLeastGradle4) {
             classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
         }
     }
@@ -57,6 +52,7 @@ def CCUD_PLUGIN_CLASS = 'com.gradle.CommonCustomUserDataGradlePlugin'
 def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.url')
 def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
 def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
+def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
 
 // send a message to the server that the build has started
 logger.quiet(generateBuildScanLifeCycleMessage('BUILD_STARTED'))
@@ -88,7 +84,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 }
             }
 
-            if (ccudPluginVersion) {
+            if (ccudPluginVersion && atLeastGradle4) {
                 def ccudPluginComponent = resolutionResult.allComponents.find {
                     it.moduleVersion.with { group == "com.gradle" && name == "common-custom-user-data-gradle-plugin" }
                 }
