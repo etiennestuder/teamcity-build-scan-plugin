@@ -129,18 +129,17 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {
-        Map<String, String> parameters = runner.getRunnerParameters();
-
-        String workingDirParam = parameters.get("teamcity.build.workingDir");
-        String pomLocation = parameters.get("pomLocation");
-        String checkoutDirParam = parameters.get("teamcity.build.checkoutDir");
+        String workingDirParam = getOptionalRunnerParam("teamcity.build.workingDir", runner);
+        String pomLocation = getOptionalRunnerParam("pomLocation", runner);
 
         File workingDir;
-        if (pomLocation != null && checkoutDirParam != null && !checkoutDirParam.isEmpty()) {
-            File checkoutDir = new File(checkoutDirParam);
-            workingDir = new File(checkoutDir, pomLocation).getParentFile();
-        } else {
+        if (pomLocation != null) {
+            String checkoutDirParam = getOptionalRunnerParam("teamcity.build.checkoutDir", runner);
+            workingDir = new File(checkoutDirParam, pomLocation).getParentFile();
+        } else if (workingDirParam != null) {
             workingDir = new File(workingDirParam);
+        } else {
+            return MavenExtensions.empty();
         }
 
         File extensionFile = new File(workingDir, ".mvn/extensions.xml");
@@ -188,12 +187,21 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @Nullable
     private static String getOptionalConfigParam(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
-        Map<String, String> configParameters = runner.getConfigParameters();
-        if (!configParameters.containsKey(paramName)) {
+        return getOptionalParam(paramName, runner.getConfigParameters());
+    }
+
+    @Nullable
+    private static String getOptionalRunnerParam(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
+        return getOptionalParam(paramName, runner.getRunnerParameters());
+    }
+
+    @Nullable
+    private static String getOptionalParam(@NotNull String paramName, @NotNull Map<String, String> params) {
+        if (!params.containsKey(paramName)) {
             return null;
         }
 
-        String value = configParameters.get(paramName).trim();
+        String value = params.get(paramName).trim();
         return value.isEmpty() ? null : value;
     }
 
