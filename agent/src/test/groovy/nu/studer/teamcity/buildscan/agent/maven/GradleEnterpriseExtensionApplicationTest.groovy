@@ -5,10 +5,10 @@ import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import org.gradle.testkit.runner.BuildResult
+import spock.lang.Requires
 import spock.lang.Specification
 import spock.lang.TempDir
 
-import static org.junit.Assume.assumeNotNull
 import static org.junit.Assume.assumeTrue
 
 class GradleEnterpriseExtensionApplicationTest extends Specification {
@@ -71,9 +71,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }
     }
 
+    @Requires({ env.GE_URL })
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
@@ -90,9 +90,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies GE extension via classpath when not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
@@ -112,9 +112,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies GE extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
@@ -136,9 +136,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies GE extension via project when defined in project and pomLocation set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
@@ -162,9 +162,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies GE extension via classpath when workingDir not set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
@@ -185,9 +185,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies CCUD extension via classpath when not defined in project where GE extension not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
@@ -205,9 +205,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies CCUD extension via classpath when not defined in project where GE extension defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
@@ -230,9 +230,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "applies CCUD extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, CCUD_EXTENSION_VERSION)
@@ -254,9 +254,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "ignores GE URL requested via TC config when GE extension is not applied via the classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
@@ -278,9 +278,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    @Requires({ env.GE_URL })
     def "configures GE URL requested via TC config when GE extension is applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeNotNull([GE_URL] as Object[])
 
         given:
         setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
