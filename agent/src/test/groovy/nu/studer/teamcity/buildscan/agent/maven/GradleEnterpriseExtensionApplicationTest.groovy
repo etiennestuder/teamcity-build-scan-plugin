@@ -240,7 +240,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathContainsGeExtension(runnerParameters)
+        classpathOmitsGeExtension(runnerParameters)
         classpathContainsCcudExtension(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
