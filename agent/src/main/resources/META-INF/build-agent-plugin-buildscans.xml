@@ -6,4 +6,6 @@
 
     <bean class="nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector"/>
 
+    <bean class="nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener$LoggingExtensionApplicationListener"/>
+
 </beans>

@@ -69,16 +69,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Nullable
     private ExtensionApplicationListener extensionApplicationListener;
 
-    public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher) {
+    public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher,
+                                           @NotNull ExtensionApplicationListener extensionApplicationListener) {
         eventDispatcher.addListener(this);
-    }
-
-    // factory method for testing purposes to inject extensionApplicationListener
-    public static BuildScanServiceMessageInjector create(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher,
-                                                         @NotNull ExtensionApplicationListener extensionApplicationListener) {
-        BuildScanServiceMessageInjector injector = new BuildScanServiceMessageInjector(eventDispatcher);
-        injector.extensionApplicationListener = extensionApplicationListener;
-        return injector;
+        this.extensionApplicationListener = extensionApplicationListener;
     }
 
     @Override
