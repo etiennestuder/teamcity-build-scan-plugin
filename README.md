@@ -102,7 +102,7 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-_Note: The Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14 and 1.10.1, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14 and 1.10.1, respectively._
 
 ## Slack
 
