@@ -66,8 +66,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
 
-    @Nullable
-    private ExtensionApplicationListener extensionApplicationListener;
+    @NotNull
+    private final ExtensionApplicationListener extensionApplicationListener;
 
     public BuildScanServiceMessageInjector(@NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher,
                                            @NotNull ExtensionApplicationListener extensionApplicationListener) {
@@ -112,9 +112,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         String geExtensionVersion = getOptionalConfigParam(GE_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (geExtensionVersion != null) {
             if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES)) {
-                if (extensionApplicationListener != null) {
-                    extensionApplicationListener.geExtensionApplied(geExtensionVersion);
-                }
+                extensionApplicationListener.geExtensionApplied(geExtensionVersion);
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
             }
@@ -123,9 +121,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         String ccudExtensionVersion = getOptionalConfigParam(CCUD_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (ccudExtensionVersion != null) {
             if (!extensions.hasExtension(CCUD_EXTENSION_MAVEN_COORDINATES)) {
-                if (extensionApplicationListener != null) {
-                    extensionApplicationListener.ccudExtensionApplied(ccudExtensionVersion);
-                }
+                extensionApplicationListener.ccudExtensionApplied(ccudExtensionVersion);
                 extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
             }
         }
