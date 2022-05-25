@@ -4,7 +4,6 @@ import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
-import org.gradle.testkit.runner.BuildResult
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -296,7 +295,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
-        systemPropertiesPropertiesOmitsGeUrl(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -323,7 +321,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
-        systemPropertiesPropertiesContainsGeUrl(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -366,37 +363,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
                 <url>$geUrl</url>
               </server>
             </gradleEnterprise>"""
-    }
-
-    void classpathContainsGeExtension(Map<String, String> runnerParameters, boolean contains = true) {
-        assert runnerParameters.containsKey("runnerArgs")
-        assert contains == runnerParameters.get("runnerArgs").contains(new File(agentTempDir, "gradle-enterprise-maven-extension-${GE_EXTENSION_VERSION}.jar").absolutePath)
-    }
-
-    void classpathOmitsGeExtension(Map<String, String> runnerParameters) {
-        classpathContainsGeExtension(runnerParameters, false)
-    }
-
-    void classpathContainsCcudExtension(Map<String, String> runnerParameters, boolean contains = true) {
-        assert runnerParameters.containsKey("runnerArgs")
-        assert contains == runnerParameters.get("runnerArgs").contains(new File(agentTempDir, "common-custom-user-data-maven-extension-${CCUD_EXTENSION_VERSION}.jar").absolutePath)
-    }
-
-    void classpathOmitsCcudExtension(Map<String, String> runnerParameters) {
-        classpathContainsCcudExtension(runnerParameters, false)
-    }
-
-    void systemPropertiesPropertiesContainsGeUrl(Map<String, String> runnerParameters, boolean contains = true) {
-        assert runnerParameters.containsKey("runnerArgs")
-        assert contains == runnerParameters.get('runnerArgs').contains("-Dgradle.enterprise.url=$GE_URL")
-    }
-
-    void systemPropertiesPropertiesOmitsGeUrl(Map<String, String> runnerParameters) {
-        systemPropertiesPropertiesContainsGeUrl(runnerParameters, false)
-    }
-
-    void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
-        outputContainsTeamCityServiceMessageBuildStarted(result.output)
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
