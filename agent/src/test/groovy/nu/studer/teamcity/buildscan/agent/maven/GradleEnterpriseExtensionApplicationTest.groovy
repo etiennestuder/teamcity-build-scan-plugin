@@ -48,7 +48,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         context = new TestContext(agentTempDir, configParameters, runnerParameters)
         extensionApplicationListener = Mock(ExtensionApplicationListener)
-        injector = BuildScanServiceMessageInjector.create(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
+        injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
     }
 
     void extractTestProject() {
