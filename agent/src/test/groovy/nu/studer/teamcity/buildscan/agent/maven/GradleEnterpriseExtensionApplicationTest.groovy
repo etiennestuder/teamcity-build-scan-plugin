@@ -34,7 +34,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     Map<String, String> runnerParameters
 
     BuildRunnerContext context
-
+    BuildScanServiceMessageInjector.ExtensionApplicationListener extensionApplicationListener
     BuildScanServiceMessageInjector injector
 
     void setup() {
@@ -46,8 +46,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         runnerParameters.put('teamcity.build.workingDir', testProjectDir.absolutePath)
 
         context = new TestContext(agentTempDir, configParameters, runnerParameters)
-
-        injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class))
+        extensionApplicationListener = Mock(BuildScanServiceMessageInjector.ExtensionApplicationListener)
+        injector = BuildScanServiceMessageInjector.create(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
     }
 
     void extractTestProject() {
@@ -83,8 +83,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -106,11 +106,10 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathContainsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
-//        output.contains('Applying common-custom-user-data-maven-extension')
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -134,8 +133,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -163,8 +162,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters, ['-f', "${new File(testProjectDir, 'pom.xml')}".toString()])
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -189,8 +188,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathContainsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -214,8 +213,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathContainsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -240,8 +239,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathContainsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -268,8 +267,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
@@ -295,8 +294,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathOmitsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         systemPropertiesPropertiesOmitsGeUrl(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
@@ -322,8 +321,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters)
 
         then:
-        classpathContainsGeExtension(runnerParameters)
-        classpathOmitsCcudExtension(runnerParameters)
+        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
         systemPropertiesPropertiesContainsGeUrl(runnerParameters)
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
