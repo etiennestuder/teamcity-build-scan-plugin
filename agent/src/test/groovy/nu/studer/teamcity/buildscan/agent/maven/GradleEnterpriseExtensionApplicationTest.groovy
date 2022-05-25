@@ -4,6 +4,7 @@ import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
+import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -33,7 +34,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     Map<String, String> runnerParameters
 
     BuildRunnerContext context
-    BuildScanServiceMessageInjector.ExtensionApplicationListener extensionApplicationListener
+    ExtensionApplicationListener extensionApplicationListener
     BuildScanServiceMessageInjector injector
 
     void setup() {
@@ -46,7 +47,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         runnerParameters.put('teamcity.build.workingDir', testProjectDir.absolutePath)
 
         context = new TestContext(agentTempDir, configParameters, runnerParameters)
-        extensionApplicationListener = Mock(BuildScanServiceMessageInjector.ExtensionApplicationListener)
+        extensionApplicationListener = Mock(ExtensionApplicationListener)
         injector = BuildScanServiceMessageInjector.create(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
     }
 

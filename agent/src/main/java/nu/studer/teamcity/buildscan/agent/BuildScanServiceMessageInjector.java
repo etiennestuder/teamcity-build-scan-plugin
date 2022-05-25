@@ -236,12 +236,4 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return sb.toString();
     }
 
-    public interface ExtensionApplicationListener {
-
-        void geExtensionApplied(String version);
-
-        void ccudExtensionApplied(String version);
-
-    }
-
 }
