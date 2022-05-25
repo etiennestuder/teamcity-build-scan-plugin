@@ -98,7 +98,7 @@ previously downloaded plugin `.zip` file.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-_Note: The Gradle Enterprise and Common Custom User Data Maven extensions are currently hard-coded to versions 1.14 and 1.10.1, respectively._
+_Note: The Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14 and 1.10.1, respectively._
 
 ## Slack
 
