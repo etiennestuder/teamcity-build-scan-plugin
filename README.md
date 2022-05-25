@@ -70,15 +70,21 @@ previously downloaded plugin `.zip` file.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-## Gradle Enterprise Integration
+# Integrations
+
+## Gradle Enterprise
+
+You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when they are run via TeamCity's Gradle or Maven runner. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
+
+The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
 
 ### Gradle Builds
 
 1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 3 configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which you want to publish build scans.
-   - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply to the build.
-   - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply to the build.
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
+   - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
+   - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply
 
 1. Trigger your Gradle build.
 
@@ -88,17 +94,17 @@ previously downloaded plugin `.zip` file.
 
 1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create 3 configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which you want to publish build scans.
-   - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply to the build.
-   - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply to the build.
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
+   - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
+   - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply
 
 1. Trigger your Maven build.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-_Note: The Gradle Enterprise and Common Custom User Data Maven extensions are currently hard-coded to versions 1.14 and 1.10.1, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14 and 1.10.1, respectively._
 
-## Slack Integration
+## Slack
 
 1. In Slack, create a webhook and keep track of the created URL.
 
@@ -113,6 +119,8 @@ _Note: The Gradle Enterprise and Common Custom User Data Maven extensions are cu
 Both feedback and contributions are very welcome.
 
 # Acknowledgements
++ [ldaley](https://github.com/ldaley) (pr #53 that adds Gradle 4/5 compatibility to the Gradle Enterprise integration)
++ [clayburn](https://github.com/clayburn) (several prs related to the Gradle Enterprise integration)
 + [madlexa](https://github.com/madlexa) (pr #47 that adds TeamCity 2022.04 compatibility)
 + [facewindu](https://github.com/facewindu) (pr #21 that includes init script test coverage)
 + [dmitry-treskunov](https://github.com/dmitry-treskunov) (bug report and proposed fix)
