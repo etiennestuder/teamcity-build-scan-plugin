@@ -82,9 +82,9 @@ The same behavior applies to the [Common Custom User Data Gradle plugin](https:/
 
 1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 3 configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which you want to publish build scans.
-   - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply to the build.
-   - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply to the build.
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
+   - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
+   - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply
 
 1. Trigger your Gradle build.
 
@@ -94,9 +94,9 @@ The same behavior applies to the [Common Custom User Data Gradle plugin](https:/
 
 1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create 3 configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which you want to publish build scans.
-   - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply to the build.
-   - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply to the build.
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
+   - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
+   - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply
 
 1. Trigger your Maven build.
 
