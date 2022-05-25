@@ -16,6 +16,7 @@ tasks.register('buildExtension', Exec).configure {
     inputs.file 'pom.xml'
     inputs.dir 'src/main'
     outputs.file 'target/service-message-maven-extension-1.0.jar'
+    outputs.cacheIf { true }
     argumentProviders.add cmdLineArgProvider
 
     def mvnw = DefaultNativePlatform.currentOperatingSystem.isWindows() ? './mvnw.cmd' : './mvnw'
