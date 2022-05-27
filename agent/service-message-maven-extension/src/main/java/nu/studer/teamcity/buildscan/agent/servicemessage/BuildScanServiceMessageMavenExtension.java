@@ -23,11 +23,10 @@ public final class BuildScanServiceMessageMavenExtension implements GradleEnterp
     public void configure(GradleEnterpriseApi api, MavenSession session) {
         logger.debug("Executing extension: " + getClass().getSimpleName());
 
-        // When a maven build step has an explicitly defined pom file location, TeamCity will run an info goal on it.
-        // This logic prevents that scan from being published.
-        if (isJetbrainsInfoGoal(api, session)) {
-            String goal = session.getGoals().get(0); // `isJetbrainsInfoGoal` guarantees exactly 1 element
-            logger.debug("Skipping Build Scan publish for goal " + goal);
+        // When a Maven build step has an explicitly defined pom.xml file location, TeamCity will run an info goal on it. Ignore build scan publication in this case.
+        if (invokesJetBrainsInfoGoal(session)) {
+            String goal = getJetBrainsInfoGoal(session);
+            logger.debug("Skipping build scan publishing for goal " + goal);
             api.getBuildScan().publishOnDemand();
         } else {
             logger.debug("Registering listener capturing build scan link");
@@ -36,14 +35,13 @@ public final class BuildScanServiceMessageMavenExtension implements GradleEnterp
         }
     }
 
-    private boolean isJetbrainsInfoGoal(GradleEnterpriseApi api, MavenSession session) {
+    private static boolean invokesJetBrainsInfoGoal(MavenSession session) {
+        return getJetBrainsInfoGoal(session) != null;
+    }
+
+    private static String getJetBrainsInfoGoal(MavenSession session) {
         List<String> goals = session.getGoals();
-        if (goals.size() == 1) {
-            String goal = goals.get(0);
-            return goal.startsWith("org.jetbrains.maven:info-maven3-plugin:") && goal.endsWith(":info");
-        } else {
-            return false;
-        }
+        return goals.size() == 1 && goals.get(0).startsWith("org.jetbrains.maven:info-maven3-plugin:") && goals.get(0).endsWith(":info") ? goals.get(0) : null;
     }
 
 }
