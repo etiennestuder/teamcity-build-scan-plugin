@@ -257,7 +257,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         when:
         injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        run(runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -420,6 +420,29 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "does not publish build scan for info goal (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters, [], 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info')
+
+        then:
+        outputContainsTeamCityServiceMessageBuildStarted(output, false)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output, false)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
     void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion) {
         def extensionsXml = new File(dotMvn, 'extensions.xml')
         extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
@@ -457,16 +480,16 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
             </gradleEnterprise>"""
     }
 
-    void outputContainsTeamCityServiceMessageBuildStarted(String output) {
+    void outputContainsTeamCityServiceMessageBuildStarted(String output, boolean contains = true) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert output.contains(serviceMsg)
-        assert 1 == output.count(serviceMsg)
+        assert output.contains(serviceMsg) == contains
+        assert (1 == output.count(serviceMsg)) == contains
     }
 
-    void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
+    void outputContainsTeamCityServiceMessageBuildScanUrl(String output, boolean contains = true) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
-        assert output.contains(serviceMsg)
-        assert 1 == output.count(serviceMsg)
+        assert output.contains(serviceMsg) == contains
+        assert (1 == output.count(serviceMsg)) == contains
     }
 
     static final class JdkCompatibleMavenVersion {
@@ -512,20 +535,18 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
 """
     }
 
-    String run(Map<String, String> runnerParameters, List<String> arguments = []) {
+    String run(Map<String, String> runnerParameters, List<String> arguments = [], String goals = 'clean package') {
         def mvnExecutable = System.getProperty('os.name').startsWith('Windows') ? './mvnw.cmd' : './mvnw'
         def runnerArgs = runnerParameters.get('runnerArgs')
 
-        def command = [mvnExecutable, 'clean', 'package']
-        runnerArgs.split(' ').each {
-            command += it
-        }
-        command += arguments
+        def command = [mvnExecutable] +
+                goals.split(' ').toList() +
+                runnerArgs.split(' ').toList() +
+                arguments
 
         new ProcessBuilder(command)
-            .directory(testProjectDir)
-            .start()
-            .text
+                .directory(testProjectDir)
+                .start()
+                .text
     }
-
 }
