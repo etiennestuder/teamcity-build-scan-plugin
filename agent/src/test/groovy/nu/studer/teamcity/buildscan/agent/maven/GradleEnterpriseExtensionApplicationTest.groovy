@@ -169,7 +169,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         when:
         injector.beforeRunnerStart(context)
-        def output = run(runnerParameters, ['-f', "${new File(testProjectDir, 'pom.xml')}".toString()])
+        def output = run(runnerParameters, '-f ' + new File(testProjectDir, 'pom.xml').path)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -203,7 +203,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         when:
         injector.beforeRunnerStart(context)
-        def output = run(runnerParameters, ['-f', "${new File(testProjectDir, 'pom.xml')}".toString()])
+        def output = run(runnerParameters, '-f ' + new File(testProjectDir, 'pom.xml').path)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -441,7 +441,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         when:
         injector.beforeRunnerStart(context)
-        def output = run(runnerParameters, [], 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info')
+        def output = run(runnerParameters, '', 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info')
 
         then:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -553,14 +553,14 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
 """
     }
 
-    String run(Map<String, String> runnerParameters, List<String> arguments = [], String goals = 'clean package') {
+    String run(Map<String, String> runnerParameters, String arguments = '', String goals = 'clean package') {
         def mvnExecutable = System.getProperty('os.name').startsWith('Windows') ? './mvnw.cmd' : './mvnw'
         def runnerArgs = runnerParameters.get('runnerArgs')
 
         def command = [mvnExecutable] +
             goals.split(' ').toList() +
             runnerArgs.split(' ').toList() +
-            arguments
+            arguments.split(' ').toList()
 
         new ProcessBuilder(command)
             .directory(testProjectDir)
