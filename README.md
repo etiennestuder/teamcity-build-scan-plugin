@@ -74,9 +74,11 @@ previously downloaded plugin `.zip` file.
 
 ## Gradle Enterprise
 
-You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when they are run via TeamCity's Gradle or Maven runner. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
+You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when they are run via TeamCity's Gradle or Maven runner. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped. If a Gradle or Maven build is run via TeamCity's command line runner or some other runner, the auto-injection is skipped, too.
 
 The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
+
+The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters, though, and even disable the auto-injection by setting the configuration parameters to empty values.
 
 ### Gradle Builds
 
@@ -89,6 +91,10 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 1. Trigger your Gradle build.
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
+
+#### Example Configuration
+
+<img width="1308" alt="image" src="https://user-images.githubusercontent.com/231070/171031337-ce151446-a18a-4039-b46b-c945455d3803.png">
 
 ### Maven Builds
 
@@ -103,6 +109,10 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
 _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14 and 1.10.1, respectively._
+
+#### Example Configuration
+
+<img width="1304" alt="image" src="https://user-images.githubusercontent.com/231070/171031962-fd002bea-272d-4110-bbe9-01128cb5c252.png">
 
 ## Slack
 
