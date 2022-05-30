@@ -1,18 +1,5 @@
 import org.gradle.util.GradleVersion
 
-// finish early if the build is an included build of a composite build
-def isTopLevelBuild = !gradle.parent
-if (!isTopLevelBuild) {
-    return
-}
-
-// finish early if configuration parameters passed in via system properties are not valid/supported
-def configuredCcudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
-if (configuredCcudPluginVersion && isNotAtLeast(configuredCcudPluginVersion, '1.7')) {
-    logger.warn("Common Custom User Data Gradle plugin must be at least 1.7. Configured version is $configuredCcudPluginVersion.")
-    return
-}
-
 // conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
     def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
@@ -53,6 +40,18 @@ def geUrl = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.url')
 def gePluginVersion = System.getProperty('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
 def ccudPluginVersion = System.getProperty('teamCityBuildScanPlugin.ccud.plugin.version')
 def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
+
+// finish early if the build is an included build of a composite build
+def isTopLevelBuild = !gradle.parent
+if (!isTopLevelBuild) {
+    return
+}
+
+// finish early if configuration parameters passed in via system properties are not valid/supported
+if (ccudPluginVersion && isNotAtLeast(ccudPluginVersion, '1.7')) {
+    logger.warn("Common Custom User Data Gradle plugin must be at least 1.7. Configured version is $ccudPluginVersion.")
+    return
+}
 
 // send a message to the server that the build has started
 logger.quiet(generateBuildScanLifeCycleMessage('BUILD_STARTED'))
