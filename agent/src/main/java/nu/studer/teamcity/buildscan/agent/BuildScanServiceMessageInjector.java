@@ -52,13 +52,15 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
 
-    // Gradle properties and Maven system properties passed to the artifact instrumenting the Gradle / Maven build
+    // Environment variables set to instrument the Gradle build
 
-    private static final String GE_URL_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.url";
+    private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
 
-    private static final String GE_PLUGIN_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.gradle-enterprise.plugin.version";
+    private static final String GE_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
 
-    private static final String CCUD_PLUGIN_VERSION_GRADLE_PROPERTY = "teamCityBuildScanPlugin.ccud.plugin.version";
+    private static final String CCUD_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION";
+
+    // Maven system properties passed on the CLI to a Maven build
 
     private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
 
@@ -78,9 +80,9 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            addGradleSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_GRADLE_PROPERTY, runner);
-            addGradleSysPropIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_GRADLE_PROPERTY, runner);
-            addGradleSysPropIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_GRADLE_PROPERTY, runner);
+            addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+            addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
+            addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
             String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
             addGradleCmdParam(initScriptParam, runner);
@@ -160,16 +162,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         runner.addEnvironmentVariable(key, value);
     }
 
-    private static void addGradleSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull BuildRunnerContext runner) {
+    private static void addEnvVarIfSet(@NotNull String configParameter, @NotNull String key, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(configParameter, runner);
         if (value != null) {
-            addGradleSysProp(property, value, runner);
+            addEnvVar(key, value, runner);
         }
-    }
-
-    private static void addGradleSysProp(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
-        String systemProp = String.format("-D%s=%s", key, value);
-        addGradleCmdParam(systemProp, runner);
     }
 
     private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
