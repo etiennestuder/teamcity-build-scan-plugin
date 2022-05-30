@@ -81,11 +81,15 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         when:
         injector.beforeRunnerStart(context)
-        run(runnerParameters)
+        def output = run(runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
+
+        and:
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -257,11 +261,15 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         when:
         injector.beforeRunnerStart(context)
-        run(runnerParameters)
+        def output = run(runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
+
+        and:
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -420,7 +428,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "does not publish build scan for info goal (#jdkCompatibleMavenVersion)"() {
+    def "does not publish build scan for TeamCity specific info goal invocation (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
 
@@ -436,8 +444,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         def output = run(runnerParameters, [], 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info')
 
         then:
-        outputContainsTeamCityServiceMessageBuildStarted(output, false)
-        outputContainsTeamCityServiceMessageBuildScanUrl(output, false)
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -480,16 +488,26 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
             </gradleEnterprise>"""
     }
 
-    void outputContainsTeamCityServiceMessageBuildStarted(String output, boolean contains = true) {
+    void outputContainsTeamCityServiceMessageBuildStarted(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert output.contains(serviceMsg) == contains
-        assert (1 == output.count(serviceMsg)) == contains
+        assert output.contains(serviceMsg)
+        assert 1 == output.count(serviceMsg)
     }
 
-    void outputContainsTeamCityServiceMessageBuildScanUrl(String output, boolean contains = true) {
+    void outputMissesTeamCityServiceMessageBuildStarted(String output) {
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
+        assert !output.contains(serviceMsg)
+    }
+
+    void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
-        assert output.contains(serviceMsg) == contains
-        assert (1 == output.count(serviceMsg)) == contains
+        assert output.contains(serviceMsg)
+        assert 1 == output.count(serviceMsg)
+    }
+
+    void outputMissesTeamCityServiceMessageBuildScanUrl(String output) {
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
+        assert !output.contains(serviceMsg)
     }
 
     static final class JdkCompatibleMavenVersion {
@@ -540,13 +558,13 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
         def runnerArgs = runnerParameters.get('runnerArgs')
 
         def command = [mvnExecutable] +
-                goals.split(' ').toList() +
-                runnerArgs.split(' ').toList() +
-                arguments
+            goals.split(' ').toList() +
+            runnerArgs.split(' ').toList() +
+            arguments
 
         new ProcessBuilder(command)
-                .directory(testProjectDir)
-                .start()
-                .text
+            .directory(testProjectDir)
+            .start()
+            .text
     }
 }
