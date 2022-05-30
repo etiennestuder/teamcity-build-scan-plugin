@@ -92,6 +92,10 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
 
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
+#### Example Configuration
+
+<img width="1308" alt="image" src="https://user-images.githubusercontent.com/231070/171031337-ce151446-a18a-4039-b46b-c945455d3803.png">
+
 ### Maven Builds
 
 1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create 3 configuration parameters:
@@ -105,6 +109,10 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
 1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
 _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14 and 1.10.1, respectively._
+
+#### Example Configuration
+
+<img width="1304" alt="image" src="https://user-images.githubusercontent.com/231070/171031962-fd002bea-272d-4110-bbe9-01128cb5c252.png">
 
 ## Slack
 
