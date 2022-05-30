@@ -557,10 +557,16 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
         def mvnExecutable = System.getProperty('os.name').startsWith('Windows') ? './mvnw.cmd' : './mvnw'
         def runnerArgs = runnerParameters.get('runnerArgs')
 
-        def command = [mvnExecutable] +
-            goals.split(' ').toList() +
-            runnerArgs.split(' ').toList() +
-            arguments.split(' ').toList()
+        def command = [mvnExecutable]
+        if (goals.trim()) {
+            command += goals.split(' ').toList()
+        }
+        if (arguments.trim()) {
+            command += arguments.split(' ').toList()
+        }
+        if (runnerArgs.trim()) {
+            command += runnerArgs.split(' ').toList()
+        }
 
         new ProcessBuilder(command)
             .directory(testProjectDir)
