@@ -74,9 +74,11 @@ previously downloaded plugin `.zip` file.
 
 ## Gradle Enterprise
 
-You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when they are run via TeamCity's Gradle or Maven runner. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
+You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when they are run via TeamCity's Gradle or Maven runner. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped. If a Gradle or Maven build is run via TeamCity's command line runner or some other runner, the auto-injection is skipped, too.
 
 The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
+
+The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters, though, and even disable the auto-injection by setting the configuration parameters to empty values.
 
 ### Gradle Builds
 
