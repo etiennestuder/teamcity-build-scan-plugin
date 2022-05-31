@@ -106,6 +106,13 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
             addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
+            // Instrument all Maven builds
+            appendEnvVar("MAVEN_OPTS", "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner), runner);
+            String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
+            if (geUrl != null) {
+                appendEnvVar("MAVEN_OPTS", "-Dgradle.enterprise.url=" + geUrl, runner);
+            }
+
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         }
     }
@@ -207,6 +214,16 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @SuppressWarnings("SameParameterValue")
     private static void addEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
         runner.addEnvironmentVariable(key, value);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void appendEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
+        String existingValue = runner.getBuildParameters().getEnvironmentVariables().get(key);
+        if (existingValue == null) {
+            runner.addEnvironmentVariable(key, value);
+        } else {
+            runner.addEnvironmentVariable(key, existingValue + " " + value);
+        }
     }
 
     private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
