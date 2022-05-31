@@ -1,8 +1,14 @@
 import org.gradle.util.GradleVersion
 
+// finish early if the build is an included build of a composite build
+def isTopLevelBuild = !gradle.parent
+if (!isTopLevelBuild) {
+    return
+}
+
 // conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
-    // There is no mechanism to share code between initscript{} block and the main script, so this logic is duplicated.
+    // there is no mechanism to share code between initscript{} block and the main script, so this logic is duplicated
     def getInputParam = { String name ->
         def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
         return System.getProperty(name) ?: System.getenv(envVarName)
@@ -42,7 +48,7 @@ def GRADLE_ENTERPRISE_EXTENSION_CLASS = 'com.gradle.enterprise.gradleplugin.Grad
 def CCUD_PLUGIN_ID = 'com.gradle.common-custom-user-data-gradle-plugin'
 def CCUD_PLUGIN_CLASS = 'com.gradle.CommonCustomUserDataGradlePlugin'
 
-// There is no mechanism to share code between initscript{} block and the main script, so this logic is duplicated.
+// there is no mechanism to share code between initscript{} block and the main script, so this logic is duplicated
 def getInputParam = { String name ->
     def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
     return System.getProperty(name) ?: System.getenv(envVarName)
@@ -52,12 +58,6 @@ def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.p
 def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
 
 def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
-
-// finish early if the build is an included build of a composite build
-def isTopLevelBuild = !gradle.parent
-if (!isTopLevelBuild) {
-    return
-}
 
 // finish early if configuration parameters passed in via system properties are not valid/supported
 if (ccudPluginVersion && isNotAtLeast(ccudPluginVersion, '1.7')) {
