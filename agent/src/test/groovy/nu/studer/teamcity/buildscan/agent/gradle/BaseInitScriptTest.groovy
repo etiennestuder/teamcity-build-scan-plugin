@@ -191,13 +191,18 @@ class BaseInitScriptTest extends Specification {
     GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
         def args = ['tasks', '-I', initScriptFile.absolutePath]
 
-        ((DefaultGradleRunner) GradleRunner.create())
+        def runner = ((DefaultGradleRunner) GradleRunner.create())
             .withJvmArguments(jvmArgs)
-            .withEnvironment(envVars)
             .withGradleVersion(gradleVersion.version)
             .withProjectDir(testProjectDir)
             .withArguments(args)
             .forwardOutput()
+
+        if (envVars) {
+            runner.withEnvironment(envVars)
+        }
+
+        runner
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
