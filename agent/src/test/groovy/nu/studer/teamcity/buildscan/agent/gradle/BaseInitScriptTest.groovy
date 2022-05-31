@@ -47,8 +47,12 @@ class BaseInitScriptTest extends Specification {
         GRADLE_7_0,
         GRADLE_7_4,
     ]
+
+    static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_3_5_AND_HIGHER =
+        GRADLE_VERSIONS_2_AND_HIGHER - [GRADLE_2_6, GRADLE_2_14, GRADLE_3_0]
+
     static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_4_AND_HIGHER =
-        GRADLE_VERSIONS_2_AND_HIGHER - [GRADLE_2_6, GRADLE_2_14, GRADLE_3_0, GRADLE_3_5]
+        GRADLE_VERSIONS_3_5_AND_HIGHER - [GRADLE_3_5]
 
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'
@@ -176,19 +180,20 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
-        createRunner(gradleVersion, jvmArgs).build()
+    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
+        createRunner(gradleVersion, jvmArgs, envVars).build()
     }
 
-    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
-        createRunner(gradleVersion, jvmArgs).buildAndFail()
+    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
+        createRunner(gradleVersion, jvmArgs, envVars).buildAndFail()
     }
 
-    GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), jvmArgs = []) {
+    GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
         def args = ['tasks', '-I', initScriptFile.absolutePath]
 
         ((DefaultGradleRunner) GradleRunner.create())
             .withJvmArguments(jvmArgs)
+            .withEnvironment(envVars)
             .withGradleVersion(gradleVersion.version)
             .withProjectDir(testProjectDir)
             .withArguments(args)

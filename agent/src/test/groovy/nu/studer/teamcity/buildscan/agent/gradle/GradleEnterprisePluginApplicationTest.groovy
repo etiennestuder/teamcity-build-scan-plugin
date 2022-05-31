@@ -17,7 +17,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig()
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -30,12 +30,12 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
-    def "applies GE plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies GE plugin via init script when not defined in project, using sys props configuration (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
@@ -48,6 +48,24 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
+    def "applies GE plugin via init script when not defined in project, using env vars configuration (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, [], gePluginConfig.toEnvVars())
+
+        then:
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
+    }
+
     def "applies GE plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
@@ -56,7 +74,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -74,7 +92,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
@@ -95,7 +113,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -116,7 +134,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -137,7 +155,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: URI.create('https://ge-server.invalid'), gePluginVersion: GE_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -155,7 +173,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
@@ -173,7 +191,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.6.6')
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toJvmArgs())
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -228,7 +246,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         String gePluginVersion
         String ccudPluginVersion
 
-        List<String> toJvmArgs() {
+        List<String> toSysProps() {
             def jvmArgs = []
             if (geUrl) {
                 jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.url=$geUrl".toString()
@@ -240,6 +258,20 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
                 jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
             }
             jvmArgs
+        }
+
+        Map<String, String> toEnvVars() {
+            Map<String, String> envVars = [:]
+            if (geUrl) {
+                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL', geUrl.toString()
+            }
+            if (gePluginVersion) {
+                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION', gePluginVersion
+            }
+            if (ccudPluginVersion) {
+                envVars.put 'TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION', ccudPluginVersion
+            }
+            envVars
         }
 
     }
