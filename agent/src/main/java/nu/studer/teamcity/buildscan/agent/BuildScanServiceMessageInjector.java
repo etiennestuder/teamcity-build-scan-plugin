@@ -2,6 +2,7 @@ package nu.studer.teamcity.buildscan.agent;
 
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter;
 import jetbrains.buildServer.agent.AgentLifeCycleListener;
+import jetbrains.buildServer.agent.BuildFinishedStatus;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.util.EventDispatcher;
 import jetbrains.buildServer.util.FileUtil;
@@ -35,6 +36,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
     private static final String GRADLE_ENTERPRISE_EXT_MAVEN = "gradle-enterprise-maven-extension-1.14.1.jar";
     private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-1.10.1.jar";
+
+    // TeamCity Command-line runner
+
+    private static final String COMMAND_LINE_RUNNER = "simpleRunner";
 
     // Gradle TeamCity Build Scan plugin
 
@@ -94,6 +99,23 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             addMavenCmdParam(extJarParam, runner);
 
             addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
+        } else if (runner.getRunType().equalsIgnoreCase(COMMAND_LINE_RUNNER)) {
+            // Instrument all Gradle builds
+            copyInitScriptToGradleUserHome(runner);
+            addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+            addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
+            addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
+
+            addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
+        }
+    }
+
+    @Override
+    public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
+        // delete init script from Gradle User Home
+        File targetInitScript = getInitScriptInGradleUserHome(runner);
+        if (targetInitScript.exists()) {
+            FileUtil.delete(targetInitScript);
         }
     }
 
@@ -101,6 +123,24 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         File initScript = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_INIT_GRADLE);
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, initScript);
         return initScript;
+    }
+
+    private void copyInitScriptToGradleUserHome(BuildRunnerContext runner) {
+        File targetInitScript = getInitScriptInGradleUserHome(runner);
+        if (!targetInitScript.exists()) {
+            targetInitScript.getParentFile().mkdirs();
+            FileUtil.copyResource(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, targetInitScript);
+        }
+    }
+
+    private File getInitScriptInGradleUserHome(BuildRunnerContext runner) {
+        String gradleUserHomeEnv = System.getenv("GRADLE_USER_HOME");
+        File gradleUserHome = gradleUserHomeEnv == null
+            ? new File(System.getProperty("user.home"), ".gradle")
+            : new File(gradleUserHomeEnv);
+        File initDir = new File(gradleUserHome, "init.d");
+        // Include namespace in script name to avoid clashing with existing scripts
+        return new File(initDir, "com.gradle.enterprise." + BUILD_SCAN_INIT_GRADLE);
     }
 
     private String getExtensionsClasspath(BuildRunnerContext runner) {
