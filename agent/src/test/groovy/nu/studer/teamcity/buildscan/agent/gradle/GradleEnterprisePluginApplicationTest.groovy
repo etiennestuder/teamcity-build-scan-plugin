@@ -105,7 +105,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
-    def "applies CCUD plugin via init script when not defined in project where GE plugin defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies CCUD plugin via init script when not defined in project where GE plugin defined in project, using sys props configuration (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -114,6 +114,27 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
+
+        then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputContainsCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
+    }
+
+    def "applies CCUD plugin via init script when not defined in project where GE plugin defined in project, using env vars configuration (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, [], gePluginConfig.toEnvVars())
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
