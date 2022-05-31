@@ -157,16 +157,16 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return workingDir != null ? MavenExtensions.fromFile(new File(workingDir, ".mvn/extensions.xml")) : MavenExtensions.empty();
     }
 
-    @SuppressWarnings("SameParameterValue")
-    private static void addEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
-        runner.addEnvironmentVariable(key, value);
-    }
-
     private static void addEnvVarIfSet(@NotNull String configParameter, @NotNull String key, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(configParameter, runner);
         if (value != null) {
             addEnvVar(key, value, runner);
         }
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static void addEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
+        runner.addEnvironmentVariable(key, value);
     }
 
     private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
