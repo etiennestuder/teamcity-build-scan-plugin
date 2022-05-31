@@ -31,11 +31,11 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
         if (descriptor != null) {
             Map<String, String> descriptorParameters = descriptor.getParameters();
 
-            params.put("buildScanPlugin.gradle-enterprise.url", descriptorParameters.get(GRADLE_ENTERPRISE_URL));
-            params.put("buildScanPlugin.gradle-enterprise.plugin.version", descriptorParameters.get(GRADLE_ENTERPRISE_PLUGIN_VERSION));
-            params.put("buildScanPlugin.ccud.plugin.version", descriptorParameters.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION));
-            params.put("buildScanPlugin.gradle-enterprise.extension.version", descriptorParameters.get(GRADLE_ENTERPRISE_EXTENSION_VERSION));
-            params.put("buildScanPlugin.ccud.extension.version", descriptorParameters.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION));
+            params.put(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_URL));
+            params.put(GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_PLUGIN_VERSION));
+            params.put(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION));
+            params.put(GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_EXTENSION_VERSION));
+            params.put(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION));
 
             params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
         }
