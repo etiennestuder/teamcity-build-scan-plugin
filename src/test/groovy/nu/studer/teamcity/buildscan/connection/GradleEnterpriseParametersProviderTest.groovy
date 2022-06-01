@@ -87,6 +87,7 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM    | '1.7'
         GRADLE_ENTERPRISE_EXTENSION_VERSION       | GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM       | '1.14.1'
         COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM | '1.10.1'
+        ALLOW_UNTRUSTED_SERVER                    | ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM                    | 'true'
     }
 
     def "gets configuration from first descriptor"() {

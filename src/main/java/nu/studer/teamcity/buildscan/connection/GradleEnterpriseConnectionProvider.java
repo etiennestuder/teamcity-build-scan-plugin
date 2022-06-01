@@ -57,7 +57,7 @@ public class GradleEnterpriseConnectionProvider extends OAuthProvider {
         if (geUrl != null) {
             description += String.format("Gradle Enterprise Url: %s\n", geUrl);
         }
-        
+
         String gePluginVersion = params.get(GRADLE_ENTERPRISE_PLUGIN_VERSION);
         if (gePluginVersion != null) {
             description += String.format("Gradle Enterprise Plugin Version: %s\n", gePluginVersion);
@@ -76,6 +76,11 @@ public class GradleEnterpriseConnectionProvider extends OAuthProvider {
         String ccudExtensionVersion = params.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION);
         if (ccudExtensionVersion != null) {
             description += String.format("Common Custom User Data Extension Version: %s\n", ccudExtensionVersion);
+        }
+
+        String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);
+        if (allowUntrustedServer != null) {
+            description += String.format("Allow Untrusted Server: %s\n", allowUntrustedServer);
         }
 
         return description;

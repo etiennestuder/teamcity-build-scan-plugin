@@ -7,6 +7,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
     public static final String GRADLE_ENTERPRISE_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";
     public static final String COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
+    public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
 
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR = "env.GRADLE_ENTERPRISE_ACCESS_KEY";
 
@@ -15,6 +16,8 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     public static final String GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
     public static final String COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
+
+    public static final String ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
 
 
     public static final String GRADLE_ENTERPRISE_CONNECTION_PROVIDER = "gradle-enterprise-connection-provider";
@@ -43,5 +46,9 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getCommonCustomUserDataExtensionVersion() {
         return COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION;
+    }
+
+    public String getAllowUntrustedServer() {
+        return ALLOW_UNTRUSTED_SERVER;
     }
 }

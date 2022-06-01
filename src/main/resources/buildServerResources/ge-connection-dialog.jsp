@@ -10,7 +10,6 @@
     <td>
         <props:textProperty name="displayName" className="longField"/>
         <span class="smallNote">Provide some name to distinguish this connection from others.</span>
-        <span class="error" id="error_displayName"></span>
     </td>
 </tr>
 
@@ -19,7 +18,6 @@
     <td>
         <props:textProperty name="${keys.gradleEnterpriseUrl}" className="longField"/>
         <span class="smallNote">The URL of the Gradle Enterprise instance to which Build Scans will be published.</span>
-        <span class="error" id="error_displayName"></span>
     </td>
 </tr>
 
@@ -28,7 +26,6 @@
     <td>
         <props:passwordProperty name="${keys.gradleEnterpriseAccessKey}" className="longField"/>
         <span class="smallNote">The access key used to authenticate with the Gradle Enterprise instance.</span>
-        <span class="error" id="error_displayName"></span>
     </td>
 </tr>
 
@@ -37,7 +34,6 @@
     <td>
         <props:textProperty name="${keys.gradleEnterprisePluginVersion}" className="longField"/>
         <span class="smallNote">The version of the Gradle Enterprise Plugin to apply to Gradle builds.</span>
-        <span class="error" id="error_displayName"></span>
     </td>
 </tr>
 
@@ -46,7 +42,6 @@
     <td>
         <props:textProperty name="${keys.commonCustomUserDataPluginVersion}" className="longField"/>
         <span class="smallNote">The version of the Common Custom User Data Plugin to apply to Gradle builds.</span>
-        <span class="error" id="error_displayName"></span>
     </td>
 </tr>
 
@@ -55,7 +50,6 @@
     <td>
         <props:textProperty name="${keys.gradleEnterpriseExtensionVersion}" className="longField"/>
         <span class="smallNote">The version of the Gradle Enterprise Extension to apply to Maven builds.</span>
-        <span class="error" id="error_displayName"></span>
     </td>
 </tr>
 
@@ -64,6 +58,17 @@
     <td>
         <props:textProperty name="${keys.commonCustomUserDataExtensionVersion}" className="longField"/>
         <span class="smallNote">The version of the Common Custom User Data Extension to apply to Maven builds.</span>
-        <span class="error" id="error_displayName"></span>
+    </td>
+</tr>
+
+<tr class="advancedSetting">
+    <td><label for="${keys.allowUntrustedServer}">Allow Untrusted Servers:</label></td>
+    <td>
+        <props:checkboxProperty name="${keys.allowUntrustedServer}"/>
+        <span class="smallNote">
+            Use of this configuration is a security risk as it makes it easier for a third party to intercept your build
+            scan data. It should only be used as a short term workaround until the server can be configured with a
+            trusted certificate.
+        </span>
     </td>
 </tr>
