@@ -21,6 +21,7 @@ import java.util.Map;
  * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
+@SuppressWarnings("SameParameterValue")
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     // TeamCity Gradle runner
@@ -57,6 +58,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
 
+    private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-steps.enable";
+
     // Environment variables set to instrument the Gradle build
 
     private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
@@ -85,36 +88,50 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-            addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
-            addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
-
-            String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
-            addGradleCmdParam(initScriptParam, runner);
-
-            addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
+            instrumentGradleRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            // for now, this intentionally ignores the configured extension versions and applies the bundled jars
-            String extJarParam = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
-            addMavenCmdParam(extJarParam, runner);
-
-            addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
+            instrumentMavenRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(COMMAND_LINE_RUNNER)) {
-            // Instrument all Gradle builds
-            copyInitScriptToGradleUserHome(runner);
-            addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-            addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
-            addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
-
-            // Instrument all Maven builds
-            appendEnvVar("MAVEN_OPTS", "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner), runner);
-            String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
-            if (geUrl != null) {
-                appendEnvVar("MAVEN_OPTS", "-Dgradle.enterprise.url=" + geUrl, runner);
+            if (getBooleanConfigParam(INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM, runner)) {
+                instrumentCommandLineRunner(runner);
             }
-
-            addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
         }
+    }
+
+    private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
+        addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+        addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
+        addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
+
+        String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
+        addGradleCmdParam(initScriptParam, runner);
+
+        addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
+    }
+
+    private void instrumentMavenRunner(@NotNull BuildRunnerContext runner) {
+        // for now, this intentionally ignores the configured extension versions and applies the bundled jars
+        String extJarParam = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
+        addMavenCmdParam(extJarParam, runner);
+
+        addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
+    }
+
+    private void instrumentCommandLineRunner(@NotNull BuildRunnerContext runner) {
+        // Instrument all Gradle builds
+        copyInitScriptToGradleUserHome(runner);
+        addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+        addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
+        addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
+
+        // Instrument all Maven builds
+        appendEnvVar("MAVEN_OPTS", "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner), runner);
+        String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
+        if (geUrl != null) {
+            appendEnvVar("MAVEN_OPTS", "-Dgradle.enterprise.url=" + geUrl, runner);
+        }
+
+        addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
 
     @Override
@@ -211,12 +228,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         }
     }
 
-    @SuppressWarnings("SameParameterValue")
     private static void addEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
         runner.addEnvironmentVariable(key, value);
     }
 
-    @SuppressWarnings("SameParameterValue")
     private static void appendEnvVar(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
         String existingValue = runner.getBuildParameters().getEnvironmentVariables().get(key);
         if (existingValue == null) {
@@ -246,6 +261,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
         String mavenCmdParam = getOptionalRunnerParam(MAVEN_CMD_PARAMS, runner);
         runner.addRunnerParameter(MAVEN_CMD_PARAMS, mavenCmdParam != null ? param + " " + mavenCmdParam : param);
+    }
+
+    private static boolean getBooleanConfigParam(@NotNull String paramName, @NotNull BuildRunnerContext runner) {
+        return Boolean.parseBoolean(getOptionalConfigParam(paramName, runner));
     }
 
     @Nullable
