@@ -58,6 +58,7 @@ def getInputParam = { String name ->
     return System.getProperty(name) ?: System.getenv(envVarName)
 }
 def geUrl = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.url')
+def geAllowUntrustedServer = Boolean.parseBoolean(getInputParam('teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server'))
 def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
 def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
 
@@ -96,6 +97,10 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
                     buildScan.publishAlways()
                     buildScan.server = geUrl
+                    if (geAllowUntrustedServer) {
+                        logger.quiet("Allowing untrusted Gradle Enterprise server via init script")
+                        buildScan.allowUntrustedServer = true
+                    }
                 }
             }
 
@@ -123,6 +128,10 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
                     ext.buildScan.publishAlways()
                     ext.server = geUrl
+                    if (geAllowUntrustedServer) {
+                        logger.quiet("Allowing untrusted Gradle Enterprise server via init script")
+                        ext.allowUntrustedServer = true
+                    }
                 }
             }
         }

@@ -50,6 +50,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";
 
+    private static final String GE_ALLOW_UNTRUSTED_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
+
     private static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.plugin.version";
 
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
@@ -63,6 +65,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     // Environment variables set to instrument the Gradle build
 
     private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
+
+    private static final String GE_ALLOW_UNTRUSTED_SERVER = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
 
     private static final String GE_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
 
@@ -100,6 +104,9 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) {
+            addEnvVar(GE_ALLOW_UNTRUSTED_SERVER, "true", runner);
+        }
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
@@ -113,6 +120,10 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         // for now, this intentionally ignores the configured extension versions and applies the bundled jars
         String extJarParam = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
         addMavenCmdParam(extJarParam, runner);
+
+        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) {
+            addEnvVar(GE_ALLOW_UNTRUSTED_SERVER, "true", runner);
+        }
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
