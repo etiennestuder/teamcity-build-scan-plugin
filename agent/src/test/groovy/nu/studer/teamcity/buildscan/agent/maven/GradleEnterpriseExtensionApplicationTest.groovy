@@ -5,6 +5,7 @@ import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import org.gradle.testkit.runner.BuildResult
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -414,6 +415,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         and:
         configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.allow-untrusted-server', "true")
         configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
 
         when:
@@ -427,6 +429,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         and:
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
+        outputContainsAllowUntrustedServerMessage(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -512,6 +515,12 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     void outputMissesTeamCityServiceMessageBuildScanUrl(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
         assert !output.contains(serviceMsg)
+    }
+
+    void outputContainsAllowUntrustedServerMessage(String output) {
+        def allowUntrustedLogMessage = "Allowing untrusted Gradle Enterprise server via Maven extension"
+        assert output.contains(allowUntrustedLogMessage)
+        assert 1 == output.count(allowUntrustedLogMessage)
     }
 
     static final class JdkCompatibleMavenVersion {
