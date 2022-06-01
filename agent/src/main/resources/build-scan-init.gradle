@@ -1,13 +1,13 @@
 import org.gradle.util.GradleVersion
 
-// finish early if the build is an included build of a composite build
-def isTopLevelBuild = !gradle.parent
-if (!isTopLevelBuild) {
-    return
-}
-
 // conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
+    // finish early if the build is an included build of a composite build
+    def isTopLevelBuild = !gradle.parent
+    if (!isTopLevelBuild) {
+        return
+    }
+
     // there is no mechanism to share code between initscript{} block and the main script, so this logic is duplicated
     def getInputParam = { String name ->
         def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
@@ -36,6 +36,12 @@ initscript {
             classpath "com.gradle:common-custom-user-data-gradle-plugin:$ccudPluginVersion"
         }
     }
+}
+
+// finish early if the build is an included build of a composite build
+def isTopLevelBuild = !gradle.parent
+if (!isTopLevelBuild) {
+    return
 }
 
 def BUILD_SCAN_PLUGIN_ID = 'com.gradle.build-scan'
