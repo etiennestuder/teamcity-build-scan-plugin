@@ -224,6 +224,23 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
+    def "sets url via CCUD gradle.enterprise.url system property when CCUD is inject via init script"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: null, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.7')
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps() + ["-Dgradle.enterprise.url=$mockScansServer.address".toString()])
+
+        then:
+        outputContainsCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
+    }
+
     void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
         def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
         def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
