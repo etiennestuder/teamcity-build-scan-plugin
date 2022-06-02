@@ -149,11 +149,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @Override
     public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
-        // delete init script from Gradle User Home // todo (etst) extract method
-        File targetInitScript = getInitScriptInGradleUserHome(runner);
-        if (targetInitScript.exists()) {
-            FileUtil.delete(targetInitScript);
-        }
+        removeInitScriptFromGradleUserHome(runner);
     }
 
     private File getInitScript(BuildRunnerContext runner) {
@@ -170,6 +166,13 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         }
     }
 
+    private void removeInitScriptFromGradleUserHome(@NotNull BuildRunnerContext runner) {
+        File targetInitScript = getInitScriptInGradleUserHome(runner);
+        if (targetInitScript.exists()) {
+            FileUtil.delete(targetInitScript);
+        }
+    }
+
     private File getInitScriptInGradleUserHome(BuildRunnerContext runner) { // todo remove unused variable
         String gradleUserHomeEnv = System.getenv("GRADLE_USER_HOME");
         File gradleUserHome = gradleUserHomeEnv == null
@@ -177,7 +180,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             : new File(gradleUserHomeEnv);
         File initDir = new File(gradleUserHome, "init.d");
         // Include namespace in script name to avoid clashing with existing scripts
-        return new File(initDir, "com.gradle.enterprise." + BUILD_SCAN_INIT_GRADLE);
+        return new File(initDir, "com.gradle.enterprise." + BUILD_SCAN_INIT_GRADLE); // todo (etst) use different namespace
     }
 
     private String getExtensionsClasspath(BuildRunnerContext runner) {
