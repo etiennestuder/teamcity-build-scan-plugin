@@ -179,8 +179,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             ? new File(System.getProperty("user.home"), ".gradle")
             : new File(gradleUserHomeEnv);
         File initDir = new File(gradleUserHome, "init.d");
-        // Include namespace in script name to avoid clashing with existing scripts
-        return new File(initDir, "com.gradle.enterprise." + BUILD_SCAN_INIT_GRADLE); // todo (etst) use different namespace
+        return new File(initDir, "build-scan-plugin." + BUILD_SCAN_INIT_GRADLE); // include namespace in script name to avoid clashing with existing scripts
     }
 
     private String getExtensionsClasspath(BuildRunnerContext runner) {
