@@ -168,7 +168,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
-    def "ignores GE URL requested via TC config when GE plugin is not applied by the init script (#jdkCompatibleGradleVersion)"() {
+    def "ignores GE URL and allowUntrustedServer requested via TC config when GE plugin is not applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
@@ -180,7 +180,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
-        outputMissesAllowUntrustedServerViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -190,7 +189,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
-    def "configures GE URL and allow untrusted requested via TC config when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
+    def "configures GE URL and allowUntrustedServer requested via TC config when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
@@ -199,7 +198,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
-        outputContainsAllowUntrustedServerViaInitScript(result)
+        outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), true)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -257,21 +256,10 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assert !result.output.contains(pluginApplicationLogMsg)
     }
 
-    void outputContainsTermsOfServiceDenial(BuildResult result) {
-        def tosWarning = 'The Gradle Terms of Service have not been agreed to.'
-        assert result.output.contains(tosWarning)
-        assert 1 == result.output.count(tosWarning)
-    }
-
-    void outputContainsAllowUntrustedServerViaInitScript(BuildResult result) {
-        def allowUntrustedLogMessage = "Allowing untrusted Gradle Enterprise server via init script"
-        assert result.output.contains(allowUntrustedLogMessage)
-        assert 1 == result.output.count(allowUntrustedLogMessage)
-    }
-
-    void outputMissesAllowUntrustedServerViaInitScript(BuildResult result) {
-        def allowUntrustedLogMessage = "Allowing untrusted Gradle Enterprise server via init script"
-        assert !result.output.contains(allowUntrustedLogMessage)
+    void outputContainsGeConnectionInfo(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
+        def geConnectionInfo = "Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
+        assert result.output.contains(geConnectionInfo)
+        assert 1 == result.output.count(geConnectionInfo)
     }
 
     static final class TcPluginConfig {
@@ -304,7 +292,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
                 envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL', geUrl.toString()
             }
             if (geAllowUntrustedServer) {
-                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER', "true"
+                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER', 'true'
             }
             if (gePluginVersion) {
                 envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION', gePluginVersion

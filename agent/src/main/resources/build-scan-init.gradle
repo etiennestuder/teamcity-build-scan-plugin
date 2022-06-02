@@ -94,13 +94,11 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 }
                 if (!scanPluginComponent) {
                     logger.quiet("Applying $BUILD_SCAN_PLUGIN_CLASS via init script")
+                    logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
                     pluginManager.apply(initscript.classLoader.loadClass(BUILD_SCAN_PLUGIN_CLASS))
-                    buildScan.publishAlways()
                     buildScan.server = geUrl
-                    if (geAllowUntrustedServer) {
-                        logger.quiet("Allowing untrusted Gradle Enterprise server via init script")
-                        buildScan.allowUntrustedServer = true
-                    }
+                    buildScan.allowUntrustedServer = geAllowUntrustedServer
+                    buildScan.publishAlways()
                 }
             }
 
@@ -124,14 +122,12 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
         if (gePluginVersion) {
             if (!settings.pluginManager.hasPlugin(GRADLE_ENTERPRISE_PLUGIN_ID)) {
                 logger.quiet("Applying $GRADLE_ENTERPRISE_PLUGIN_CLASS via init script")
+                logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
                 settings.pluginManager.apply(initscript.classLoader.loadClass(GRADLE_ENTERPRISE_PLUGIN_CLASS))
                 extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
-                    ext.buildScan.publishAlways()
                     ext.server = geUrl
-                    if (geAllowUntrustedServer) {
-                        logger.quiet("Allowing untrusted Gradle Enterprise server via init script")
-                        ext.allowUntrustedServer = true
-                    }
+                    ext.allowUntrustedServer = geAllowUntrustedServer
+                    ext.buildScan.publishAlways()
                 }
             }
         }
