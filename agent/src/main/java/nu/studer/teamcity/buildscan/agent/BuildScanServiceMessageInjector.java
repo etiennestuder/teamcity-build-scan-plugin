@@ -118,8 +118,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentMavenRunner(@NotNull BuildRunnerContext runner) {
         // for now, this intentionally ignores the configured extension versions and applies the bundled jars
-        String extJarParam = getInvocationArgs(runner);
-        addMavenCmdParam(extJarParam, runner);
+        String invocationArgs = getInvocationArgs(runner);
+        addMavenCmdParam(invocationArgs, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
@@ -134,15 +134,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         copyInitScriptToGradleUserHome();
 
         // Instrument all Maven builds
-        String mavenOpts = getInvocationArgs(runner);
-        String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
-        if (geUrl != null) { // todo only do if GE extension gets applied
-            mavenOpts = mavenOpts + " -D" + GE_URL_MAVEN_PROPERTY + "=" + geUrl;
-        }
-        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) { // todo only do if GE extension gets applied
-            mavenOpts = mavenOpts + " -D" + GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY + "=true";
-        }
-        appendEnvVar("MAVEN_OPTS", mavenOpts, runner);
+        String invocationArgs = getInvocationArgs(runner);
+        appendEnvVar("MAVEN_OPTS", invocationArgs, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
@@ -184,6 +177,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private String getInvocationArgs(BuildRunnerContext runner) {
         List<File> extensionJars = new ArrayList<File>();
+        List<String> sysProps = new ArrayList<String>();
 
         // add extension to capture build scan URL
         extensionJars.add(getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner));
@@ -195,8 +189,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES)) {
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
-                addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
-                addMavenSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, runner);
+                addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
+                addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
             }
         }
 
@@ -208,8 +202,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             }
         }
 
-        String classpath = asClasspath(extensionJars);
-        return "-Dmaven.ext.class.path=" + classpath;
+        return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
@@ -263,16 +256,12 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         runner.addRunnerParameter(GRADLE_CMD_PARAMS, gradleCmdParam != null ? param + " " + gradleCmdParam : param);
     }
 
-    private static void addMavenSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull BuildRunnerContext runner) {
+    private static void addSysPropIfSet(@NotNull String configParameter, @NotNull String property, List<String> sysProps, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(configParameter, runner);
         if (value != null) {
-            addMavenSysProp(property, value, runner);
+            String sysProp = String.format("-D%s=%s", property, value);
+            sysProps.add(sysProp);
         }
-    }
-
-    private static void addMavenSysProp(@NotNull String key, @NotNull String value, @NotNull BuildRunnerContext runner) {
-        String systemProp = String.format("-D%s=%s", key, value);
-        addMavenCmdParam(systemProp, runner);
     }
 
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
@@ -312,6 +301,18 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
                 sb.append(File.pathSeparator);
             }
             sb.append(file.getAbsolutePath());
+        }
+        return sb.toString();
+    }
+
+    @NotNull
+    private static String asArgs(List<String> elements) {
+        StringBuilder sb = new StringBuilder();
+        for (String element : elements) {
+            if (sb.length() > 0) {
+                sb.append(' ');
+            }
+            sb.append(element);
         }
         return sb.toString();
     }
