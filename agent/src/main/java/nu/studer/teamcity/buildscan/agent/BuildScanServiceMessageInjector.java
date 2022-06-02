@@ -118,7 +118,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentMavenRunner(@NotNull BuildRunnerContext runner) {
         // for now, this intentionally ignores the configured extension versions and applies the bundled jars
-        String extJarParam = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
+        String extJarParam = getInvocationArgs(runner);
         addMavenCmdParam(extJarParam, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
@@ -134,7 +134,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         copyInitScriptToGradleUserHome();
 
         // Instrument all Maven builds
-        String mavenOpts = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
+        String mavenOpts = getInvocationArgs(runner);
         String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
         if (geUrl != null) { // todo only do if GE extension gets applied
             mavenOpts = mavenOpts + " -D" + GE_URL_MAVEN_PROPERTY + "=" + geUrl;
@@ -182,7 +182,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return new File(initDir, "build-scan-plugin." + BUILD_SCAN_INIT_GRADLE); // include namespace in script name to avoid clashing with existing scripts
     }
 
-    private String getExtensionsClasspath(BuildRunnerContext runner) {
+    private String getInvocationArgs(BuildRunnerContext runner) {
         List<File> extensionJars = new ArrayList<File>();
 
         // add extension to capture build scan URL
@@ -208,7 +208,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
             }
         }
 
-        return asClasspath(extensionJars);
+        String classpath = asClasspath(extensionJars);
+        return "-Dmaven.ext.class.path=" + classpath;
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
