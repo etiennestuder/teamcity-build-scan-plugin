@@ -429,7 +429,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         and:
         outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
-        outputContainsAllowUntrustedServerMessage(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
@@ -515,12 +514,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     void outputMissesTeamCityServiceMessageBuildScanUrl(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
         assert !output.contains(serviceMsg)
-    }
-
-    void outputContainsAllowUntrustedServerMessage(String output) {
-        def allowUntrustedLogMessage = "Allowing untrusted Gradle Enterprise server via Maven extension"
-        assert output.contains(allowUntrustedLogMessage)
-        assert 1 == output.count(allowUntrustedLogMessage)
     }
 
     static final class JdkCompatibleMavenVersion {

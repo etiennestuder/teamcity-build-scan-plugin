@@ -33,12 +33,6 @@ public final class BuildScanServiceMessageMavenExtension implements GradleEnterp
             BuildScanServiceMessageSender.register(api.getBuildScan());
             logger.debug("Finished registering listener capturing build scan link");
         }
-
-        // The GE Maven extension does not (yet) provide a system property to configure 'allowUntrustedServer', so we emulate one here.
-        if (Boolean.parseBoolean(System.getProperty("gradle.enterprise.allowUntrustedServer"))) {
-            logger.info("Allowing untrusted Gradle Enterprise server via Maven extension");
-            api.setAllowUntrustedServer(true);
-        }
     }
 
     private static boolean invokesJetBrainsInfoGoal(MavenSession session) {
