@@ -116,7 +116,7 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 
 #### Example Configuration
 
-<img width="1304" alt="image" src="https://user-images.githubusercontent.com/231070/171031962-fd002bea-272d-4110-bbe9-01128cb5c252.png">
+<img width="1298" alt="image" src="https://user-images.githubusercontent.com/231070/171748453-243aa862-c31b-4367-bb90-49b257de1f3f.png">
 
 ## Slack
 
