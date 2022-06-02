@@ -126,19 +126,20 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentCommandLineRunner(@NotNull BuildRunnerContext runner) {
         // Instrument all Gradle builds
-        copyInitScriptToGradleUserHome(runner);
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
         addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
+        copyInitScriptToGradleUserHome(runner);
+
         // Instrument all Maven builds
         String mavenOpts = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
         String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
-        if (geUrl != null) {
+        if (geUrl != null) { // todo only do if GE extension gets applied
             mavenOpts = mavenOpts + " -D" + GE_URL_MAVEN_PROPERTY + "=" + geUrl;
         }
-        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) {
+        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) { // todo only do if GE extension gets applied
             mavenOpts = mavenOpts + " -D" + GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY + "=true";
         }
         appendEnvVar("MAVEN_OPTS", mavenOpts, runner);
@@ -148,7 +149,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @Override
     public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
-        // delete init script from Gradle User Home
+        // delete init script from Gradle User Home // todo (etst) extract method
         File targetInitScript = getInitScriptInGradleUserHome(runner);
         if (targetInitScript.exists()) {
             FileUtil.delete(targetInitScript);
@@ -169,7 +170,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         }
     }
 
-    private File getInitScriptInGradleUserHome(BuildRunnerContext runner) {
+    private File getInitScriptInGradleUserHome(BuildRunnerContext runner) { // todo remove unused variable
         String gradleUserHomeEnv = System.getenv("GRADLE_USER_HOME");
         File gradleUserHome = gradleUserHomeEnv == null
             ? new File(System.getProperty("user.home"), ".gradle")
