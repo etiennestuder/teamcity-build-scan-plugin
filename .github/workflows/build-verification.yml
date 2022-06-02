@@ -1,6 +1,11 @@
 name: Verify Build
 
-on: [ push, pull_request, workflow_dispatch ]
+on:
+    push:
+        branches-ignore:
+            - master # The `development-release` runs on push to `master` and is a superset of this workflow
+    pull_request:
+    workflow_dispatch:
 
 jobs:
     verification:
