@@ -23,7 +23,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     ]
 
     static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
-    static final String GE_EXTENSION_VERSION = '1.14.1'
+    static final String GE_EXTENSION_VERSION = '1.14.2'
     static final String CCUD_EXTENSION_VERSION = '1.10.1'
 
     @TempDir
