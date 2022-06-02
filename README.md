@@ -129,8 +129,9 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 Both feedback and contributions are very welcome.
 
 # Acknowledgements
-+ [ldaley](https://github.com/ldaley) (pr #53 that adds Gradle 4/5 compatibility to the Gradle Enterprise integration)
++ [bigdaz](https://github.com/bigdaz) (several prs related to the Gradle Enterprise integration)
 + [clayburn](https://github.com/clayburn) (several prs related to the Gradle Enterprise integration)
++ [ldaley](https://github.com/ldaley) (pr #53 that adds Gradle 4/5 compatibility to the Gradle Enterprise integration)
 + [madlexa](https://github.com/madlexa) (pr #47 that adds TeamCity 2022.04 compatibility)
 + [facewindu](https://github.com/facewindu) (pr #21 that includes init script test coverage)
 + [dmitry-treskunov](https://github.com/dmitry-treskunov) (bug report and proposed fix)
