@@ -76,7 +76,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
 
-    private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allow-untrusted-server";
+    private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allowUntrustedServer";
 
     private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
 

@@ -35,7 +35,7 @@ public final class BuildScanServiceMessageMavenExtension implements GradleEnterp
         }
 
         // The GE Maven extension does not (yet) provide a system property to configure 'allowUntrustedServer', so we emulate one here.
-        if (Boolean.parseBoolean(System.getProperty("gradle.enterprise.allow-untrusted-server"))) {
+        if (Boolean.parseBoolean(System.getProperty("gradle.enterprise.allowUntrustedServer"))) {
             logger.info("Allowing untrusted Gradle Enterprise server via Maven extension");
             api.setAllowUntrustedServer(true);
         }
