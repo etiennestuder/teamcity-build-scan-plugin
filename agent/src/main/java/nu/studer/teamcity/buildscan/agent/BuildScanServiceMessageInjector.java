@@ -21,7 +21,7 @@ import java.util.Map;
  * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
-@SuppressWarnings("SameParameterValue")
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
 public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     // TeamCity Gradle runner
