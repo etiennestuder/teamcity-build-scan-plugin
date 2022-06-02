@@ -97,7 +97,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
 #### Example Configuration
 
-<img width="1308" alt="image" src="https://user-images.githubusercontent.com/231070/171031337-ce151446-a18a-4039-b46b-c945455d3803.png">
+<img width="1302" alt="image" src="https://user-images.githubusercontent.com/231070/171748029-590c9f99-9382-41f3-8597-8c049ce328ed.png">
 
 ### Maven Builds
 
