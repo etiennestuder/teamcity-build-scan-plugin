@@ -131,7 +131,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
-        copyInitScriptToGradleUserHome(runner);
+        copyInitScriptToGradleUserHome();
 
         // Instrument all Maven builds
         String mavenOpts = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
@@ -149,7 +149,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @Override
     public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
-        removeInitScriptFromGradleUserHome(runner);
+        removeInitScriptFromGradleUserHome();
     }
 
     private File getInitScript(BuildRunnerContext runner) {
@@ -158,22 +158,22 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return initScript;
     }
 
-    private void copyInitScriptToGradleUserHome(BuildRunnerContext runner) {
-        File targetInitScript = getInitScriptInGradleUserHome(runner);
+    private void copyInitScriptToGradleUserHome() {
+        File targetInitScript = getInitScriptInGradleUserHome();
         if (!targetInitScript.exists()) {
             targetInitScript.getParentFile().mkdirs();
             FileUtil.copyResource(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, targetInitScript);
         }
     }
 
-    private void removeInitScriptFromGradleUserHome(@NotNull BuildRunnerContext runner) {
-        File targetInitScript = getInitScriptInGradleUserHome(runner);
+    private void removeInitScriptFromGradleUserHome() {
+        File targetInitScript = getInitScriptInGradleUserHome();
         if (targetInitScript.exists()) {
             FileUtil.delete(targetInitScript);
         }
     }
 
-    private File getInitScriptInGradleUserHome(BuildRunnerContext runner) { // todo remove unused variable
+    private File getInitScriptInGradleUserHome() {
         String gradleUserHomeEnv = System.getenv("GRADLE_USER_HOME");
         File gradleUserHome = gradleUserHomeEnv == null
             ? new File(System.getProperty("user.home"), ".gradle")
