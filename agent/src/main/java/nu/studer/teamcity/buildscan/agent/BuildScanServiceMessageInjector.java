@@ -66,7 +66,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
 
-    private static final String GE_ALLOW_UNTRUSTED_SERVER = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
+    private static final String GE_ALLOW_UNTRUSTED_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
 
     private static final String GE_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
 
@@ -106,7 +106,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_SERVER, runner);
+        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
@@ -128,15 +128,20 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         // Instrument all Gradle builds
         copyInitScriptToGradleUserHome(runner);
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
         // Instrument all Maven builds
-        appendEnvVar("MAVEN_OPTS", "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner), runner);
+        String mavenOpts = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
         String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
         if (geUrl != null) {
-            appendEnvVar("MAVEN_OPTS", "-Dgradle.enterprise.url=" + geUrl, runner);
+            mavenOpts = mavenOpts + " -D" + GE_URL_MAVEN_PROPERTY + "=" + geUrl;
         }
+        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) {
+            mavenOpts = mavenOpts + " -D" + GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY + "=true";
+        }
+        appendEnvVar("MAVEN_OPTS", mavenOpts, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
