@@ -76,6 +76,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
 
+    private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allow-untrusted-server";
+
     private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
 
     private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
@@ -104,9 +106,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) {
-            addEnvVar(GE_ALLOW_UNTRUSTED_SERVER, "true", runner);
-        }
+        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_SERVER, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
@@ -120,10 +120,6 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         // for now, this intentionally ignores the configured extension versions and applies the bundled jars
         String extJarParam = "-Dmaven.ext.class.path=" + getExtensionsClasspath(runner);
         addMavenCmdParam(extJarParam, runner);
-
-        if (getBooleanConfigParam(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, runner)) {
-            addEnvVar(GE_ALLOW_UNTRUSTED_SERVER, "true", runner);
-        }
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
@@ -192,6 +188,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addMavenSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, runner);
+                addMavenSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, runner);
             }
         }
 
