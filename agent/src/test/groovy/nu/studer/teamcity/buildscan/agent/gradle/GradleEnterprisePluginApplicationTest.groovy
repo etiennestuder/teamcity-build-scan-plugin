@@ -8,7 +8,7 @@ import static org.junit.Assume.assumeTrue
 class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
     private static final String GE_PLUGIN_VERSION = '3.10.1'
-    private static final String CCUD_PLUGIN_VERSION = '1.7'
+    private static final String CCUD_PLUGIN_VERSION = '1.7.2'
 
     private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
 
@@ -223,17 +223,19 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
-    def "sets url via CCUD gradle.enterprise.url system property when CCUD is inject via init script"() {
+    def "can configure GE via CCUD system property overrides when CCUD plugin is inject via init script"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: null, gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.7')
+        def gePluginConfig = new TcPluginConfig(geUrl: URI.create('https://ge-server.invalid'), gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps() + ["-Dgradle.enterprise.url=$mockScansServer.address".toString()])
 
         then:
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
+        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
