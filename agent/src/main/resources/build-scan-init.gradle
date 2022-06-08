@@ -13,6 +13,7 @@ initscript {
         def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
         return System.getProperty(name) ?: System.getenv(envVarName)
     }
+    def pluginRepositoryUrl = getInputParam('teamCityBuildScanPlugin.gradle.plugin-repository.url')
     def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
 
@@ -20,8 +21,14 @@ initscript {
     def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
 
     if (gePluginVersion || ccudPluginVersion && atLeastGradle4) {
+        if (pluginRepositoryUrl) {
+            logger.quiet("Resolving Gradle Enterprise plugins from ${pluginRepositoryUrl}")
+        } else {
+            pluginRepositoryUrl = 'https://plugins.gradle.org/m2'
+        }
+
         repositories {
-            maven { url 'https://plugins.gradle.org/m2' }
+            maven { url pluginRepositoryUrl }
         }
     }
 

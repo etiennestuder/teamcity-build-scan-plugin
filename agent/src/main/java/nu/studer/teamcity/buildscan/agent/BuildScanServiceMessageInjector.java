@@ -62,7 +62,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enable";
 
+    private static final String GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
+
     // Environment variables set to instrument the Gradle build
+
+    private static final String GRADLE_PLUGIN_REPOSITORY_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL";
 
     private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
 
@@ -105,10 +109,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
-        addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
-        addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
-        addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
+        setGradleInitScriptVars(runner);
 
         String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
         addGradleCmdParam(initScriptParam, runner);
@@ -118,7 +119,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentMavenRunner(@NotNull BuildRunnerContext runner) {
         // for now, this intentionally ignores the configured extension versions and applies the bundled jars
-        String invocationArgs = getInvocationArgs(runner);
+        String invocationArgs = getMavenInvocationArgs(runner);
         addMavenCmdParam(invocationArgs, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
@@ -126,15 +127,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentCommandLineRunner(@NotNull BuildRunnerContext runner) {
         // Instrument all Gradle builds
-        addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
-        addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
-        addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
-
+        setGradleInitScriptVars(runner);
         copyInitScriptToGradleUserHome();
 
         // Instrument all Maven builds
-        String invocationArgs = getInvocationArgs(runner);
+        String invocationArgs = getMavenInvocationArgs(runner);
         appendEnvVar("MAVEN_OPTS", invocationArgs, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
@@ -143,6 +140,14 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     @Override
     public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
         removeInitScriptFromGradleUserHome();
+    }
+
+    private void setGradleInitScriptVars(@NotNull BuildRunnerContext runner) {
+        addEnvVarIfSet(GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM, GRADLE_PLUGIN_REPOSITORY_VAR, runner);
+        addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
+        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
+        addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
+        addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
     }
 
     private File getInitScript(BuildRunnerContext runner) {
@@ -175,7 +180,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
         return new File(initDir, "build-scan-plugin." + BUILD_SCAN_INIT_GRADLE); // include namespace in script name to avoid clashing with existing scripts
     }
 
-    private String getInvocationArgs(BuildRunnerContext runner) {
+    private String getMavenInvocationArgs(BuildRunnerContext runner) {
         List<File> extensionJars = new ArrayList<File>();
         List<String> sysProps = new ArrayList<String>();
 
