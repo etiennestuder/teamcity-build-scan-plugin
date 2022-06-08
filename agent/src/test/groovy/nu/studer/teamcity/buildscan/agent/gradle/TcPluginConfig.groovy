@@ -30,7 +30,7 @@ final class TcPluginConfig {
 
      // Generate sysProps for the init-script directly, for Gradle versions where TestKit doesn't support env vars
      List<String> toSysProps() {
-         def jvmArgs = []
+         def jvmArgs = ["-DteamCityBuildScanPlugin.init-script-name=build-scan-init.gradle"]
          if (gradlePluginRepositoryUrl) {
              jvmArgs << "-DteamCityBuildScanPlugin.gradle.plugin-repository.url=$gradlePluginRepositoryUrl".toString()
          }

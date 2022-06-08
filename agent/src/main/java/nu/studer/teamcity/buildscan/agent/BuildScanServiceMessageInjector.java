@@ -28,7 +28,8 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private static final String GRADLE_RUNNER = "gradle-runner";
     private static final String GRADLE_CMD_PARAMS = "ui.gradleRunner.additional.gradle.cmd.params";
-    private static final String BUILD_SCAN_INIT_GRADLE = "build-scan-init.gradle";
+    private static final String BUILD_SCAN_INIT = "build-scan-init";
+    private static final String BUILD_SCAN_INIT_GRADLE = BUILD_SCAN_INIT + ".gradle";
 
     // TeamCity Maven runner
 
@@ -64,6 +65,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static final String GE_ALLOW_UNTRUSTED_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
     private static final String GE_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
     private static final String CCUD_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION";
+    private static final String INIT_SCRIPT_NAME_VAR = "TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME";
 
     // Maven system properties passed on the CLI to a Maven build
 
@@ -95,10 +97,11 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     }
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
-        setGradleInitScriptEnvVars(runner);
-
-        String initScriptParam = "--init-script " + getInitScript(runner).getAbsolutePath();
+        File initScript = getInitScriptInAgentTempDir(runner);
+        String initScriptParam = "--init-script " + initScript.getAbsolutePath();
         addGradleCmdParam(initScriptParam, runner);
+
+        addGradleInitScriptEnvVars(initScript, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
@@ -113,8 +116,9 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     private void instrumentCommandLineRunner(@NotNull BuildRunnerContext runner) {
         // Instrument all Gradle builds
-        setGradleInitScriptEnvVars(runner);
-        copyInitScriptToGradleUserHome();
+        String activationId = String.valueOf(System.currentTimeMillis());
+        File initScript = copyInitScriptToGradleUserHome(activationId);
+        addGradleInitScriptEnvVars(initScript, runner);
 
         // Instrument all Maven builds
         String invocationArgs = getMavenInvocationArgs(runner);
@@ -125,45 +129,53 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @Override
     public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
-        removeInitScriptFromGradleUserHome();
+        removeInitScriptFromGradleUserHome(runner);
     }
 
-    private void setGradleInitScriptEnvVars(@NotNull BuildRunnerContext runner) {
+    private void addGradleInitScriptEnvVars(@NotNull File targetInitScript, @NotNull BuildRunnerContext runner) {
         addEnvVarIfSet(GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM, GRADLE_PLUGIN_REPOSITORY_VAR, runner);
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
         addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
+
+        // The init-script is inactive by default. Supply the script name env var to activate it.
+        addEnvVar(INIT_SCRIPT_NAME_VAR, targetInitScript.getName(), runner);
     }
 
-    private File getInitScript(BuildRunnerContext runner) {
+    private File getInitScriptInAgentTempDir(BuildRunnerContext runner) {
         File initScript = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_INIT_GRADLE);
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, initScript);
         return initScript;
     }
 
-    private void copyInitScriptToGradleUserHome() {
-        File targetInitScript = getInitScriptInGradleUserHome();
+    private File copyInitScriptToGradleUserHome(String activationId) {
+        File targetInitScript = new File(getInitScriptsDir(), BUILD_SCAN_INIT + "-" + activationId + ".gradle");
         if (!targetInitScript.exists()) {
             targetInitScript.getParentFile().mkdirs();
             FileUtil.copyResource(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, targetInitScript);
         }
+        return targetInitScript;
     }
 
-    private void removeInitScriptFromGradleUserHome() {
-        File targetInitScript = getInitScriptInGradleUserHome();
+    private void removeInitScriptFromGradleUserHome(BuildRunnerContext runner) {
+        String initScriptName = runner.getBuildParameters().getEnvironmentVariables().get(INIT_SCRIPT_NAME_VAR);
+        if (initScriptName == null) {
+            return;
+        }
+        File targetInitScript = new File(getInitScriptsDir(), initScriptName);
         if (targetInitScript.exists()) {
             FileUtil.delete(targetInitScript);
         }
     }
 
-    private File getInitScriptInGradleUserHome() {
+    @NotNull
+    private File getInitScriptsDir() {
         String gradleUserHomeEnv = System.getenv("GRADLE_USER_HOME");
         File gradleUserHome = gradleUserHomeEnv == null
             ? new File(System.getProperty("user.home"), ".gradle")
             : new File(gradleUserHomeEnv);
-        File initDir = new File(gradleUserHome, "init.d");
-        return new File(initDir, "build-scan-plugin." + BUILD_SCAN_INIT_GRADLE); // include namespace in script name to avoid clashing with existing scripts
+        return new File(gradleUserHome, "init.d");
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
