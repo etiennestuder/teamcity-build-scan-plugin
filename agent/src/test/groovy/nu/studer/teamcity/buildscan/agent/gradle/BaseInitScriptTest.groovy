@@ -3,8 +3,12 @@ package nu.studer.teamcity.buildscan.agent.gradle
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
+import jetbrains.buildServer.agent.AgentLifeCycleListener
+import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.FileUtil
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
+import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import nu.studer.teamcity.buildscan.agent.TestContext
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.internal.DefaultGradleRunner
@@ -63,6 +67,9 @@ class BaseInitScriptTest extends Specification {
 
     @TempDir
     File testProjectDir
+
+    @TempDir
+    File agentTempDir
 
     @AutoCleanup
     def mockScansServer = GroovyEmbeddedApp.of {
@@ -180,22 +187,38 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        createRunner(gradleVersion, jvmArgs, envVars).build()
+    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), List<String> additionalJvmArgs = []) {
+        createRunner(gradleVersion, tcPluginConfig, additionalJvmArgs).build()
     }
 
-    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        createRunner(gradleVersion, jvmArgs, envVars).buildAndFail()
+    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), List<String> additionalJvmArgs = []) {
+        createRunner(gradleVersion, tcPluginConfig, additionalJvmArgs).buildAndFail()
     }
 
-    GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        def args = ['tasks', '-I', initScriptFile.absolutePath]
+    private GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig, List<String> additionalJvmArgs = []) {
+        TestContext context = new TestContext("gradle-runner", agentTempDir, tcPluginConfig.toConfigProperties(), [:])
+        def extensionApplicationListener = Mock(ExtensionApplicationListener)
+        def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
+        injector.beforeRunnerStart(context)
+
+        def gradleArgs = context.runnerParameters.get("ui.gradleRunner.additional.gradle.cmd.params")
+        def args = ['tasks'] + (gradleArgs.split(' ') as List<String>)
+
+        def testKitSupportsEnvVars = gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
+        if (testKitSupportsEnvVars) {
+            return createRunner(gradleVersion, args, additionalJvmArgs, context.buildParameters.environmentVariables)
+        } else {
+            return createRunner(gradleVersion, args, tcPluginConfig.toSysProps() + additionalJvmArgs, [:])
+        }
+    }
+
+    private GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), List<String> gradleArgs, List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
         def runner = ((DefaultGradleRunner) GradleRunner.create())
             .withJvmArguments(jvmArgs)
             .withGradleVersion(gradleVersion.version)
             .withProjectDir(testProjectDir)
-            .withArguments(args)
+            .withArguments(gradleArgs)
             .forwardOutput()
 
         if (envVars) {

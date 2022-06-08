@@ -25,12 +25,14 @@ class TestContext implements BuildRunnerContext {
 
     private final String runType
     private final AgentRunningBuild agentRunningBuild
+    private final BuildParametersMap buildParametersMap
     private final Map<String, String> configParameters
     private final Map<String, String> runnerParameters
 
     TestContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
         this.runType = runType
         this.agentRunningBuild = new TestAgentBuild(agentTempDirectory)
+        this.buildParametersMap = new TestBuildParametersMap()
         this.configParameters = configParameters
         this.runnerParameters = runnerParameters
     }
@@ -62,7 +64,7 @@ class TestContext implements BuildRunnerContext {
 
     @Override
     BuildParametersMap getBuildParameters() {
-        return null
+        return buildParametersMap
     }
 
     @Override
@@ -77,17 +79,17 @@ class TestContext implements BuildRunnerContext {
 
     @Override
     void addSystemProperty(@NotNull String key, @NotNull String value) {
-
+        buildParametersMap.systemProperties.put(key, value)
     }
 
     @Override
     void addEnvironmentVariable(@NotNull String key, @NotNull String value) {
-
+        buildParametersMap.environmentVariables.put(key, value)
     }
 
     @Override
     void addConfigParameter(@NotNull String key, @NotNull String value) {
-
+        configParameters.put(key, value)
     }
 
     @Override
@@ -118,6 +120,25 @@ class TestContext implements BuildRunnerContext {
     @Override
     VirtualContext getVirtualContext() {
         return null
+    }
+
+    private class TestBuildParametersMap implements BuildParametersMap {
+        private Map<String,String> envVars = [:]
+        private Map<String,String> sysProps = [:]
+        @Override
+        Map<String, String> getEnvironmentVariables() {
+            return envVars
+        }
+
+        @Override
+        Map<String, String> getSystemProperties() {
+            return sysProps
+        }
+
+        @Override
+        Map<String, String> getAllParameters() {
+            return null
+        }
     }
 
     private class TestAgentBuild implements AgentRunningBuild {
