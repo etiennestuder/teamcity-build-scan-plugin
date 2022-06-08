@@ -311,7 +311,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
     void outputContainsPluginRepositoryInfo(BuildResult result, String gradlePluginRepositoryUrl) {
         def repositoryInfo = "Gradle Enterprise plugins resolution: ${gradlePluginRepositoryUrl}"
         assert result.output.contains(repositoryInfo)
-        assert 1 == result.output.count(gradlePluginRepositoryUrl)
+        assert 1 == result.output.count(repositoryInfo)
     }
 
     static final class TcPluginConfig {
