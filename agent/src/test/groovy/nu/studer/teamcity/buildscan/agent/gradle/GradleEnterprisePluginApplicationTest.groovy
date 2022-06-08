@@ -208,10 +208,32 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), true)
         outputMissesCcudPluginApplicationViaInitScript(result)
+        outputMissesCustomPluginRepositoryInfo(result)
 
         and:
         outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+    }
+
+    def "can configure alternative repository for plugins when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(
+            geUrl: mockScansServer.address,
+            geAllowUntrustedServer: true,
+            gePluginVersion: GE_PLUGIN_VERSION,
+            ccudPluginVersion: CCUD_PLUGIN_VERSION,
+            gradlePluginRepositoryUrl: new URI('https://plugins.grdev.net/m2'))
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
+
+        then:
+        outputContainsCustomPluginRepositoryInfo(result, 'https://plugins.grdev.net/m2')
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsCcudPluginApplicationViaInitScript(result)
 
         where:
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
@@ -290,12 +312,23 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assert 1 == result.output.count(geConnectionInfo)
     }
 
+    void outputContainsCustomPluginRepositoryInfo(BuildResult result, String repositoryUrl) {
+        def repositoryInfo = "Resolving Gradle Enterprise plugins from ${repositoryUrl}"
+        assert result.output.contains(repositoryInfo)
+    }
+
+    void outputMissesCustomPluginRepositoryInfo(BuildResult result) {
+        def repositoryInfo = "Resolving Gradle Enterprise plugins from"
+        assert !result.output.contains(repositoryInfo)
+    }
+
     static final class TcPluginConfig {
 
         URI geUrl
         boolean geAllowUntrustedServer
         String gePluginVersion
         String ccudPluginVersion
+        URI gradlePluginRepositoryUrl
 
         List<String> toSysProps() {
             def jvmArgs = []
@@ -310,6 +343,9 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
             }
             if (ccudPluginVersion) {
                 jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
+            }
+            if (gradlePluginRepositoryUrl) {
+                jvmArgs << "-DteamCityBuildScanPlugin.gradle.plugin-repository.url=$gradlePluginRepositoryUrl".toString()
             }
             jvmArgs
         }
@@ -327,6 +363,9 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
             }
             if (ccudPluginVersion) {
                 envVars.put 'TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION', ccudPluginVersion
+            }
+            if (gradlePluginRepositoryUrl) {
+                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL', gradlePluginRepositoryUrl.toString()
             }
             envVars
         }
