@@ -208,7 +208,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), true)
         outputMissesCcudPluginApplicationViaInitScript(result)
-        outputMissesCustomPluginRepositoryInfo(result)
+        outputContainsPluginRepositoryInfo(result, 'https://plugins.gradle.org/m2')
 
         and:
         outputContainsTeamCityServiceMessageBuildStarted(result)
@@ -222,16 +222,14 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: mockScansServer.address,
-            geAllowUntrustedServer: true,
-            gePluginVersion: GE_PLUGIN_VERSION,
-            gradlePluginRepositoryUrl: new URI('https://plugins.grdev.net/m2'))
+        def gePluginConfig = new TcPluginConfig(gradlePluginRepositoryUrl: new URI('https://plugins.grdev.net/m2'), geUrl: mockScansServer.address, geAllowUntrustedServer: false, gePluginVersion: GE_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
-        outputContainsCustomPluginRepositoryInfo(result, 'https://plugins.grdev.net/m2')
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), false)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+        outputContainsPluginRepositoryInfo(result, 'https://plugins.grdev.net/m2')
 
         where:
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
@@ -310,14 +308,10 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assert 1 == result.output.count(geConnectionInfo)
     }
 
-    void outputContainsCustomPluginRepositoryInfo(BuildResult result, String repositoryUrl) {
-        def repositoryInfo = "Resolving Gradle Enterprise plugins from ${repositoryUrl}"
+    void outputContainsPluginRepositoryInfo(BuildResult result, String gradlePluginRepositoryUrl) {
+        def repositoryInfo = "Gradle Enterprise plugins resolution: ${gradlePluginRepositoryUrl}"
         assert result.output.contains(repositoryInfo)
-    }
-
-    void outputMissesCustomPluginRepositoryInfo(BuildResult result) {
-        def repositoryInfo = "Resolving Gradle Enterprise plugins from"
-        assert !result.output.contains(repositoryInfo)
+        assert 1 == result.output.count(gradlePluginRepositoryUrl)
     }
 
     static final class TcPluginConfig {

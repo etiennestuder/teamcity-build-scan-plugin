@@ -21,11 +21,8 @@ initscript {
     def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
 
     if (gePluginVersion || ccudPluginVersion && atLeastGradle4) {
-        if (pluginRepositoryUrl) {
-            logger.quiet("Resolving Gradle Enterprise plugins from ${pluginRepositoryUrl}")
-        } else {
-            pluginRepositoryUrl = 'https://plugins.gradle.org/m2'
-        }
+        pluginRepositoryUrl = pluginRepositoryUrl ?: 'https://plugins.gradle.org/m2'
+        logger.quiet("Gradle Enterprise plugins resolution: $pluginRepositoryUrl")
 
         repositories {
             maven { url pluginRepositoryUrl }
