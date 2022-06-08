@@ -55,7 +55,7 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
     private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
-    private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enable";
+    private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
 
     // Environment variables set to instrument the Gradle build
 
