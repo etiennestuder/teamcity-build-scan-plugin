@@ -229,6 +229,43 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
+    def "does not apply GE plugin via init script for command-line runner without opt-in parameter (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(runner: "simpleRunner", geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
+
+        then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        where:
+        // We can't test the injector on old versions of Gradle, which means it's pointless to test command-line jobs
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
+    }
+
+    def "applies GE plugin via init script for command-line runner (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(runner: "simpleRunner", geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
+        gePluginConfig.enableCommandLineRunner = true
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
+
+        then:
+        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(result)
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        // We can't test the injector on old versions of Gradle, which means it's pointless to test command-line jobs
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
+    }
+
     void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
         def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
         def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"

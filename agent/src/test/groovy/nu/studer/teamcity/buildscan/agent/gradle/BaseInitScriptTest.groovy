@@ -8,6 +8,7 @@ import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.FileUtil
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import nu.studer.teamcity.buildscan.agent.TestBuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.TestContext
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
@@ -188,44 +189,44 @@ class BaseInitScriptTest extends Specification {
     }
 
     BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), List<String> additionalJvmArgs = []) {
-        createRunner(gradleVersion, tcPluginConfig, additionalJvmArgs).build()
-    }
 
-    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), List<String> additionalJvmArgs = []) {
-        createRunner(gradleVersion, tcPluginConfig, additionalJvmArgs).buildAndFail()
-    }
+        DefaultGradleRunner testKitRunner = new DefaultGradleRunner().withProjectDir(testProjectDir)
+            .withGradleVersion(gradleVersion.version)
+            .forwardOutput() as DefaultGradleRunner
 
-    private GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig, List<String> additionalJvmArgs = []) {
-        TestContext context = new TestContext("gradle-runner", agentTempDir, tcPluginConfig.toConfigProperties(), [:])
-        def extensionApplicationListener = Mock(ExtensionApplicationListener)
-        def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
+        // Provide BuildScanServiceMessageInjector with Gradle User Home for testkit
+        File gradleUserHome = testKitRunner.testKitDirProvider.dir
+        def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
 
+        TestContext context = new TestContext(tcPluginConfig.runner, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
         injector.beforeRunnerStart(context)
 
+        def args = ['tasks']
         def gradleArgs = context.runnerParameters.get("ui.gradleRunner.additional.gradle.cmd.params")
-        def args = ['tasks'] + (gradleArgs.split(' ') as List<String>)
+        if (gradleArgs) {
+            args += (gradleArgs.split(' ') as List<String>)
+        }
+        testKitRunner.withArguments(args)
 
         def testKitSupportsEnvVars = gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
         if (testKitSupportsEnvVars) {
-            return createRunner(gradleVersion, args, additionalJvmArgs, context.buildParameters.environmentVariables)
+            testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
+            testKitRunner.withJvmArguments(additionalJvmArgs)
         } else {
-            return createRunner(gradleVersion, args, tcPluginConfig.toSysProps() + additionalJvmArgs, [:])
-        }
-    }
-
-    private GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), List<String> gradleArgs, List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        def runner = ((DefaultGradleRunner) GradleRunner.create())
-            .withJvmArguments(jvmArgs)
-            .withGradleVersion(gradleVersion.version)
-            .withProjectDir(testProjectDir)
-            .withArguments(gradleArgs)
-            .forwardOutput()
-
-        if (envVars) {
-            runner.withEnvironment(envVars)
+            testKitRunner.withJvmArguments(tcPluginConfig.toSysProps() + additionalJvmArgs)
         }
 
-        runner
+        try {
+            return testKitRunner.build()
+        } finally {
+            // Run the finish hook, and check that any file was deleted from Gradle User Home
+            injector.runnerFinished(context, null)
+
+            def initScriptsDir = new File(gradleUserHome, 'init.d')
+            if (initScriptsDir.exists()) {
+                assert initScriptsDir.list() as List<String> == []
+            }
+        }
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {

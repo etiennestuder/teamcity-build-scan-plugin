@@ -1,12 +1,13 @@
 package nu.studer.teamcity.buildscan.agent.gradle
 
 final class TcPluginConfig {
-
     URI gradlePluginRepositoryUrl
     URI geUrl
     boolean geAllowUntrustedServer
     String gePluginVersion
     String ccudPluginVersion
+    String runner = "gradle-runner"
+    boolean enableCommandLineRunner
 
     Map<String, String> toConfigProperties() {
         Map<String, String> configProps = [:]
@@ -24,6 +25,9 @@ final class TcPluginConfig {
         }
         if (ccudPluginVersion) {
             configProps.put 'buildScanPlugin.ccud.plugin.version', ccudPluginVersion
+        }
+        if (enableCommandLineRunner) {
+            configProps.put 'buildScanPlugin.command-line-build-step.enabled', 'true'
         }
         configProps
     }
@@ -44,6 +48,9 @@ final class TcPluginConfig {
             jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$gePluginVersion".toString()
         }
         if (ccudPluginVersion) {
+            jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
+        }
+        if (enableCommandLineRunner) {
             jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
         }
         jvmArgs

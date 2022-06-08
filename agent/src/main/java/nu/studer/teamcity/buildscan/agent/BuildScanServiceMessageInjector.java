@@ -22,7 +22,7 @@ import java.util.Map;
  * builds.
  */
 @SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
-public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
+public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     // TeamCity Gradle runner
 
@@ -171,11 +171,15 @@ public final class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter
 
     @NotNull
     private File getInitScriptsDir() {
-        String gradleUserHomeEnv = System.getenv("GRADLE_USER_HOME");
-        File gradleUserHome = gradleUserHomeEnv == null
+        return new File(getGradleUserHome(), "init.d");
+    }
+
+    @NotNull
+    protected File getGradleUserHome() {
+        String gradleUserHomeOverride = System.getProperty("gradle.user.home", System.getenv("GRADLE_USER_HOME"));
+        return gradleUserHomeOverride == null
             ? new File(System.getProperty("user.home"), ".gradle")
-            : new File(gradleUserHomeEnv);
-        return new File(gradleUserHome, "init.d");
+            : new File(gradleUserHomeOverride);
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
