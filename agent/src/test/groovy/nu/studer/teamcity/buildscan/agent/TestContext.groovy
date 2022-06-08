@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.agent.maven
+package nu.studer.teamcity.buildscan.agent
 
 import jetbrains.buildServer.agent.AgentBuildFeature
 import jetbrains.buildServer.agent.AgentCheckoutMode
@@ -23,11 +23,13 @@ import org.jetbrains.annotations.NotNull
 
 class TestContext implements BuildRunnerContext {
 
+    private final String runType
     private final AgentRunningBuild agentRunningBuild
     private final Map<String, String> configParameters
     private final Map<String, String> runnerParameters
 
-    TestContext(File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
+    TestContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
+        this.runType = runType
         this.agentRunningBuild = new TestAgentBuild(agentTempDirectory)
         this.configParameters = configParameters
         this.runnerParameters = runnerParameters
@@ -50,7 +52,7 @@ class TestContext implements BuildRunnerContext {
 
     @Override
     String getRunType() {
-        return "Maven2"
+        return runType
     }
 
     @Override
