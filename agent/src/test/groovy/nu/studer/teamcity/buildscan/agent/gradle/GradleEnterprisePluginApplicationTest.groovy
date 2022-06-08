@@ -226,14 +226,12 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
             geUrl: mockScansServer.address,
             geAllowUntrustedServer: true,
             gePluginVersion: GE_PLUGIN_VERSION,
-            ccudPluginVersion: CCUD_PLUGIN_VERSION,
             gradlePluginRepositoryUrl: new URI('https://plugins.grdev.net/m2'))
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig.toSysProps())
 
         then:
         outputContainsCustomPluginRepositoryInfo(result, 'https://plugins.grdev.net/m2')
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
-        outputContainsCcudPluginApplicationViaInitScript(result)
 
         where:
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
