@@ -87,7 +87,9 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
    - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
    - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - whether it is ok to communicate with an untrusted server (opt)
    - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
-   - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply (opt)
+   - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply (
+     opt)
+   - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins (opt)
 
 1. Trigger your Gradle build.
 
