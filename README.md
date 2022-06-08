@@ -39,16 +39,17 @@ It is recommended that you use the [latest Gradle Enterprise Gradle plugin versi
 
 If you use TeamCity's GradleRunner to launch your Gradle builds, there is nothing special to do.
 
-If, and only if, you do not use TeamCity's GradleRunner to launch Gradle builds, apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds in order to
-notify TeamCity about the build scans that were published while running a build.
+If you use TeamCity's CommmandLineRunner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter. (See below)
 
-If you do not use TeamCity's GradleRunner to launch Gradle builds and you do not apply the [TeamCity build scan Gradle plugin](https://github.com/etiennestuder/gradle-build-scan-teamcity-plugin) to your Gradle builds, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and setting the value to `true`.
+If the first 2 mechanisms will not work for you Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and setting the value to `true`.
 
 ### Maven builds
 
 If you use TeamCity's MavenRunner to launch Maven builds, there is nothing special to do.
 
-If you do not use TeamCity's MavenRunner to launch Maven builds, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and setting the value to `true`.
+If you use TeamCity's CommmandLineRunner to launch your Maven builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter. (See below)
+
+If the first 2 mechanisms will not work for you Maven build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by creating a TeamCity configuration parameter with name `BUILD_SCAN_LOG_PARSING` and setting the value to `true`.
 
 # Installation
 
@@ -90,6 +91,7 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
    - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply (
      opt)
    - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins (opt)
+   - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for all jobs using the CommandLineRunner (opt)
 
 1. Trigger your Gradle build.
 
@@ -109,6 +111,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
    - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - whether it is ok to communicate with an untrusted server (opt)
    - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
    - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply (opt)
+   - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for all jobs using the CommandLineRunner (opt)
 
 1. Trigger your Maven build.
 
