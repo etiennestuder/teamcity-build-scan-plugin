@@ -322,14 +322,17 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
     static final class TcPluginConfig {
 
+        URI gradlePluginRepositoryUrl
         URI geUrl
         boolean geAllowUntrustedServer
         String gePluginVersion
         String ccudPluginVersion
-        URI gradlePluginRepositoryUrl
 
         List<String> toSysProps() {
             def jvmArgs = []
+            if (gradlePluginRepositoryUrl) {
+                jvmArgs << "-DteamCityBuildScanPlugin.gradle.plugin-repository.url=$gradlePluginRepositoryUrl".toString()
+            }
             if (geUrl) {
                 jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.url=$geUrl".toString()
             }
@@ -342,14 +345,14 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
             if (ccudPluginVersion) {
                 jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
             }
-            if (gradlePluginRepositoryUrl) {
-                jvmArgs << "-DteamCityBuildScanPlugin.gradle.plugin-repository.url=$gradlePluginRepositoryUrl".toString()
-            }
             jvmArgs
         }
 
         Map<String, String> toEnvVars() {
             Map<String, String> envVars = [:]
+            if (gradlePluginRepositoryUrl) {
+                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL', gradlePluginRepositoryUrl.toString()
+            }
             if (geUrl) {
                 envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL', geUrl.toString()
             }
@@ -361,9 +364,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
             }
             if (ccudPluginVersion) {
                 envVars.put 'TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION', ccudPluginVersion
-            }
-            if (gradlePluginRepositoryUrl) {
-                envVars.put 'TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL', gradlePluginRepositoryUrl.toString()
             }
             envVars
         }
