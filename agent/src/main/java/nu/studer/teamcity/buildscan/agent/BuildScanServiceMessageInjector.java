@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.agent;
 
+import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter;
 import jetbrains.buildServer.agent.AgentLifeCycleListener;
 import jetbrains.buildServer.agent.BuildFinishedStatus;
@@ -21,8 +22,10 @@ import java.util.Map;
  * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
-@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored", "Convert2Diamond"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
+
+    private static final Logger LOG = Logger.getInstance(BuildScanServiceMessageInjector.class.getName());
 
     // TeamCity Gradle runner
 
@@ -192,9 +195,12 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         if (geExtensionVersion != null) {
             if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES)) {
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
-                extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
-                addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
-                addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+                File geExtensionJar = resolveExtensionJar(GE_EXTENSION_MAVEN_COORDINATES.withVersion(geExtensionVersion), runner);
+                if (geExtensionJar != null) {
+                    extensionJars.add(geExtensionJar);
+                    addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
+                    addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+                }
             }
         }
 
@@ -202,7 +208,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         if (ccudExtensionVersion != null) {
             if (!extensions.hasExtension(CCUD_EXTENSION_MAVEN_COORDINATES)) {
                 extensionApplicationListener.ccudExtensionApplied(ccudExtensionVersion);
-                extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
+                File ccudExtensionJar = resolveExtensionJar(CCUD_EXTENSION_MAVEN_COORDINATES.withVersion(ccudExtensionVersion), runner);
+                if (ccudExtensionJar != null) {
+                    extensionJars.add(ccudExtensionJar);
+                }
             }
         }
 
@@ -213,6 +222,46 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), name);
         FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + name, extensionJar);
         return extensionJar;
+    }
+
+    @Nullable
+    private File resolveExtensionJar(MavenCoordinates extension, BuildRunnerContext runner) {
+        File agentTempDirectory = runner.getBuild().getAgentTempDirectory();
+        File mvn = getMavenExecutable(runner);
+
+        if (!mvn.exists()) {
+            LOG.error(String.format("Failed to resolve extension jar %s. Maven executable not found at %s.", extension.getGavFormat(), mvn.getAbsolutePath()));
+            return null;
+        }
+
+        ProcessBuilder processBuilder = new ProcessBuilder(
+            mvn.getAbsolutePath(),
+            "org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy",
+            "-Dartifact=" + extension.getGavFormat(),
+            "-DoutputDirectory=" + agentTempDirectory.getAbsolutePath()
+        ).directory(mvn.getParentFile());
+
+        try {
+            processBuilder.start().waitFor();
+        } catch (Exception e) {
+            LOG.error(String.format("Failed to resolve extension jar %s.", extension.getGavFormat()), e);
+        }
+
+        File extensionJar = new File(agentTempDirectory, extension.getDefaultFilename());
+
+        if (!extensionJar.exists()) {
+            LOG.error(String.format("Failed to resolve extension jar %s. Maven did not produce the expected jar at %s.", extension.getGavFormat(), extensionJar.getAbsolutePath()));
+            return null;
+        }
+
+        return extensionJar;
+    }
+
+    @NotNull
+    private File getMavenExecutable(BuildRunnerContext runner) {
+        String mavenPath = getOptionalRunnerParam("maven.path", runner);
+        String mvnExe = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
+        return new File(mavenPath, "bin/" + mvnExe);
     }
 
     private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {

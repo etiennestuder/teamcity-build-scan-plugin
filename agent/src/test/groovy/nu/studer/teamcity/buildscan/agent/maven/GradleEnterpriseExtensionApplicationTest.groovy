@@ -32,8 +32,11 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     @TempDir
     File agentTempDir
 
-    File wrapperDir
+    @TempDir
+    File mavenPathDir
+
     File dotMvn
+    File mavenPathBin
 
     Map<String, String> configParameters
     Map<String, String> runnerParameters
@@ -43,32 +46,43 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     BuildScanServiceMessageInjector injector
 
     void setup() {
+        dotMvn = new File(testProjectDir, '.mvn')
+        dotMvn.mkdirs()
+
+        mavenPathBin = new File(mavenPathDir, 'bin')
+        mavenPathBin.mkdirs()
+
         extractTestProject()
+        bootstrapMavenPath()
 
         configParameters = new HashMap<String, String>()
         runnerParameters = new HashMap<String, String>()
 
         runnerParameters.put('teamcity.build.checkoutDir', testProjectDir.absolutePath)
         runnerParameters.put('teamcity.build.workingDir', testProjectDir.absolutePath)
+        runnerParameters.put('maven.path', mavenPathDir.absolutePath)
 
         context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         extensionApplicationListener = Mock(ExtensionApplicationListener)
         injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
     }
 
-    void extractTestProject() {
-        ['pom.xml', 'mvnw', 'mvnw.cmd'].each {
-            def file = new File(testProjectDir, it)
+    def extractTestProject() {
+        extractProject(testProjectDir, 'pom.xml', 'mvnw', 'mvnw.cmd')
+    }
+
+    def bootstrapMavenPath() {
+        extractProject(mavenPathBin, 'mvn', 'mvn.cmd')
+    }
+
+    def extractProject(File root, String... files) {
+        files.each {
+            def file = new File(root, it)
             file << getClass().getResourceAsStream("/maven-test-project/$it")
-            if (it.startsWith("mvnw")) {
-                file.setExecutable(true)
-            }
+            file.setExecutable(true)
         }
 
-        dotMvn = new File(testProjectDir, '.mvn')
-        dotMvn.mkdirs()
-
-        wrapperDir = new File(dotMvn, 'wrapper')
+        def wrapperDir = new File(root, '.mvn/wrapper')
         wrapperDir.mkdirs()
 
         ['maven-wrapper.jar'].each {
@@ -553,10 +567,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     }
 
     void setMavenVersion(String version) {
-        def mavenWrapperProperties = new File(wrapperDir, 'maven-wrapper.properties')
-        mavenWrapperProperties << """distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$version/apache-maven-$version-bin.zip
+        def wrapperProperties = """distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$version/apache-maven-$version-bin.zip
 wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar
 """
+        [testProjectDir, mavenPathBin].each {
+            def mavenWrapperPropertiesFile = new File(it, '.mvn/wrapper/maven-wrapper.properties')
+            mavenWrapperPropertiesFile << wrapperProperties
+        }
     }
 
     String run(Map<String, String> runnerParameters, String arguments = '', String goals = 'clean package') {
