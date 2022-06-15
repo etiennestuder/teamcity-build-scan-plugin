@@ -51,41 +51,45 @@ public class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Override
     public String describeConnection(@NotNull OAuthConnectionDescriptor connection) {
         Map<String, String> params = connection.getParameters();
-        String description = "";
+        String description = "Gradle Enterprise Connection Settings:\n";
 
         String geUrl = params.get(GRADLE_ENTERPRISE_URL);
         if (geUrl != null) {
-            description += String.format("Gradle Enterprise Url: %s\n", geUrl);
+            description += String.format("* Gradle Enterprise Url: %s\n", geUrl);
         }
 
         String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);
         if (allowUntrustedServer != null) {
-            description += String.format("Allow Untrusted Server: %s\n", allowUntrustedServer);
+            description += String.format("* Allow Untrusted Server: %s\n", allowUntrustedServer);
         }
 
-        String gradlePluginRepositoryUrl = params.get(GRADLE_PLUGIN_REPOSITORY_URL);
-        if (gradlePluginRepositoryUrl != null) {
-            description += String.format("Gradle Plugin Repository URL: %s\n", gradlePluginRepositoryUrl);
-        }
+        description += "\nGradle Settings:\n";
 
         String gePluginVersion = params.get(GRADLE_ENTERPRISE_PLUGIN_VERSION);
         if (gePluginVersion != null) {
-            description += String.format("Gradle Enterprise Plugin Version: %s\n", gePluginVersion);
+            description += String.format("* Gradle Enterprise Plugin Version: %s\n", gePluginVersion);
         }
 
         String ccudPluginVersion = params.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION);
         if (ccudPluginVersion != null) {
-            description += String.format("Common Custom User Data Plugin Version: %s\n", ccudPluginVersion);
+            description += String.format("* Common Custom User Data Plugin Version: %s\n", ccudPluginVersion);
         }
+
+        String gradlePluginRepositoryUrl = params.get(GRADLE_PLUGIN_REPOSITORY_URL);
+        if (gradlePluginRepositoryUrl != null) {
+            description += String.format("* Gradle Plugin Repository URL: %s\n", gradlePluginRepositoryUrl);
+        }
+
+        description += "\nMaven Settings\n";
 
         String geExtensionVersion = params.get(GRADLE_ENTERPRISE_EXTENSION_VERSION);
         if (geExtensionVersion != null) {
-            description += String.format("Gradle Enterprise Extension Version: %s\n", geExtensionVersion);
+            description += String.format("* Gradle Enterprise Extension Version: %s\n", geExtensionVersion);
         }
 
         String ccudExtensionVersion = params.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION);
         if (ccudExtensionVersion != null) {
-            description += String.format("Common Custom User Data Extension Version: %s\n", ccudExtensionVersion);
+            description += String.format("* Common Custom User Data Extension Version: %s\n", ccudExtensionVersion);
         }
 
         return description;
