@@ -13,6 +13,7 @@ initscript {
         def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
         return System.getProperty(name) ?: System.getenv(envVarName)
     }
+    def pluginRepositoryUrl = getInputParam('teamCityBuildScanPlugin.gradle.plugin-repository.url')
     def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
 
@@ -20,8 +21,11 @@ initscript {
     def atLeastGradle4 = GradleVersion.current() >= GradleVersion.version('4.0')
 
     if (gePluginVersion || ccudPluginVersion && atLeastGradle4) {
+        pluginRepositoryUrl = pluginRepositoryUrl ?: 'https://plugins.gradle.org/m2'
+        logger.quiet("Gradle Enterprise plugins resolution: $pluginRepositoryUrl")
+
         repositories {
-            maven { url 'https://plugins.gradle.org/m2' }
+            maven { url pluginRepositoryUrl }
         }
     }
 
@@ -99,6 +103,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     buildScan.server = geUrl
                     buildScan.allowUntrustedServer = geAllowUntrustedServer
                     buildScan.publishAlways()
+                    buildScan.value 'CI auto injection', 'TeamCity'
                 }
             }
 
@@ -128,6 +133,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     ext.server = geUrl
                     ext.allowUntrustedServer = geAllowUntrustedServer
                     ext.buildScan.publishAlways()
+                    ext.buildScan.value 'CI auto injection', 'TeamCity'
                 }
             }
         }
