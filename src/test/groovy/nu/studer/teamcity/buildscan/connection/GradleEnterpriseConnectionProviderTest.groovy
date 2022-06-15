@@ -26,9 +26,9 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
 
         where:
         key                                       | value
-        GRADLE_ENTERPRISE_PLUGIN_VERSION          | '3.10.1'
-        COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | '1.7'
-        GRADLE_ENTERPRISE_EXTENSION_VERSION       | '1.14.1'
+        GRADLE_ENTERPRISE_PLUGIN_VERSION          | '3.10.2'
+        COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | '1.7.2'
+        GRADLE_ENTERPRISE_EXTENSION_VERSION       | '1.14.2'
         COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | '1.10.1'
     }
 
@@ -46,13 +46,13 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         description.contains("$text: $value")
 
         where:
-        parameter                                 | value    | text
-        GRADLE_ENTERPRISE_URL                     | '3.10.1' | 'Gradle Enterprise Url'
-        GRADLE_ENTERPRISE_PLUGIN_VERSION          | '3.10.1' | 'Gradle Enterprise Plugin Version'
-        COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | '1.7'    | 'Common Custom User Data Plugin Version'
-        GRADLE_ENTERPRISE_EXTENSION_VERSION       | '1.14.1' | 'Gradle Enterprise Extension Version'
-        COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | '1.10.1' | 'Common Custom User Data Extension Version'
-        ALLOW_UNTRUSTED_SERVER                    | 'true   '| 'Allow Untrusted Server'
+        parameter                                 | value                    | text
+        GRADLE_ENTERPRISE_URL                     | 'https://ge.example.com' | 'Gradle Enterprise Url'
+        GRADLE_ENTERPRISE_PLUGIN_VERSION          | '3.10.2'                 | 'Gradle Enterprise Plugin Version'
+        COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | '1.7.2'                  | 'Common Custom User Data Plugin Version'
+        GRADLE_ENTERPRISE_EXTENSION_VERSION       | '1.14.2'                 | 'Gradle Enterprise Extension Version'
+        COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | '1.10.1'                 | 'Common Custom User Data Extension Version'
+        ALLOW_UNTRUSTED_SERVER                    | 'true'                   | 'Allow Untrusted Server'
     }
 
 }
