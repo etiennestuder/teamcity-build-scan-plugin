@@ -83,11 +83,12 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         descriptorParam                           | configParam                                            | value
         GRADLE_ENTERPRISE_URL                     | GRADLE_ENTERPRISE_URL_CONFIG_PARAM                     | 'https://ge.example.com'
         GRADLE_ENTERPRISE_ACCESS_KEY              | GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR                   | 'ge.example.com=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
-        GRADLE_ENTERPRISE_PLUGIN_VERSION          | GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM          | '3.10.1'
-        COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM    | '1.7'
-        GRADLE_ENTERPRISE_EXTENSION_VERSION       | GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM       | '1.14.1'
-        COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM | '1.10.1'
+        GRADLE_ENTERPRISE_PLUGIN_VERSION          | GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM          | '1.0.0'
+        COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM    | '1.0.0'
+        GRADLE_ENTERPRISE_EXTENSION_VERSION       | GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM       | '1.0.0'
+        COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM | '1.0.0'
         ALLOW_UNTRUSTED_SERVER                    | ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM                    | 'true'
+        GRADLE_PLUGIN_REPOSITORY_URL              | GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM              | 'https://plugins.example.com'
     }
 
     def "gets configuration from first descriptor"() {

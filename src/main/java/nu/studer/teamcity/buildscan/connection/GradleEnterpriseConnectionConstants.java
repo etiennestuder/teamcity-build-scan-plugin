@@ -1,6 +1,11 @@
 package nu.studer.teamcity.buildscan.connection;
 
 public final class GradleEnterpriseConnectionConstants {
+
+    // Constants defined by the Gradle Enterprise Connection
+    // These are used to correlate data set by the user in the connection dialog to the descriptor parameters available
+    // in the Project Feature Descriptor Parameters
+
     public static final String GRADLE_ENTERPRISE_URL = "gradleEnterpriseUrl";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY = "gradleEnterpriseAccessKey";
     public static final String GRADLE_ENTERPRISE_PLUGIN_VERSION = "gradleEnterprisePluginVersion";
@@ -8,6 +13,10 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String GRADLE_ENTERPRISE_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";
     public static final String COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
     public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
+    public static final String GRADLE_PLUGIN_REPOSITORY_URL = "gradlePluginRepositoryUrl";
+
+    // Constants defined by the BuildScanServiceMessageInjector
+    // This connection sets these values as build parameters so that they can be picked up by the BuildScanServiceMessageInjector
 
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR = "env.GRADLE_ENTERPRISE_ACCESS_KEY";
 
@@ -16,10 +25,8 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     public static final String GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
     public static final String COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
-
     public static final String ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
-
-
+    public static final String GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
     public static final String GRADLE_ENTERPRISE_CONNECTION_PROVIDER = "gradle-enterprise-connection-provider";
 
     // These getters exist so that ge-connection-dialog.jsp can read these constants as a JavaBean
@@ -50,5 +57,9 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getAllowUntrustedServer() {
         return ALLOW_UNTRUSTED_SERVER;
+    }
+
+    public String getGradlePluginRepositoryUrl() {
+        return GRADLE_PLUGIN_REPOSITORY_URL;
     }
 }

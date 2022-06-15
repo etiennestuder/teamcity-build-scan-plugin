@@ -31,12 +31,14 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
         if (descriptor != null) {
             Map<String, String> descriptorParameters = descriptor.getParameters();
 
+            // descriptorParameters can contain null values, but TeamCity handles these null parameters as if they were not set
             params.put(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_URL));
             params.put(GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_PLUGIN_VERSION));
             params.put(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION));
             params.put(GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_EXTENSION_VERSION));
             params.put(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION));
             params.put(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, descriptorParameters.get(ALLOW_UNTRUSTED_SERVER));
+            params.put(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
 
             params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
         }
