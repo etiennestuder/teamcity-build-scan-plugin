@@ -197,11 +197,11 @@ class BaseInitScriptTest extends Specification {
     }
 
     BuildResult run(BuildConfig config) {
-        DefaultGradleRunner testKitRunner = new DefaultGradleRunner().withProjectDir(testProjectDir)
+        DefaultGradleRunner testKitRunner = new DefaultGradleRunner()
+            .withProjectDir(testProjectDir)
             .withGradleVersion(config.gradleVersion.version)
             .forwardOutput() as DefaultGradleRunner
 
-        // Provide BuildScanServiceMessageInjector with Gradle User Home for testkit
         File gradleUserHome = testKitRunner.testKitDirProvider.dir
         def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
 

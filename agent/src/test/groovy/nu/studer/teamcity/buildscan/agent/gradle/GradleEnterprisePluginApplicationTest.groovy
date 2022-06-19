@@ -237,7 +237,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, enableCommandLineRunner: false)
         def result = run(new BuildConfig(
             gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
             tcPluginConfig: gePluginConfig,
@@ -248,7 +248,9 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         where:
-        // We can't test the injector on old versions of Gradle, which means it's pointless to test command-line jobs
+        // we can only test the injector on versions of Gradle where TestKit accepts env vars since
+        // the init script name passed as an env var from the injector to the script is not available
+        // in the test context and thus cannot be passed as a sys prop the init script instead
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
     }
 
@@ -271,7 +273,9 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        // We can't test the injector on old versions of Gradle, which means it's pointless to test command-line jobs
+        // we can only test the injector on versions of Gradle where TestKit accepts env vars since
+        // the init script name passed as an env var from the injector to the script is not available
+        // in the test context and thus cannot be passed as a sys prop the init script instead
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
     }
 
