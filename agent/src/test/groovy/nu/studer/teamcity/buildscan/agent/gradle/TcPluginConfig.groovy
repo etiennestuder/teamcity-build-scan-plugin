@@ -50,9 +50,6 @@ class TcPluginConfig {
         if (ccudPluginVersion) {
             jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
         }
-        if (enableCommandLineRunner) {
-            jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
-        }
         jvmArgs
     }
 
