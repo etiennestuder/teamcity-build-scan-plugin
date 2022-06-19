@@ -14,12 +14,12 @@ import static org.junit.Assume.assumeTrue
 class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     static final List<JdkCompatibleMavenVersion> SUPPORTED_MAVEN_VERSIONS = [
-//        new JdkCompatibleMavenVersion('3.5.0', 7, 11),
-//        new JdkCompatibleMavenVersion('3.5.4', 7, 11),
-//        new JdkCompatibleMavenVersion('3.6.0', 7, 11),
-//        new JdkCompatibleMavenVersion('3.6.3', 7, 11),
-//        new JdkCompatibleMavenVersion('3.8.1', 7, 11),
-new JdkCompatibleMavenVersion('3.8.5', 7, 11)
+        new JdkCompatibleMavenVersion('3.5.0', 7, 11),
+        new JdkCompatibleMavenVersion('3.5.4', 7, 11),
+        new JdkCompatibleMavenVersion('3.6.0', 7, 11),
+        new JdkCompatibleMavenVersion('3.6.3', 7, 11),
+        new JdkCompatibleMavenVersion('3.8.1', 7, 11),
+        new JdkCompatibleMavenVersion('3.8.5', 7, 11)
     ]
 
     static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
