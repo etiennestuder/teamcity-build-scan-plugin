@@ -144,9 +144,9 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private File getInitScriptInAgentTempDir(BuildRunnerContext runner) {
-        File initScript = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_INIT_GRADLE);
-        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, initScript);
-        return initScript;
+        File targetInitScript = new File(runner.getBuild().getAgentTempDirectory(), BUILD_SCAN_INIT_GRADLE);
+        FileUtil.copyResource(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, targetInitScript);
+        return targetInitScript;
     }
 
     private File copyInitScriptToGradleUserHome(String activationId) {
