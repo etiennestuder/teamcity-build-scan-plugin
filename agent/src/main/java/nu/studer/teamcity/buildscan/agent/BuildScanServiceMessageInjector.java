@@ -151,10 +151,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private File copyInitScriptToGradleUserHome(String activationId) {
         File targetInitScript = new File(getInitScriptsDir(), BUILD_SCAN_INIT + "-" + activationId + ".gradle");
-        if (!targetInitScript.exists()) {
-            targetInitScript.getParentFile().mkdirs();
-            FileUtil.copyResource(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, targetInitScript);
-        }
+        targetInitScript.getParentFile().mkdirs();
+        FileUtil.copyResource(BuildScanServiceMessageInjector.class, "/" + BUILD_SCAN_INIT_GRADLE, targetInitScript);
         return targetInitScript;
     }
 
