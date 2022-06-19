@@ -13,6 +13,13 @@ initscript {
         def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
         return System.getProperty(name) ?: System.getenv(envVarName)
     }
+
+    def requestedInitScriptName = getInputParam('teamCityBuildScanPlugin.init-script-name')
+    def initScriptName = buildscript.sourceFile.name
+    if (requestedInitScriptName != initScriptName) {
+        return
+    }
+
     def pluginRepositoryUrl = getInputParam('teamCityBuildScanPlugin.gradle.plugin-repository.url')
     def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
     def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
@@ -61,6 +68,14 @@ def getInputParam = { String name ->
     def envVarName = name.toUpperCase().replace('.', '_').replace('-', '_')
     return System.getProperty(name) ?: System.getenv(envVarName)
 }
+
+def requestedInitScriptName = getInputParam('teamCityBuildScanPlugin.init-script-name')
+def initScriptName = buildscript.sourceFile.name
+if (requestedInitScriptName != initScriptName) {
+    logger.quiet("Ignoring '${initScriptName}' as requested name '${requestedInitScriptName}' does not match")
+    return
+}
+
 def geUrl = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.url')
 def geAllowUntrustedServer = Boolean.parseBoolean(getInputParam('teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server'))
 def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')

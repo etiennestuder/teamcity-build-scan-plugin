@@ -1,0 +1,1 @@
+- 'build-scan-init' script is safer to copy into Gradle User Home, as it has no effect without corresponding Env Var to activate.

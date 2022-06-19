@@ -3,8 +3,13 @@ package nu.studer.teamcity.buildscan.agent.gradle
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
+import jetbrains.buildServer.agent.AgentLifeCycleListener
+import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.FileUtil
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
+import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import nu.studer.teamcity.buildscan.agent.TestBuildScanServiceMessageInjector
+import nu.studer.teamcity.buildscan.agent.TestContext
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.internal.DefaultGradleRunner
@@ -63,6 +68,9 @@ class BaseInitScriptTest extends Specification {
 
     @TempDir
     File testProjectDir
+
+    @TempDir
+    File agentTempDir
 
     @AutoCleanup
     def mockScansServer = GroovyEmbeddedApp.of {
@@ -180,29 +188,45 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        createRunner(gradleVersion, jvmArgs, envVars).build()
-    }
+    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), List<String> additionalJvmArgs = []) {
 
-    BuildResult runAndFail(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        createRunner(gradleVersion, jvmArgs, envVars).buildAndFail()
-    }
-
-    GradleRunner createRunner(GradleVersion gradleVersion = GradleVersion.current(), List<String> jvmArgs = [], Map<String, String> envVars = [:]) {
-        def args = ['tasks', '-I', initScriptFile.absolutePath]
-
-        def runner = ((DefaultGradleRunner) GradleRunner.create())
-            .withJvmArguments(jvmArgs)
+        DefaultGradleRunner testKitRunner = new DefaultGradleRunner().withProjectDir(testProjectDir)
             .withGradleVersion(gradleVersion.version)
-            .withProjectDir(testProjectDir)
-            .withArguments(args)
-            .forwardOutput()
+            .forwardOutput() as DefaultGradleRunner
 
-        if (envVars) {
-            runner.withEnvironment(envVars)
+        // Provide BuildScanServiceMessageInjector with Gradle User Home for testkit
+        File gradleUserHome = testKitRunner.testKitDirProvider.dir
+        def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
+
+        TestContext context = new TestContext(tcPluginConfig.runner, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
+        injector.beforeRunnerStart(context)
+
+        def args = ['tasks']
+        def gradleArgs = context.runnerParameters.get("ui.gradleRunner.additional.gradle.cmd.params")
+        if (gradleArgs) {
+            args += (gradleArgs.split(' ') as List<String>)
+        }
+        testKitRunner.withArguments(args)
+
+        def testKitSupportsEnvVars = gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
+        if (testKitSupportsEnvVars) {
+            testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
+            testKitRunner.withJvmArguments(additionalJvmArgs)
+        } else {
+            testKitRunner.withJvmArguments(tcPluginConfig.toSysProps() + additionalJvmArgs)
         }
 
-        runner
+        try {
+            return testKitRunner.build()
+        } finally {
+            // Run the finish hook, and check that any file was deleted from Gradle User Home
+            injector.runnerFinished(context, null)
+
+            def initScriptsDir = new File(gradleUserHome, 'init.d')
+            if (initScriptsDir.exists()) {
+                assert initScriptsDir.list() as List<String> == []
+            }
+        }
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
