@@ -204,7 +204,7 @@ class BaseInitScriptTest extends Specification {
         File gradleUserHome = testKitRunner.testKitDirProvider.dir
         def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
 
-        TestBuildRunnerContext context = new TestBuildRunnerContext(config.runType, agentTempDir, config.tcPluginConfig.toConfigProperties(), [:])
+        TestBuildRunnerContext context = new TestBuildRunnerContext(config.runType, agentTempDir, config.tcPluginConfig.toConfigParameters(), [:])
         injector.beforeRunnerStart(context)
 
         def args = ['tasks']
@@ -219,7 +219,7 @@ class BaseInitScriptTest extends Specification {
             testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
             testKitRunner.withJvmArguments(config.additionalJvmArgs)
         } else {
-            testKitRunner.withJvmArguments(config.tcPluginConfig.toSysProps() + config.additionalJvmArgs)
+            testKitRunner.withJvmArguments(config.tcPluginConfig.toSystemProperties() + config.additionalJvmArgs)
         }
 
         try {

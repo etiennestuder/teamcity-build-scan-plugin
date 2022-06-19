@@ -9,7 +9,8 @@ class TcPluginConfig {
     String ccudPluginVersion
     boolean enableCommandLineRunner
 
-    Map<String, String> toConfigProperties() {
+    // configuration params as they would be set by the user in the TeamCity configuration
+    Map<String, String> toConfigParameters() {
         Map<String, String> configProps = [:]
         if (gradlePluginRepositoryUrl) {
             configProps.put 'buildScanPlugin.gradle.plugin-repository.url', gradlePluginRepositoryUrl.toString()
@@ -32,9 +33,9 @@ class TcPluginConfig {
         configProps
     }
 
-    // Generate sysProps for the init-script directly, for Gradle versions where TestKit doesn't support env vars
-    List<String> toSysProps() {
-        def jvmArgs = ["-DteamCityBuildScanPlugin.init-script-name=build-scan-init.gradle"]
+    // system properties as they are passed from the TC plugin to the init-script (for Gradle versions where TestKit doesn't support env vars)
+    List<String> toSystemProperties() {
+        List<String> jvmArgs = ["-DteamCityBuildScanPlugin.init-script-name=build-scan-init.gradle"]
         if (gradlePluginRepositoryUrl) {
             jvmArgs << "-DteamCityBuildScanPlugin.gradle.plugin-repository.url=$gradlePluginRepositoryUrl".toString()
         }
