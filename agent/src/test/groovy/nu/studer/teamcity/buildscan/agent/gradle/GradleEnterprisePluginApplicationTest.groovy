@@ -258,7 +258,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, enableCommandLineRunner: true)
         def result = run(new BuildConfig(
             gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
-            TcPluginConfig: gePluginConfig,
+            tcPluginConfig: gePluginConfig,
             runType: 'simpleRunner'))
 
         then:
