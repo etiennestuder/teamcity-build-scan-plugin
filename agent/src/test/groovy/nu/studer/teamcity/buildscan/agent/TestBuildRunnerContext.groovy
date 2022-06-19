@@ -21,7 +21,7 @@ import jetbrains.buildServer.vcs.VcsRoot
 import jetbrains.buildServer.vcs.VcsRootEntry
 import org.jetbrains.annotations.NotNull
 
-class TestContext implements BuildRunnerContext {
+class TestBuildRunnerContext implements BuildRunnerContext {
 
     private final String runType
     private final AgentRunningBuild agentRunningBuild
@@ -29,7 +29,7 @@ class TestContext implements BuildRunnerContext {
     private final Map<String, String> configParameters
     private final Map<String, String> runnerParameters
 
-    TestContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
+    TestBuildRunnerContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
         this.runType = runType
         this.agentRunningBuild = new TestAgentRunningBuild(agentTempDirectory)
         this.buildParameters = new TestBuildParametersMap()

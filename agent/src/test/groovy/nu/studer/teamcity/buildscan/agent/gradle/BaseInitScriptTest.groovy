@@ -8,10 +8,9 @@ import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.FileUtil
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
 import nu.studer.teamcity.buildscan.agent.TestBuildScanServiceMessageInjector
-import nu.studer.teamcity.buildscan.agent.TestContext
 import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.internal.DefaultGradleRunner
 import org.gradle.util.GradleVersion
 import ratpack.groovy.test.embed.GroovyEmbeddedApp
@@ -198,7 +197,7 @@ class BaseInitScriptTest extends Specification {
         File gradleUserHome = testKitRunner.testKitDirProvider.dir
         def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
 
-        TestContext context = new TestContext(tcPluginConfig.runner, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
+        TestBuildRunnerContext context = new TestBuildRunnerContext(tcPluginConfig.runner, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
         injector.beforeRunnerStart(context)
 
         def args = ['tasks']

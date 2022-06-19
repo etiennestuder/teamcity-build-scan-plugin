@@ -5,7 +5,7 @@ import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
-import nu.studer.teamcity.buildscan.agent.TestContext
+import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -51,7 +51,7 @@ new JdkCompatibleMavenVersion('3.8.5', 7, 11)
         runnerParameters.put('teamcity.build.checkoutDir', testProjectDir.absolutePath)
         runnerParameters.put('teamcity.build.workingDir', testProjectDir.absolutePath)
 
-        context = new TestContext("Maven2", agentTempDir, configParameters, runnerParameters)
+        context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         extensionApplicationListener = Mock(ExtensionApplicationListener)
         injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
     }
