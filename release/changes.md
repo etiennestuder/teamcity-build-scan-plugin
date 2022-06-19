@@ -1,1 +1,1 @@
-- 'build-scan-init' script is safer to copy into Gradle User Home, as it has no effect without corresponding Env Var to activate.
+- Ensures Gradle init script copied to Gradle User Home has no side effects on Gradle builds that did not excplicitly enabled automatic capturing of a Build Scan.
