@@ -158,12 +158,11 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private void removeInitScriptFromGradleUserHome(BuildRunnerContext runner) {
         String initScriptName = runner.getBuildParameters().getEnvironmentVariables().get(INIT_SCRIPT_NAME_VAR);
-        if (initScriptName == null) {
-            return;
-        }
-        File targetInitScript = new File(getInitScriptsDir(), initScriptName);
-        if (targetInitScript.exists()) {
-            FileUtil.delete(targetInitScript);
+        if (initScriptName != null && !initScriptName.equals(BUILD_SCAN_INIT_GRADLE)) {
+            File targetInitScript = new File(getInitScriptsDir(), initScriptName);
+            if (targetInitScript.exists()) {
+                FileUtil.delete(targetInitScript);
+            }
         }
     }
 
