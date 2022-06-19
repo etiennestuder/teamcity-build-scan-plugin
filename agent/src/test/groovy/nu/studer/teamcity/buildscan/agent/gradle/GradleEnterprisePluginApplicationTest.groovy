@@ -215,7 +215,10 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: URI.create('https://ge-server.invalid'), gePluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig, "gradle-runner", ["-Dgradle.enterprise.url=$mockScansServer.address".toString()])
+        def result = run(new BuildConfig(
+            gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
+            tcPluginConfig: gePluginConfig,
+            additionalJvmArgs: ["-Dgradle.enterprise.url=$mockScansServer.address".toString()]))
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
@@ -234,7 +237,10 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
 
         when:
         def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig, "simpleRunner")
+        def result = run(new BuildConfig(
+            gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
+            tcPluginConfig: gePluginConfig,
+            runType: 'simpleRunner'))
 
         then:
         outputMissesGePluginApplicationViaInitScript(result)
@@ -249,9 +255,11 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
-        gePluginConfig.enableCommandLineRunner = true
-        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig, "simpleRunner")
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION, enableCommandLineRunner: true)
+        def result = run(new BuildConfig(
+            gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
+            TcPluginConfig: gePluginConfig,
+            runType: 'simpleRunner'))
 
         then:
         outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)

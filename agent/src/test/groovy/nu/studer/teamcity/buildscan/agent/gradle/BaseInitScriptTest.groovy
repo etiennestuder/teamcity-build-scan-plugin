@@ -187,16 +187,24 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), String runType = "gradle-runner", List<String> additionalJvmArgs = []) {
+    BuildResult run(GradleVersion gradleVersion) {
+        run(new BuildConfig(gradleVersion: gradleVersion))
+    }
+
+    BuildResult run(GradleVersion gradleVersion, TcPluginConfig tcPluginConfig) {
+        run(new BuildConfig(gradleVersion: gradleVersion, tcPluginConfig: tcPluginConfig))
+    }
+
+    BuildResult run(BuildConfig config) {
         DefaultGradleRunner testKitRunner = new DefaultGradleRunner().withProjectDir(testProjectDir)
-            .withGradleVersion(gradleVersion.version)
+            .withGradleVersion(config.gradleVersion.version)
             .forwardOutput() as DefaultGradleRunner
 
         // Provide BuildScanServiceMessageInjector with Gradle User Home for testkit
         File gradleUserHome = testKitRunner.testKitDirProvider.dir
         def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
 
-        TestBuildRunnerContext context = new TestBuildRunnerContext(runType, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
+        TestBuildRunnerContext context = new TestBuildRunnerContext(config.runType, agentTempDir, config.tcPluginConfig.toConfigProperties(), [:])
         injector.beforeRunnerStart(context)
 
         def args = ['tasks']
@@ -206,12 +214,12 @@ class BaseInitScriptTest extends Specification {
         }
         testKitRunner.withArguments(args)
 
-        def testKitSupportsEnvVars = gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
+        def testKitSupportsEnvVars = config.gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
         if (testKitSupportsEnvVars) {
             testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
-            testKitRunner.withJvmArguments(additionalJvmArgs)
+            testKitRunner.withJvmArguments(config.additionalJvmArgs)
         } else {
-            testKitRunner.withJvmArguments(tcPluginConfig.toSysProps() + additionalJvmArgs)
+            testKitRunner.withJvmArguments(config.tcPluginConfig.toSysProps() + config.additionalJvmArgs)
         }
 
         try {
@@ -237,6 +245,14 @@ class BaseInitScriptTest extends Specification {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']"
         assert result.output.contains(serviceMsg)
         assert 1 == result.output.count(serviceMsg)
+    }
+
+    static final class BuildConfig {
+
+        GradleVersion gradleVersion = GradleVersion.current()
+        TcPluginConfig tcPluginConfig = new TcPluginConfig()
+        String runType = "gradle-runner"
+        List<String> additionalJvmArgs = []
     }
 
     static final class JdkCompatibleGradleVersion {
