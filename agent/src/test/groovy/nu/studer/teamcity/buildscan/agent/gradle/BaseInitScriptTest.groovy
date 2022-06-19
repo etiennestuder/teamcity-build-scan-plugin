@@ -8,6 +8,7 @@ import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.FileUtil
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import nu.studer.teamcity.buildscan.agent.TcPluginConfig
 import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
 import nu.studer.teamcity.buildscan.agent.TestBuildScanServiceMessageInjector
 import org.gradle.testkit.runner.BuildResult
@@ -219,7 +220,7 @@ class BaseInitScriptTest extends Specification {
             testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
             testKitRunner.withJvmArguments(config.additionalJvmArgs)
         } else {
-            testKitRunner.withJvmArguments(config.tcPluginConfig.toSystemProperties() + config.additionalJvmArgs)
+            testKitRunner.withJvmArguments(config.tcPluginConfig.toSystemPropertiesForGradleInvocation() + config.additionalJvmArgs)
         }
 
         try {

@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.agent.gradle
 
+import nu.studer.teamcity.buildscan.agent.TcPluginConfig
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.util.GradleVersion
 
