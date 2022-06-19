@@ -5,6 +5,7 @@ import jetbrains.buildServer.util.EventDispatcher
 import org.jetbrains.annotations.NotNull
 
 class TestBuildScanServiceMessageInjector extends BuildScanServiceMessageInjector {
+
     private final File gradleUserHome
 
     TestBuildScanServiceMessageInjector(File gradleUserHome, @NotNull EventDispatcher<AgentLifeCycleListener> eventDispatcher, @NotNull ExtensionApplicationListener extensionApplicationListener) {
@@ -17,4 +18,5 @@ class TestBuildScanServiceMessageInjector extends BuildScanServiceMessageInjecto
     protected File getGradleUserHome() {
         return gradleUserHome
     }
+
 }

@@ -25,31 +25,16 @@ class TestContext implements BuildRunnerContext {
 
     private final String runType
     private final AgentRunningBuild agentRunningBuild
-    private final BuildParametersMap buildParametersMap
+    private final BuildParametersMap buildParameters
     private final Map<String, String> configParameters
     private final Map<String, String> runnerParameters
 
     TestContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
         this.runType = runType
-        this.agentRunningBuild = new TestAgentBuild(agentTempDirectory)
-        this.buildParametersMap = new TestBuildParametersMap()
+        this.agentRunningBuild = new TestAgentRunningBuild(agentTempDirectory)
+        this.buildParameters = new TestBuildParametersMap()
         this.configParameters = configParameters
         this.runnerParameters = runnerParameters
-    }
-
-    @Override
-    String getId() {
-        return null
-    }
-
-    @Override
-    AgentRunningBuild getBuild() {
-        return agentRunningBuild
-    }
-
-    @Override
-    File getWorkingDirectory() {
-        return null
     }
 
     @Override
@@ -58,13 +43,13 @@ class TestContext implements BuildRunnerContext {
     }
 
     @Override
-    String getName() {
-        return null
+    AgentRunningBuild getBuild() {
+        return agentRunningBuild
     }
 
     @Override
     BuildParametersMap getBuildParameters() {
-        return buildParametersMap
+        return buildParameters
     }
 
     @Override
@@ -79,12 +64,12 @@ class TestContext implements BuildRunnerContext {
 
     @Override
     void addSystemProperty(@NotNull String key, @NotNull String value) {
-        buildParametersMap.systemProperties.put(key, value)
+        buildParameters.systemProperties.put(key, value)
     }
 
     @Override
     void addEnvironmentVariable(@NotNull String key, @NotNull String value) {
-        buildParametersMap.environmentVariables.put(key, value)
+        buildParameters.environmentVariables.put(key, value)
     }
 
     @Override
@@ -122,13 +107,25 @@ class TestContext implements BuildRunnerContext {
         return null
     }
 
-    private class TestBuildParametersMap implements BuildParametersMap {
-        private Map<String,String> envVars = [:]
-        private Map<String,String> sysProps = [:]
-        @Override
-        Map<String, String> getEnvironmentVariables() {
-            return envVars
-        }
+    @Override
+    String getId() {
+        return null
+    }
+
+    @Override
+    String getName() {
+        return null
+    }
+
+    @Override
+    File getWorkingDirectory() {
+        return null
+    }
+
+    private static final class TestBuildParametersMap implements BuildParametersMap {
+
+        private final Map<String, String> sysProps = [:]
+        private final Map<String, String> envVars = [:]
 
         @Override
         Map<String, String> getSystemProperties() {
@@ -136,17 +133,28 @@ class TestContext implements BuildRunnerContext {
         }
 
         @Override
+        Map<String, String> getEnvironmentVariables() {
+            return envVars
+        }
+
+        @Override
         Map<String, String> getAllParameters() {
             return null
         }
+
     }
 
-    private class TestAgentBuild implements AgentRunningBuild {
+    private static final class TestAgentRunningBuild implements AgentRunningBuild {
 
         private final File agentTempDirectory
 
-        TestAgentBuild(File agentTempDirectory) {
+        TestAgentRunningBuild(File agentTempDirectory) {
             this.agentTempDirectory = agentTempDirectory
+        }
+
+        @Override
+        File getAgentTempDirectory() {
+            return agentTempDirectory
         }
 
         @Override
@@ -375,11 +383,6 @@ class TestContext implements BuildRunnerContext {
         }
 
         @Override
-        File getAgentTempDirectory() {
-            return agentTempDirectory
-        }
-
-        @Override
         BuildProgressLogger getBuildLogger() {
             return null
         }
@@ -413,5 +416,7 @@ class TestContext implements BuildRunnerContext {
         String describe(boolean verbose) {
             return null
         }
+
     }
+
 }

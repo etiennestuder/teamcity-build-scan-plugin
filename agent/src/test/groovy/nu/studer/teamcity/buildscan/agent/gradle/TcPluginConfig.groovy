@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.agent.gradle
 
-final class TcPluginConfig {
+class TcPluginConfig {
+
     URI gradlePluginRepositoryUrl
     URI geUrl
     boolean geAllowUntrustedServer
@@ -55,4 +56,5 @@ final class TcPluginConfig {
         }
         jvmArgs
     }
+
 }
