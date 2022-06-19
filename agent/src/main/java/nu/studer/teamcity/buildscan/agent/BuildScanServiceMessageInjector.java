@@ -98,10 +98,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
         File initScript = getInitScriptInAgentTempDir(runner);
+        addGradleInitScriptEnvVars(initScript, runner);
+
         String initScriptParam = "--init-script " + initScript.getAbsolutePath();
         addGradleCmdParam(initScriptParam, runner);
-
-        addGradleInitScriptEnvVars(initScript, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
     }
@@ -115,12 +115,12 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private void instrumentCommandLineRunner(@NotNull BuildRunnerContext runner) {
-        // Instrument all Gradle builds
+        // instrument all Gradle builds
         String activationId = String.valueOf(System.currentTimeMillis());
         File initScript = copyInitScriptToGradleUserHome(activationId);
         addGradleInitScriptEnvVars(initScript, runner);
 
-        // Instrument all Maven builds
+        // instrument all Maven builds
         String invocationArgs = getMavenInvocationArgs(runner);
         appendEnvVar("MAVEN_OPTS", invocationArgs, runner);
 
@@ -132,15 +132,15 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         removeInitScriptFromGradleUserHome(runner);
     }
 
-    private void addGradleInitScriptEnvVars(@NotNull File targetInitScript, @NotNull BuildRunnerContext runner) {
+    private void addGradleInitScriptEnvVars(@NotNull File initScript, @NotNull BuildRunnerContext runner) {
         addEnvVarIfSet(GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM, GRADLE_PLUGIN_REPOSITORY_VAR, runner);
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
         addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
-        // The init-script is inactive by default. Supply the script name env var to activate it.
-        addEnvVar(INIT_SCRIPT_NAME_VAR, targetInitScript.getName(), runner);
+        // the init-script is inactive by default, supply the script name env var to activate it
+        addEnvVar(INIT_SCRIPT_NAME_VAR, initScript.getName(), runner);
     }
 
     private File getInitScriptInAgentTempDir(BuildRunnerContext runner) {
@@ -178,7 +178,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     protected File getGradleUserHome() {
         String gradleUserHomeOverride = System.getProperty("gradle.user.home", System.getenv("GRADLE_USER_HOME"));
         return gradleUserHomeOverride == null
-            ? new File(System.getProperty("user.home"), ".gradle")
+            ? new File(System.getProperty("user.home", System.getenv("USER_HOME")), ".gradle")
             : new File(gradleUserHomeOverride);
     }
 
