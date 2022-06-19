@@ -7,7 +7,6 @@ class TcPluginConfig {
     boolean geAllowUntrustedServer
     String gePluginVersion
     String ccudPluginVersion
-    String runner = "gradle-runner"
     boolean enableCommandLineRunner
 
     Map<String, String> toConfigProperties() {

@@ -187,8 +187,7 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), List<String> additionalJvmArgs = []) {
-
+    BuildResult run(GradleVersion gradleVersion = GradleVersion.current(), TcPluginConfig tcPluginConfig = new TcPluginConfig(), String runType = "gradle-runner", List<String> additionalJvmArgs = []) {
         DefaultGradleRunner testKitRunner = new DefaultGradleRunner().withProjectDir(testProjectDir)
             .withGradleVersion(gradleVersion.version)
             .forwardOutput() as DefaultGradleRunner
@@ -197,7 +196,7 @@ class BaseInitScriptTest extends Specification {
         File gradleUserHome = testKitRunner.testKitDirProvider.dir
         def injector = new TestBuildScanServiceMessageInjector(gradleUserHome, EventDispatcher.create(AgentLifeCycleListener.class), Mock(ExtensionApplicationListener))
 
-        TestBuildRunnerContext context = new TestBuildRunnerContext(tcPluginConfig.runner, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
+        TestBuildRunnerContext context = new TestBuildRunnerContext(runType, agentTempDir, tcPluginConfig.toConfigProperties(), [:])
         injector.beforeRunnerStart(context)
 
         def args = ['tasks']
