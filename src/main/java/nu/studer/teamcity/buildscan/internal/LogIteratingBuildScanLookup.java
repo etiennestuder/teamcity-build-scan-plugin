@@ -24,7 +24,7 @@ public final class LogIteratingBuildScanLookup implements BuildScanLookup {
     @NotNull
     public BuildScanReferences getBuildScansForBuild(@NotNull SBuild build) {
         // check if log parsing is explicitly enabled via configuration parameter
-        String logParsing = build.getParametersProvider().get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING);
+        String logParsing = build.getParametersProvider().get(TeamCityConfiguration.LOG_PARSING_CONFIG_PARAM);
         boolean iterateLog = Boolean.parseBoolean(logParsing);
         if (!iterateLog) {
             LOGGER.debug(String.format("Log parsing not enabled. Not parsing build log for build scan urls of build id: %s", build.getBuildId()));

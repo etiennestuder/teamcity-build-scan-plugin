@@ -66,7 +66,7 @@ public final class SlackIntegration implements ExternalIntegration {
 
     @Nullable
     private static URL getWebhookURL(@NotNull TeamCityConfiguration teamCityConfiguration) {
-        String webhookUrlString = teamCityConfiguration.params.get(TeamCityConfiguration.BUILD_SCAN_SLACK_WEBHOOK_URL);
+        String webhookUrlString = teamCityConfiguration.params.get(TeamCityConfiguration.SLACK_WEBHOOK_URL_CONFIG_PARAM);
         if (webhookUrlString == null) {
             return null;
         }

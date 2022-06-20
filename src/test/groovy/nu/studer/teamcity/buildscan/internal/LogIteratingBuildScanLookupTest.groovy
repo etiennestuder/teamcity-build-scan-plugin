@@ -17,7 +17,7 @@ class LogIteratingBuildScanLookupTest extends Specification {
 
         and:
         ParametersProvider parametersProvider = Stub(ParametersProvider) {
-            get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'true'
+            get(TeamCityConfiguration.LOG_PARSING_CONFIG_PARAM) >> 'true'
         }
 
         BuildLog buildLog = Stub(BuildLog)
@@ -47,7 +47,7 @@ class LogIteratingBuildScanLookupTest extends Specification {
 
         and:
         ParametersProvider parametersProvider = Stub(ParametersProvider) {
-            get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'dummy'
+            get(TeamCityConfiguration.LOG_PARSING_CONFIG_PARAM) >> 'dummy'
         }
 
         BuildLog buildLog = Stub(BuildLog)
@@ -134,7 +134,7 @@ class LogIteratingBuildScanLookupTest extends Specification {
 
         and:
         ParametersProvider parametersProvider = Stub(ParametersProvider) {
-            get(TeamCityConfiguration.BUILD_SCAN_LOG_PARSING) >> 'true'
+            get(TeamCityConfiguration.LOG_PARSING_CONFIG_PARAM) >> 'true'
         }
 
         BuildLog buildLog = Stub(BuildLog)
