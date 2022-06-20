@@ -40,26 +40,4 @@ class TcPluginConfig {
         }
         configProps
     }
-
-    // system properties as they are passed from the TC plugin to the init-script (for Gradle versions where TestKit doesn't support env vars)
-    List<String> toSystemPropertiesForGradleInvocation() {
-        List<String> jvmArgs = ["-DteamCityBuildScanPlugin.init-script-name=build-scan-init.gradle"]
-        if (gradlePluginRepositoryUrl) {
-            jvmArgs << "-DteamCityBuildScanPlugin.gradle.plugin-repository.url=$gradlePluginRepositoryUrl".toString()
-        }
-        if (geUrl) {
-            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.url=$geUrl".toString()
-        }
-        if (geAllowUntrustedServer) {
-            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server=true"
-        }
-        if (gePluginVersion) {
-            jvmArgs << "-DteamCityBuildScanPlugin.gradle-enterprise.plugin.version=$gePluginVersion".toString()
-        }
-        if (ccudPluginVersion) {
-            jvmArgs << "-DteamCityBuildScanPlugin.ccud.plugin.version=$ccudPluginVersion".toString()
-        }
-        jvmArgs
-    }
-
 }

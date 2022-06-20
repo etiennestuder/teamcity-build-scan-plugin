@@ -248,10 +248,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         where:
-        // we can only test the injector on versions of Gradle where TestKit accepts env vars since
-        // the init script name passed as an env var from the injector to the script is not available
-        // in the test context and thus cannot be passed as a sys prop the init script instead
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     def "applies GE plugin via init script for command-line runner (#jdkCompatibleGradleVersion)"() {
@@ -273,10 +270,7 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        // we can only test the injector on versions of Gradle where TestKit accepts env vars since
-        // the init script name passed as an env var from the injector to the script is not available
-        // in the test context and thus cannot be passed as a sys prop the init script instead
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_5_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
     void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
