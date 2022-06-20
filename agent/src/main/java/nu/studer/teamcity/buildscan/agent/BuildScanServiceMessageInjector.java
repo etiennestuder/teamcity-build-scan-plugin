@@ -1,9 +1,6 @@
 package nu.studer.teamcity.buildscan.agent;
 
-import jetbrains.buildServer.agent.AgentLifeCycleAdapter;
-import jetbrains.buildServer.agent.AgentLifeCycleListener;
-import jetbrains.buildServer.agent.BuildFinishedStatus;
-import jetbrains.buildServer.agent.BuildRunnerContext;
+import jetbrains.buildServer.agent.*;
 import jetbrains.buildServer.util.EventDispatcher;
 import jetbrains.buildServer.util.FileUtil;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -96,6 +94,16 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
     }
 
+    @Override
+    public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
+        removeInitScriptFromGradleUserHome(runner);
+    }
+
+    @Override
+    public void agentStarted(@NotNull BuildAgent agent) {
+        purgeInitScriptsFromGradleUserHome();
+    }
+
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {
         File initScript = getInitScriptInAgentTempDir(runner);
         addGradleInitScriptEnvVars(initScript, runner);
@@ -125,11 +133,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         appendEnvVar("MAVEN_OPTS", invocationArgs, runner);
 
         addEnvVar(GRADLE_BUILDSCAN_TEAMCITY_PLUGIN, "1", runner);
-    }
-
-    @Override
-    public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
-        removeInitScriptFromGradleUserHome(runner);
     }
 
     private void addGradleInitScriptEnvVars(@NotNull File initScript, @NotNull BuildRunnerContext runner) {
@@ -163,6 +166,13 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             if (targetInitScript.exists()) {
                 FileUtil.delete(targetInitScript);
             }
+        }
+    }
+
+    private void purgeInitScriptsFromGradleUserHome() {
+        File[] filesToDelete = getInitScriptsDir().listFiles((dir, name) -> name.startsWith(BUILD_SCAN_INIT));
+        if (filesToDelete != null) {
+            FileUtil.deleteFiles(Arrays.asList(filesToDelete));
         }
     }
 
