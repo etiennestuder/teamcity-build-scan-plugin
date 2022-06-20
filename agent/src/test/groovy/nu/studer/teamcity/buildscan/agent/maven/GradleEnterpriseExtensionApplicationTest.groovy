@@ -22,7 +22,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.8.6', 7, 11)
     ]
 
-    static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE') ?: null // Replace empty string with null
+    static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE') ?: null
     static final String GE_EXTENSION_VERSION = '1.14.2'
     static final String CCUD_EXTENSION_VERSION = '1.10.1'
 
