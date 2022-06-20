@@ -14,7 +14,7 @@ initscript {
         return System.getProperty(name) ?: System.getenv(envVarName)
     }
 
-    def requestedInitScriptName = getInputParam('teamCityBuildScanPlugin.init-script-name')
+    def requestedInitScriptName = getInputParam('teamCityBuildScanPlugin.init-script.name')
     def initScriptName = buildscript.sourceFile.name
     if (requestedInitScriptName != initScriptName) {
         return
@@ -69,7 +69,7 @@ def getInputParam = { String name ->
     return System.getProperty(name) ?: System.getenv(envVarName)
 }
 
-def requestedInitScriptName = getInputParam('teamCityBuildScanPlugin.init-script-name')
+def requestedInitScriptName = getInputParam('teamCityBuildScanPlugin.init-script.name')
 def initScriptName = buildscript.sourceFile.name
 if (requestedInitScriptName != initScriptName) {
     logger.quiet("Ignoring init script '${initScriptName}' as requested name '${requestedInitScriptName}' does not match")

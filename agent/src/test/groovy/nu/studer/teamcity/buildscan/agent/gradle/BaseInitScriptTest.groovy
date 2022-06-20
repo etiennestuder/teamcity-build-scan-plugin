@@ -19,6 +19,7 @@ import spock.lang.AutoCleanup
 import spock.lang.Specification
 import spock.lang.TempDir
 
+import java.util.stream.Collectors
 import java.util.zip.GZIPOutputStream
 
 import static nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector.BUILD_SCAN_INIT_GRADLE
@@ -220,7 +221,8 @@ class BaseInitScriptTest extends Specification {
             testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
             testKitRunner.withJvmArguments(config.additionalJvmArgs)
         } else {
-            testKitRunner.withJvmArguments(config.tcPluginConfig.toSystemPropertiesForGradleInvocation() + config.additionalJvmArgs)
+            def systemProps = mapEnvVarsToSystemProps(context.buildParameters.environmentVariables)
+            testKitRunner.withJvmArguments(systemProps + config.additionalJvmArgs)
         }
 
         try {
@@ -246,6 +248,25 @@ class BaseInitScriptTest extends Specification {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']"
         assert result.output.contains(serviceMsg)
         assert 1 == result.output.count(serviceMsg)
+    }
+
+    /**
+     * For TestKit versions that don't support environment variables, map those vars to system prop inputs.
+     */
+    private static List<String> mapEnvVarsToSystemProps(Map<String, String> envVars) {
+        def mapping = [
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL: "teamCityBuildScanPlugin.gradle-enterprise.url",
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER: "teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server",
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION: "teamCityBuildScanPlugin.gradle-enterprise.plugin.version",
+            TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION: "teamCityBuildScanPlugin.ccud.plugin.version",
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL: "teamCityBuildScanPlugin.gradle.plugin-repository.url",
+            TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME: "teamCityBuildScanPlugin.init-script.name"
+        ]
+
+        return envVars.entrySet().stream().map(e -> {
+            def sysPropName = mapping.get(e.key) ?: e.key
+            return "-D" + sysPropName + "=" + e.value
+        }).collect(Collectors.toList())
     }
 
     static final class BuildConfig {
