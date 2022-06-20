@@ -62,14 +62,14 @@ If the first two mechanisms will not work for your Maven build configurations, y
 
 1. Download the plugin `.zip` file from [https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
 
-1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the
+2. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the
 previously downloaded plugin `.zip` file.
 
-1. Restart TeamCity.
+3. Restart TeamCity.
 
-1. Trigger your Gradle builds with build scans enabled.
+4. Trigger your Gradle builds with build scans enabled.
 
-1. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
+5. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
 # Integrations
 
@@ -89,12 +89,12 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
    - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
    - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply (optional)
 
-2. Optionally, provide additional configuration parameters for your environment:
+2. If required, provide additional configuration parameters for your environment (optional):
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to `true` if your Gradle Enterprise instance is using a self-signed certificate
     - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
-    - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for all command-line build steps; by default only steps using the `Gradle` runner are enabled
-    - `buildScanPlugin.log-parsign.enabled` - use log parsing to extract Build Scan urls; required if the default mechanism for capturing Build Scan links is not working
+    - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for `Command Line` build steps; by default only steps using the `Gradle` runner are enabled
+    - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
 
 3. Trigger your Gradle build.
 
@@ -114,11 +114,11 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
    - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
    - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply (optional)
 
-2. Optionally, provide additional configuration parameters for your environment:
+2. If required, provide additional configuration parameters for your environment (optional):
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to `true` if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for all command-line build steps; by default only steps using the `Maven` runner are enabled
-    - `buildScanPlugin.log-parsign.enabled` - use log parsing to extract Build Scan urls; required if the default mechanism for capturing Build Scan links is not working
+    - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for `Command Line` build steps; by default only steps using the `Maven` runner are enabled
+   - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
 
 3. Trigger your Maven build.
 
@@ -134,11 +134,11 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 
 1. In Slack, create a webhook and keep track of the created URL.
 
-1. In TeamCity, on the build configuration for which you want to be notified about published build scans, create a configuration parameter with name `buildScanPlugin.slack-webhook.url` and the value being the URL of the webhook created in step #1.
+2. In TeamCity, on the build configuration for which you want to be notified about published build scans, create a configuration parameter with name `buildScanPlugin.slack-webhook.url` and the value being the URL of the webhook created in step #1.
 
-1. Trigger your Gradle builds with build scans enabled.
+3. Trigger your Gradle builds with build scans enabled.
 
-1. Find a notification about the published build scans in the Slack channel configured in the webhook.
+4. Find a notification about the published build scans in the Slack channel configured in the webhook.
 
 # Feedback and Contributions
 
