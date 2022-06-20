@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -170,7 +171,12 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private void purgeInitScriptsFromGradleUserHome() {
-        File[] filesToDelete = getInitScriptsDir().listFiles((dir, name) -> name.startsWith(BUILD_SCAN_INIT));
+        File[] filesToDelete = getInitScriptsDir().listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.startsWith(BUILD_SCAN_INIT);
+            }
+        });
         if (filesToDelete != null) {
             FileUtil.deleteFiles(Arrays.asList(filesToDelete));
         }
