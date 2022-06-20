@@ -26,7 +26,7 @@ public final class SlackTestInvocation {
         String fullBuildName = "My Configuration";
 
         Map<String, String> params = new HashMap<>();
-        params.put(TeamCityConfiguration.BUILD_SCAN_SLACK_WEBHOOK_URL, args[2]);
+        params.put(TeamCityConfiguration.SLACK_WEBHOOK_URL_CONFIG_PARAM, args[2]);
         params.put("teamcity.serverUrl", "http://tc.server.org");
         params.put("teamcity.build.id", "23");
 
