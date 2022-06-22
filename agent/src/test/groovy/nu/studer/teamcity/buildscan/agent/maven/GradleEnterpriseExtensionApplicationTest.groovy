@@ -457,6 +457,29 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "build succeeds when service message maven extension is applied to a project without GE in the extension classpath (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
+        configParameters.put('buildScanPlugin.command-line-build-step.enabled', 'true')
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters)
+
+        then:
+        outputContainsBuildSuccess(output)
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
     void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion) {
         def extensionsXml = new File(dotMvn, 'extensions.xml')
         extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
@@ -516,6 +539,10 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assert !output.contains(serviceMsg)
     }
 
+    void outputContainsBuildSuccess(String output) {
+        assert output.contains("[INFO] BUILD SUCCESS")
+    }
+
     static final class JdkCompatibleMavenVersion {
 
         private final String mavenVersion
@@ -563,7 +590,7 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
         def mvnExecutable = System.getProperty('os.name').startsWith('Windows') ? './mvnw.cmd' : './mvnw'
         def runnerArgs = runnerParameters.get('runnerArgs')
 
-        def command = [mvnExecutable]
+        def command = [mvnExecutable, '-B']
         if (goals.trim()) {
             command += goals.split(' ').toList()
         }
