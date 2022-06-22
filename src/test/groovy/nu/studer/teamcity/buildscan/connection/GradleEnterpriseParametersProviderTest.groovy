@@ -89,6 +89,7 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM | '1.0.0'
         ALLOW_UNTRUSTED_SERVER                    | ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM                    | 'true'
         GRADLE_PLUGIN_REPOSITORY_URL              | GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM              | 'https://plugins.example.com'
+        INSTRUMENT_COMMAND_LINE_BUILD_STEP        | INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM        | 'true'
     }
 
     def "gets configuration from first descriptor"() {

@@ -39,6 +39,7 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             params.put(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION));
             params.put(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, descriptorParameters.get(ALLOW_UNTRUSTED_SERVER));
             params.put(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
+            params.put(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, descriptorParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
 
             params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
         }

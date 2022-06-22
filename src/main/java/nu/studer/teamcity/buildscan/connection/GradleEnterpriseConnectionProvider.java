@@ -92,6 +92,12 @@ public class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Common Custom User Data Extension Version: %s\n", ccudExtensionVersion);
         }
 
+        description += "\nCommand Line Settings\n";
+        String instrumentCommandLineBuildStep = params.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP);
+        if (instrumentCommandLineBuildStep != null) {
+            description += String.format("* Instrument Command Line Build Step: %s\n", instrumentCommandLineBuildStep);
+        }
+
         return description;
     }
 
