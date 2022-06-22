@@ -14,6 +14,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
     public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
     public static final String GRADLE_PLUGIN_REPOSITORY_URL = "gradlePluginRepositoryUrl";
+    public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP = "instrumentCommandLineBuildStep";
 
     // Constants defined by the BuildScanServiceMessageInjector
     // This connection sets these values as build parameters so that they can be picked up by the BuildScanServiceMessageInjector
@@ -27,6 +28,8 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
     public static final String ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
     public static final String GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
+    public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
+
     public static final String GRADLE_ENTERPRISE_CONNECTION_PROVIDER = "gradle-enterprise-connection-provider";
 
     // These getters exist so that ge-connection-dialog.jsp can read these constants as a JavaBean
@@ -61,5 +64,9 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getGradlePluginRepositoryUrl() {
         return GRADLE_PLUGIN_REPOSITORY_URL;
+    }
+
+    public String getInstrumentCommandLineBuildStep() {
+        return INSTRUMENT_COMMAND_LINE_BUILD_STEP;
     }
 }

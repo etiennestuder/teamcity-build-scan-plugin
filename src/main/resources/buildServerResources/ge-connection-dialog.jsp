@@ -90,3 +90,15 @@
         <span class="smallNote">The version of the Common Custom User Data Extension to apply to Maven builds.</span>
     </td>
 </tr>
+
+<tr class="groupingTitle">
+    <td colspan="2">Command Line Settings</td>
+</tr>
+
+<tr>
+    <td><label for="${keys.instrumentCommandLineBuildStep}">Instrument Command Line Build Steps:</label></td>
+    <td>
+        <props:checkboxProperty name="${keys.instrumentCommandLineBuildStep}"/>
+        <span class="smallNote">Instruments Gradle and Maven builds which utilize Command Line Build Steps rather than the Gradle and Maven Build Steps.</span>
+    </td>
+</tr>

@@ -55,6 +55,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | '1.10.1'                      | 'Common Custom User Data Extension Version'
         ALLOW_UNTRUSTED_SERVER                    | 'true'                        | 'Allow Untrusted Server'
         GRADLE_PLUGIN_REPOSITORY_URL              | 'https://plugins.example.com' | 'Gradle Plugin Repository URL'
+        INSTRUMENT_COMMAND_LINE_BUILD_STEP        | 'true'                        | 'Instrument Command Line Build Step'
     }
 
 }
