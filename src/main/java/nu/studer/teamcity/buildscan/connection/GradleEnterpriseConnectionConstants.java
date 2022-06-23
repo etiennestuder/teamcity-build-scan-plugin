@@ -3,8 +3,7 @@ package nu.studer.teamcity.buildscan.connection;
 public final class GradleEnterpriseConnectionConstants {
 
     // Constants defined by the Gradle Enterprise Connection
-    // These are used to correlate data set by the user in the connection dialog to the descriptor parameters available
-    // in the Project Feature Descriptor Parameters
+    // These are used to correlate data set by the user in the connection dialog to the descriptor parameters available in the Project Feature Descriptor Parameters
 
     public static final String GRADLE_ENTERPRISE_URL = "gradleEnterpriseUrl";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY = "gradleEnterpriseAccessKey";
@@ -69,4 +68,5 @@ public final class GradleEnterpriseConnectionConstants {
     public String getInstrumentCommandLineBuildStep() {
         return INSTRUMENT_COMMAND_LINE_BUILD_STEP;
     }
+
 }

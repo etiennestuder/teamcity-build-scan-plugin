@@ -8,8 +8,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
 
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR;
 
@@ -18,6 +16,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
  * parameters output screen
  */
 public final class GradleEnterprisePasswordProvider implements PasswordsProvider {
+
     @NotNull
     @Override
     public Collection<Parameter> getPasswordParameters(@NotNull SBuild build) {

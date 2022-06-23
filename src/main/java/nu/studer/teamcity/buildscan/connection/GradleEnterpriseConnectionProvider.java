@@ -11,9 +11,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.*;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
 
 public class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
@@ -133,6 +145,7 @@ public class GradleEnterpriseConnectionProvider extends OAuthProvider {
     }
 
     private static class EmptyPropertiesProcessor implements PropertiesProcessor {
+
         @Override
         public Collection<InvalidProperty> process(Map<String, String> properties) {
             return Collections.emptyList();
