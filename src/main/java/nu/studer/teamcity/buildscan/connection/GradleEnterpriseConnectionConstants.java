@@ -32,7 +32,7 @@ public final class GradleEnterpriseConnectionConstants {
 
     public static final String GRADLE_ENTERPRISE_CONNECTION_PROVIDER = "gradle-enterprise-connection-provider";
 
-    // These getters exist so that ge-connection-dialog.jsp can read these constants as a JavaBean
+    // These getters exist so that geConnectionDialog.jsp can read these constants as a JavaBean
 
     public String getGradleEnterpriseUrl() {
         return GRADLE_ENTERPRISE_URL;
