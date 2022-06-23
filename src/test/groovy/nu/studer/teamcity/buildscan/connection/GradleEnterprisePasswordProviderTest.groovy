@@ -6,7 +6,7 @@ import jetbrains.buildServer.serverSide.SBuild
 import jetbrains.buildServer.serverSide.parameters.types.PasswordsProvider
 import spock.lang.Specification
 
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR
 
 class GradleEnterprisePasswordProviderTest extends Specification {
 
@@ -42,8 +42,9 @@ class GradleEnterprisePasswordProviderTest extends Specification {
         def passwordParameters = passwordsProvider.getPasswordParameters(sBuild)
 
         then:
-        def keyParams = passwordParameters.findAll { it.name == GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR }
+        def keyParams = passwordParameters.findAll { it.name == GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR }
         keyParams.size() == 1
         keyParams[0].value == value
     }
+
 }

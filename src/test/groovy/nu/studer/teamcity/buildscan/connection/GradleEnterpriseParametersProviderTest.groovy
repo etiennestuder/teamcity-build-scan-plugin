@@ -81,15 +81,15 @@ class GradleEnterpriseParametersProviderTest extends Specification {
 
         where:
         descriptorParam                           | configParam                                            | value
+        GRADLE_PLUGIN_REPOSITORY_URL              | GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM              | 'https://plugins.example.com'
         GRADLE_ENTERPRISE_URL                     | GRADLE_ENTERPRISE_URL_CONFIG_PARAM                     | 'https://ge.example.com'
-        GRADLE_ENTERPRISE_ACCESS_KEY              | GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR                   | 'ge.example.com=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+        ALLOW_UNTRUSTED_SERVER                    | ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM                    | 'true'
         GRADLE_ENTERPRISE_PLUGIN_VERSION          | GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM          | '1.0.0'
         COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM    | '1.0.0'
         GRADLE_ENTERPRISE_EXTENSION_VERSION       | GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM       | '1.0.0'
         COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM | '1.0.0'
-        ALLOW_UNTRUSTED_SERVER                    | ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM                    | 'true'
-        GRADLE_PLUGIN_REPOSITORY_URL              | GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM              | 'https://plugins.example.com'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP        | INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM        | 'true'
+        GRADLE_ENTERPRISE_ACCESS_KEY              | GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR                   | 'ge.example.com=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
     }
 
     def "gets configuration from first descriptor"() {
