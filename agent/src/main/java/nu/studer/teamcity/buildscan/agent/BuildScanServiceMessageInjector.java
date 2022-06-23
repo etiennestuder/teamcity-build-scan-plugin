@@ -87,6 +87,11 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     @Override
+    public void agentStarted(@NotNull BuildAgent agent) {
+        purgeInitScriptsFromGradleUserHome();
+    }
+
+    @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
             instrumentGradleRunner(runner);
@@ -102,11 +107,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     @Override
     public void runnerFinished(@NotNull BuildRunnerContext runner, @NotNull BuildFinishedStatus status) {
         removeInitScriptFromGradleUserHome(runner);
-    }
-
-    @Override
-    public void agentStarted(@NotNull BuildAgent agent) {
-        purgeInitScriptsFromGradleUserHome();
     }
 
     private void instrumentGradleRunner(@NotNull BuildRunnerContext runner) {

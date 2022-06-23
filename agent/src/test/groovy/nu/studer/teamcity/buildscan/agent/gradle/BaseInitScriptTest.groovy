@@ -250,17 +250,15 @@ class BaseInitScriptTest extends Specification {
         assert 1 == result.output.count(serviceMsg)
     }
 
-    /**
-     * For TestKit versions that don't support environment variables, map those vars to system prop inputs.
-     */
+    // for TestKit versions that don't support environment variables, map those vars to system properties
     private static List<String> mapEnvVarsToSystemProps(Map<String, String> envVars) {
         def mapping = [
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL: "teamCityBuildScanPlugin.gradle-enterprise.url",
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL                   : "teamCityBuildScanPlugin.gradle-enterprise.url",
             TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER: "teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION: "teamCityBuildScanPlugin.gradle-enterprise.plugin.version",
-            TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION: "teamCityBuildScanPlugin.ccud.plugin.version",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL: "teamCityBuildScanPlugin.gradle.plugin-repository.url",
-            TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME: "teamCityBuildScanPlugin.init-script.name"
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION        : "teamCityBuildScanPlugin.gradle-enterprise.plugin.version",
+            TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION                     : "teamCityBuildScanPlugin.ccud.plugin.version",
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL            : "teamCityBuildScanPlugin.gradle.plugin-repository.url",
+            TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME                        : "teamCityBuildScanPlugin.init-script.name"
         ]
 
         return envVars.entrySet().stream().map(e -> {

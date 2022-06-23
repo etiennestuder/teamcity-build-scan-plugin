@@ -83,7 +83,7 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
 
 ### Gradle Builds
 
-1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create 3 configuration parameters:
+1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create three configuration parameters:
 
    - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
    - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
@@ -108,7 +108,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
 ### Maven Builds
 
-1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create 3 configuration parameters:
+1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create three configuration parameters:
 
    - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
    - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
@@ -118,7 +118,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to `true` if your Gradle Enterprise instance is using a self-signed certificate
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for `Command Line` build steps; by default only steps using the `Maven` runner are enabled
-   - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
+    - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
 
 3. Trigger your Maven build.
 
