@@ -1,1 +1,3 @@
-- Ensures Gradle init script copied to Gradle User Home has no side effects on Gradle builds that did not excplicitly enabled automatic capturing of a Build Scan.
+- Ensures the Gradle init script copied to Gradle User Home has no side effects on Gradle builds that did not explicitly enable automatic capturing of a Build Scan.
+- Provides a custom TeamCity Connection to conveniently configure the TeamCity Build Scan plugin via configuration UI.
+- Has changed names for the TeamCity configuration parameters for the Build Scan link log parsing flag and the Slack webhook URL.
