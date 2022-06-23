@@ -27,17 +27,17 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
 
-public class GradleEnterpriseConnectionProvider extends OAuthProvider {
+public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
-    private static final String DEFAULT_PLUGIN_VERSIONS_RESOURCE = "default-plugin-versions.properties";
 
-    private final PluginDescriptor descriptor;
+    private static final String DEFAULT_PLUGIN_VERSIONS_RESOURCE = "default-plugin-versions.properties";
 
     private static final PropertiesProcessor EMPTY_PROPERTIES_PROCESSOR = new EmptyPropertiesProcessor();
 
+    private final PluginDescriptor descriptor;
+
     public GradleEnterpriseConnectionProvider(PluginDescriptor pluginDescriptor) {
-        super();
         this.descriptor = pluginDescriptor;
     }
 
@@ -140,15 +140,17 @@ public class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Override
     public PropertiesProcessor getPropertiesProcessor() {
         // this can be used to invalidate properties set by the user
-        // by returning empty list, no validation is done
+        // by returning an empty list, no validation is done
         return EMPTY_PROPERTIES_PROCESSOR;
     }
 
-    private static class EmptyPropertiesProcessor implements PropertiesProcessor {
+    private static final class EmptyPropertiesProcessor implements PropertiesProcessor {
 
         @Override
         public Collection<InvalidProperty> process(Map<String, String> properties) {
             return Collections.emptyList();
         }
+
     }
+
 }

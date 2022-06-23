@@ -35,49 +35,50 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 
 /**
  * This implementation of {@link BuildParametersProvider} injects configuration parameters and environment variables
- * needed in order to automatically apply Gradle Enterprise to Gradle and Maven builds, based on configuration of the
- * connection.
+ * needed in order to automatically apply Gradle Enterprise to Gradle and Maven builds, based on the configuration of
+ * the connection.
  */
 public final class GradleEnterpriseParametersProvider implements BuildParametersProvider {
 
     @NotNull
     @Override
     public Map<String, String> getParameters(@NotNull SBuild build, boolean emulationMode) {
-        SProjectFeatureDescriptor descriptor = getsProjectFeatureDescriptor(build);
-
-        Map<String, String> params = new HashMap<>();
-        if (descriptor != null) {
-            Map<String, String> descriptorParameters = descriptor.getParameters();
-
-            // descriptorParameters can contain null values, but TeamCity handles these null parameters as if they were not set
-            params.put(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_URL));
-            params.put(GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_PLUGIN_VERSION));
-            params.put(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION));
-            params.put(GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_EXTENSION_VERSION));
-            params.put(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION));
-            params.put(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, descriptorParameters.get(ALLOW_UNTRUSTED_SERVER));
-            params.put(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
-            params.put(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, descriptorParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
-
-            params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
+        SProjectFeatureDescriptor descriptor = getProjectFeatureDescriptor(build);
+        if (descriptor == null) {
+            return Collections.emptyMap();
         }
+
+        Map<String, String> descriptorParameters = descriptor.getParameters();
+
+        // descriptorParameters can contain null values, but TeamCity handles these null parameters as if they were not set
+        Map<String, String> params = new HashMap<>();
+        params.put(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
+        params.put(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_URL));
+        params.put(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, descriptorParameters.get(ALLOW_UNTRUSTED_SERVER));
+        params.put(GRADLE_ENTERPRISE_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_PLUGIN_VERSION));
+        params.put(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION));
+        params.put(GRADLE_ENTERPRISE_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_EXTENSION_VERSION));
+        params.put(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION));
+        params.put(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, descriptorParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
+        params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
         return params;
     }
 
     @Nullable
-    private SProjectFeatureDescriptor getsProjectFeatureDescriptor(@NotNull SBuild build) {
+    private SProjectFeatureDescriptor getProjectFeatureDescriptor(@NotNull SBuild build) {
         SBuildType buildType = build.getBuildType();
-        if (buildType != null) {
-            Collection<SProjectFeatureDescriptor> oauthConnections = buildType.getProject().getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE);
+        if (buildType == null) {
+            return null;
+        }
 
-            // This logic will find the first descriptor that matches the GE provider type. From testing, this seems to have the following behavior:
-            // - If there are duplicate connections on a project, the newest one wins
-            // - Connections on sub-projects can override connections on the root project regardless of age
-            for (SProjectFeatureDescriptor descriptor : oauthConnections) {
-                String oauthProviderType = descriptor.getParameters().get(OAuthConstants.OAUTH_TYPE_PARAM);
-                if (GRADLE_ENTERPRISE_CONNECTION_PROVIDER.equals(oauthProviderType)) {
-                    return descriptor;
-                }
+        // Find the first connection that matches the GE provider type. From testing, this seems to have the following ordering behavior:
+        // - If there are duplicate connections on a project, the newest one wins
+        // - Connections on subprojects can override connections on the root project regardless of age
+        Collection<SProjectFeatureDescriptor> connections = buildType.getProject().getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE);
+        for (SProjectFeatureDescriptor descriptor : connections) {
+            String oauthProviderType = descriptor.getParameters().get(OAuthConstants.OAUTH_TYPE_PARAM);
+            if (GRADLE_ENTERPRISE_CONNECTION_PROVIDER.equals(oauthProviderType)) {
+                return descriptor;
             }
         }
 
@@ -89,4 +90,5 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
     public Collection<String> getParametersAvailableOnAgent(@NotNull SBuild build) {
         return Collections.emptyList();
     }
+
 }

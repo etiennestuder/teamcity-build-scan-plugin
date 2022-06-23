@@ -30,4 +30,5 @@ public final class GradleEnterprisePasswordProvider implements PasswordsProvider
 
         return passwordParameters;
     }
+
 }
