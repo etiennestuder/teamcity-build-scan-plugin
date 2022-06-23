@@ -116,21 +116,28 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Nullable
     @Override
     public Map<String, String> getDefaultProperties() {
-        Properties properties = new Properties();
-        Map<String, String> defaultProperties = new HashMap<>();
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(DEFAULT_PLUGIN_VERSIONS_RESOURCE);
+        if (inputStream == null) {
+            return null;
+        }
 
-        if (inputStream != null) {
+        Properties properties = new Properties();
+        try {
+            properties.load(inputStream);
+        } catch (IOException e) {
+            LOGGER.warn("Unable to load default plugin versions from " + DEFAULT_PLUGIN_VERSIONS_RESOURCE, e);
+            return null;
+        } finally {
             try {
-                properties.load(inputStream);
                 inputStream.close();
             } catch (IOException e) {
-                LOGGER.warn("Unable to load default plugin version from " + DEFAULT_PLUGIN_VERSIONS_RESOURCE, e);
+                e.printStackTrace();
             }
         }
 
+        Map<String, String> defaultProperties = new HashMap<>();
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
-            defaultProperties.put(entry.getKey().toString(), entry.getValue().toString());
+            defaultProperties.put(entry.getKey().toString(), String.valueOf(entry.getValue()));
         }
 
         return defaultProperties;
