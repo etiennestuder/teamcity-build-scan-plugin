@@ -63,11 +63,12 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Override
     public String describeConnection(@NotNull OAuthConnectionDescriptor connection) {
         Map<String, String> params = connection.getParameters();
+
         String description = "Gradle Enterprise Connection Settings:\n";
 
         String geUrl = params.get(GRADLE_ENTERPRISE_URL);
         if (geUrl != null) {
-            description += String.format("* Gradle Enterprise Url: %s\n", geUrl);
+            description += String.format("* Gradle Enterprise Server URL: %s\n", geUrl);
         }
 
         String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);
@@ -79,12 +80,12 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         String gePluginVersion = params.get(GRADLE_ENTERPRISE_PLUGIN_VERSION);
         if (gePluginVersion != null) {
-            description += String.format("* Gradle Enterprise Plugin Version: %s\n", gePluginVersion);
+            description += String.format("* Gradle Enterprise Gradle Plugin Version: %s\n", gePluginVersion);
         }
 
         String ccudPluginVersion = params.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION);
         if (ccudPluginVersion != null) {
-            description += String.format("* Common Custom User Data Plugin Version: %s\n", ccudPluginVersion);
+            description += String.format("* Common Custom User Data Gradle Plugin Version: %s\n", ccudPluginVersion);
         }
 
         String gradlePluginRepositoryUrl = params.get(GRADLE_PLUGIN_REPOSITORY_URL);
@@ -92,22 +93,23 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Gradle Plugin Repository URL: %s\n", gradlePluginRepositoryUrl);
         }
 
-        description += "\nMaven Settings\n";
+        description += "\nMaven Settings:\n";
 
         String geExtensionVersion = params.get(GRADLE_ENTERPRISE_EXTENSION_VERSION);
         if (geExtensionVersion != null) {
-            description += String.format("* Gradle Enterprise Extension Version: %s\n", geExtensionVersion);
+            description += String.format("* Gradle Enterprise Maven Extension Version: %s\n", geExtensionVersion);
         }
 
         String ccudExtensionVersion = params.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION);
         if (ccudExtensionVersion != null) {
-            description += String.format("* Common Custom User Data Extension Version: %s\n", ccudExtensionVersion);
+            description += String.format("* Common Custom User Data Maven Extension Version: %s\n", ccudExtensionVersion);
         }
 
-        description += "\nCommand Line Settings\n";
+        description += "\nTeamCity Build Steps Settings:\n";
+
         String instrumentCommandLineBuildStep = params.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP);
         if (instrumentCommandLineBuildStep != null) {
-            description += String.format("* Instrument Command Line Build Step: %s\n", instrumentCommandLineBuildStep);
+            description += String.format("* Instrument Command Line Build Steps: %s\n", instrumentCommandLineBuildStep);
         }
 
         return description;
