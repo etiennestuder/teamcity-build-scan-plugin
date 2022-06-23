@@ -124,7 +124,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
 4. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14.2 and 1.10.1, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14.3 and 1.10.1, respectively._
 
 #### Example Configuration
 

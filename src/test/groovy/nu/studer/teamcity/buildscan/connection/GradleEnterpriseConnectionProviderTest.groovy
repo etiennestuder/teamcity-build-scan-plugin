@@ -59,7 +59,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         ALLOW_UNTRUSTED_SERVER                    | 'true'                        | 'Allow Untrusted Server'
         GRADLE_ENTERPRISE_PLUGIN_VERSION          | '3.10.2'                      | 'Gradle Enterprise Gradle Plugin Version'
         COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION    | '1.7.2'                       | 'Common Custom User Data Gradle Plugin Version'
-        GRADLE_ENTERPRISE_EXTENSION_VERSION       | '1.14.2'                      | 'Gradle Enterprise Maven Extension Version'
+        GRADLE_ENTERPRISE_EXTENSION_VERSION       | '1.14.3'                      | 'Gradle Enterprise Maven Extension Version'
         COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION | '1.10.1'                      | 'Common Custom User Data Maven Extension Version'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP        | 'true'                        | 'Instrument Command Line Build Steps'
     }
