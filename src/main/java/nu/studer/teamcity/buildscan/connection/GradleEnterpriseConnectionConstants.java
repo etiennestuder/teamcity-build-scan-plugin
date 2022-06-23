@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.connection;
 
+@SuppressWarnings("unused")
 public final class GradleEnterpriseConnectionConstants {
 
     // Constants defined by the Gradle Enterprise Connection
