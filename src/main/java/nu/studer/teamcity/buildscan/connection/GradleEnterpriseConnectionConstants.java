@@ -13,6 +13,8 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CCUD_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
     public static final String GE_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";
     public static final String CCUD_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
+    public static final String CUSTOM_GE_EXTENSION_COORDINATES = "customGradleEnterpriseExtensionCoordinates";
+    public static final String CUSTOM_CCUD_EXTENSION_COORDINATES = "customCommonCustomUserDataExtensionCoordinates";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP = "instrumentCommandLineBuildStep";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY = "gradleEnterpriseAccessKey";
 
@@ -26,6 +28,8 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     public static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
     public static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
+    public static final String CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
+    public static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR = "env.GRADLE_ENTERPRISE_ACCESS_KEY";
 
@@ -59,6 +63,14 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getCommonCustomUserDataExtensionVersion() {
         return CCUD_EXTENSION_VERSION;
+    }
+
+    public String getCustomGradleEnterpriseExtensionCoordinates() {
+        return CUSTOM_GE_EXTENSION_COORDINATES;
+    }
+
+    public String getCustomCommonCustomUserDataExtensionCoordinates() {
+        return CUSTOM_CCUD_EXTENSION_COORDINATES;
     }
 
     public String getInstrumentCommandLineBuildStep() {
