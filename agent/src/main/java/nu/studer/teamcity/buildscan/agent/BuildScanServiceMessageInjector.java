@@ -267,6 +267,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             String[] ga = groupAndArtifact.split(":");
             if (ga.length == 2) {
                 return new MavenCoordinates(ga[0], ga[1]);
+            } else if (ga.length == 3) {
+                return new MavenCoordinates(ga[0], ga[1], ga[2]);
             } else {
                 return null;
             }
