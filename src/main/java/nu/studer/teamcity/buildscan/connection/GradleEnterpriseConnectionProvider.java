@@ -18,11 +18,11 @@ import java.util.Map;
 import java.util.Properties;
 
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_EXTENSION_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
@@ -78,12 +78,12 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         description += "\nGradle Settings:\n";
 
-        String gePluginVersion = params.get(GRADLE_ENTERPRISE_PLUGIN_VERSION);
+        String gePluginVersion = params.get(GE_PLUGIN_VERSION);
         if (gePluginVersion != null) {
             description += String.format("* Gradle Enterprise Gradle Plugin Version: %s\n", gePluginVersion);
         }
 
-        String ccudPluginVersion = params.get(COMMON_CUSTOM_USER_DATA_PLUGIN_VERSION);
+        String ccudPluginVersion = params.get(CCUD_PLUGIN_VERSION);
         if (ccudPluginVersion != null) {
             description += String.format("* Common Custom User Data Gradle Plugin Version: %s\n", ccudPluginVersion);
         }
@@ -95,12 +95,12 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         description += "\nMaven Settings:\n";
 
-        String geExtensionVersion = params.get(GRADLE_ENTERPRISE_EXTENSION_VERSION);
+        String geExtensionVersion = params.get(GE_EXTENSION_VERSION);
         if (geExtensionVersion != null) {
             description += String.format("* Gradle Enterprise Maven Extension Version: %s\n", geExtensionVersion);
         }
 
-        String ccudExtensionVersion = params.get(COMMON_CUSTOM_USER_DATA_EXTENSION_VERSION);
+        String ccudExtensionVersion = params.get(CCUD_EXTENSION_VERSION);
         if (ccudExtensionVersion != null) {
             description += String.format("* Common Custom User Data Maven Extension Version: %s\n", ccudExtensionVersion);
         }
