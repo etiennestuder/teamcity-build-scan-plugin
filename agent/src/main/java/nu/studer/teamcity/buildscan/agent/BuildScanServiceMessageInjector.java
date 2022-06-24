@@ -59,6 +59,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
     private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
+    private static final String CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
+    private static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
     private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
 
     // Environment variables set to instrument the Gradle build
@@ -210,7 +212,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         MavenExtensions extensions = getMavenExtensions(runner);
         String geExtensionVersion = getOptionalConfigParam(GE_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (geExtensionVersion != null) {
-            if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES)) {
+            MavenCoordinates customGeExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
+            if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES) && !extensions.hasExtension(customGeExtensionCoords)) {
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
@@ -220,7 +223,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
         String ccudExtensionVersion = getOptionalConfigParam(CCUD_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (ccudExtensionVersion != null) {
-            if (!extensions.hasExtension(CCUD_EXTENSION_MAVEN_COORDINATES)) {
+            MavenCoordinates customCcudExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
+            if (!extensions.hasExtension(CCUD_EXTENSION_MAVEN_COORDINATES) && !extensions.hasExtension(customCcudExtensionCoords)) {
                 extensionApplicationListener.ccudExtensionApplied(ccudExtensionVersion);
                 extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
             }
@@ -253,6 +257,20 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
 
         return workingDir != null ? MavenExtensions.fromFile(new File(workingDir, ".mvn/extensions.xml")) : MavenExtensions.empty();
+    }
+
+    @Nullable
+    static MavenCoordinates parseCoordinates(String groupAndArtifact) {
+        if (groupAndArtifact == null || groupAndArtifact.trim().isEmpty()) {
+            return null;
+        } else {
+            String[] ga = groupAndArtifact.split(":");
+            if (ga.length == 2) {
+                return new MavenCoordinates(ga[0], ga[1]);
+            } else {
+                return null;
+            }
+        }
     }
 
     private static void addEnvVarIfSet(@NotNull String configParameter, @NotNull String key, @NotNull BuildRunnerContext runner) {

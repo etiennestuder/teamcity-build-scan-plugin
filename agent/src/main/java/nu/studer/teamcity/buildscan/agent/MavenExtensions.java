@@ -61,8 +61,9 @@ final class MavenExtensions {
         }
     }
 
-    boolean hasExtension(@NotNull MavenCoordinates coordinates) {
-        if (document == null) {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    boolean hasExtension(@Nullable MavenCoordinates coordinates) {
+        if (document == null || coordinates == null) {
             return false;
         }
 
