@@ -253,6 +253,38 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "does not inject GE extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and: // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
+        setProjectDefinedExtensions(null, null, new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre'))
+        setProjectDefinedGeConfiguration()
+
+        and:
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.custom.coordinates', 'com.google.guava:guava')
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters)
+
+        then:
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
+
+        and:
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
     def "applies CCUD extension via classpath when not defined in project where GE extension not defined in project and not applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
@@ -355,6 +387,38 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
         configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
         configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters)
+
+        then:
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
+    def "does not inject CCUD extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and: // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
+        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null, new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre'))
+        setProjectDefinedGeConfiguration()
+
+        and:
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.ccud.extension.custom.coordinates', 'com.google.guava:guava')
 
         when:
         injector.beforeRunnerStart(context)
@@ -480,7 +544,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion) {
+    void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension = null) {
         def extensionsXml = new File(dotMvn, 'extensions.xml')
         extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
 
@@ -499,6 +563,15 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
                 <groupId>com.gradle</groupId>
                 <artifactId>common-custom-user-data-maven-extension</artifactId>
                 <version>$ccudExtensionVersion</version>
+            </extension>"""
+        }
+
+        if (customExtension) {
+            extensionsXml << """
+            <extension>
+                <groupId>${customExtension.group}</groupId>
+                <artifactId>${customExtension.artifact}</artifactId>
+                <version>${customExtension.version}</version>
             </extension>"""
         }
 
@@ -606,4 +679,13 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
             .start()
             .text
     }
+
+    static final class GroupArtifactVersion {
+
+        String group
+        String artifact
+        String version
+
+    }
+
 }
