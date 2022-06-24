@@ -19,13 +19,17 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION_CONFIG_PARAM;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION_CONFIG_PARAM;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
@@ -40,6 +44,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
  */
 public final class GradleEnterpriseParametersProvider implements BuildParametersProvider {
 
+    @SuppressWarnings("DuplicatedCode")
     @NotNull
     @Override
     public Map<String, String> getParameters(@NotNull SBuild build, boolean emulationMode) {
@@ -59,6 +64,8 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
         params.put(CCUD_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(CCUD_PLUGIN_VERSION));
         params.put(GE_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(GE_EXTENSION_VERSION));
         params.put(CCUD_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(CCUD_EXTENSION_VERSION));
+        params.put(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, descriptorParameters.get(CUSTOM_GE_EXTENSION_COORDINATES));
+        params.put(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, descriptorParameters.get(CUSTOM_CCUD_EXTENSION_COORDINATES));
         params.put(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, descriptorParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
         params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
         return params;

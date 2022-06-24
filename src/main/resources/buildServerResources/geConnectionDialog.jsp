@@ -25,7 +25,7 @@
     </td>
 </tr>
 
-<tr class="advancedSetting">
+<tr>
     <td><label for="${keys.allowUntrustedServer}">Allow Untrusted Server:</label></td>
     <td>
         <props:checkboxProperty name="${keys.allowUntrustedServer}"/>
@@ -61,7 +61,6 @@
     </td>
 </tr>
 
-
 <tr class="advancedSetting">
     <td><label for="${keys.gradlePluginRepositoryUrl}">Gradle Plugin Repository URL:</label></td>
     <td>
@@ -88,6 +87,22 @@
     <td>
         <props:textProperty name="${keys.commonCustomUserDataExtensionVersion}" className="longField"/>
         <span class="smallNote">The version of the Common Custom User Data Maven Extension to apply to Maven builds.</span>
+    </td>
+</tr>
+
+<tr class="advancedSetting">
+    <td><label for="${keys.customGradleEnterpriseExtensionCoordinates}">Gradle Enterprise Maven Extension Custom Coordinates:</label></td>
+    <td>
+        <props:textProperty name="${keys.customGradleEnterpriseExtensionCoordinates}" className="longField"/>
+        <span class="smallNote">The coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension.</span>
+    </td>
+</tr>
+
+<tr class="advancedSetting">
+    <td><label for="${keys.customCommonCustomUserDataExtensionCoordinates}">Common Custom User Data Maven Extension Custom Coordinates:</label></td>
+    <td>
+        <props:textProperty name="${keys.customCommonCustomUserDataExtensionCoordinates}" className="longField"/>
+        <span class="smallNote">The coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it.</span>
     </td>
 </tr>
 

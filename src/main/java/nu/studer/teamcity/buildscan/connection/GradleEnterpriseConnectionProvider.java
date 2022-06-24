@@ -20,9 +20,11 @@ import java.util.Properties;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
@@ -103,6 +105,16 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         String ccudExtensionVersion = params.get(CCUD_EXTENSION_VERSION);
         if (ccudExtensionVersion != null) {
             description += String.format("* Common Custom User Data Maven Extension Version: %s\n", ccudExtensionVersion);
+        }
+
+        String customGeExtensionCoordinates = params.get(CUSTOM_GE_EXTENSION_COORDINATES);
+        if (customGeExtensionCoordinates != null) {
+            description += String.format("* Gradle Enterprise Maven Extension Custom Coordinates: %s\n", customGeExtensionCoordinates);
+        }
+
+        String customCcudExtensionCoordinates = params.get(CUSTOM_CCUD_EXTENSION_COORDINATES);
+        if (customCcudExtensionCoordinates != null) {
+            description += String.format("* Common Custom User Data Maven Extension Custom Coordinates: %s\n", customCcudExtensionCoordinates);
         }
 
         description += "\nTeamCity Build Steps Settings:\n";
