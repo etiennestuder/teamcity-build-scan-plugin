@@ -38,26 +38,31 @@ class GradleEnterpriseParametersProviderTest extends Specification {
     BuildParametersProvider buildParametersProvider
 
     Map<String, String> descriptorParams
+    Map<String, String> higherDescriptorParams
 
     SBuild sBuild
     SBuildType sBuildType
     SProject sProject
     SProjectFeatureDescriptor sProjectFeatureDescriptor
+    SProjectFeatureDescriptor higherProjectFeatureDescriptor
 
     void setup() {
         buildParametersProvider = new GradleEnterpriseParametersProvider()
 
         descriptorParams = [(OAuthConstants.OAUTH_TYPE_PARAM): GRADLE_ENTERPRISE_CONNECTION_PROVIDER]
+        higherDescriptorParams = [(OAuthConstants.OAUTH_TYPE_PARAM): GRADLE_ENTERPRISE_CONNECTION_PROVIDER]
 
         sBuild = Stub()
         sBuildType = Stub()
         sProject = Stub()
         sProjectFeatureDescriptor = Stub()
+        higherProjectFeatureDescriptor = Stub()
 
         sBuild.getBuildType() >> sBuildType
         sBuildType.getProject() >> sProject
         sProject.getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE) >> [sProjectFeatureDescriptor]
         sProjectFeatureDescriptor.getParameters() >> descriptorParams
+        higherProjectFeatureDescriptor.getParameters() >> higherDescriptorParams
     }
 
     def "returns no elements when no buildType is defined"() {
@@ -119,20 +124,39 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         given:
         def value = 'https://ge.example.com'
         descriptorParams[GRADLE_ENTERPRISE_URL] = value
-
-        def sProjectFeatureDescriptor2 = Stub(SProjectFeatureDescriptor)
-        def descriptorParams2 = [
-            (OAuthConstants.OAUTH_TYPE_PARAM): GRADLE_ENTERPRISE_CONNECTION_PROVIDER,
-            (GRADLE_ENTERPRISE_URL)          : 'https://ge.example.invalid',
-        ]
-        sProjectFeatureDescriptor2.getParameters() >> descriptorParams2
+        higherDescriptorParams[GRADLE_ENTERPRISE_URL] = 'https://ge.example.invalid'
 
         when:
         def parameters = buildParametersProvider.getParameters(sBuild, false)
 
         then:
-        sProject.getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE) >> [sProjectFeatureDescriptor, sProjectFeatureDescriptor2]
+        sProject.getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE) >> [sProjectFeatureDescriptor, higherProjectFeatureDescriptor]
         parameters.get(GRADLE_ENTERPRISE_URL_CONFIG_PARAM) == value
     }
 
+    def "inherits configuration parameter from last descriptor when not set in first descriptor"() {
+        given:
+        def value = 'https://ge.example.com'
+        higherDescriptorParams[GRADLE_ENTERPRISE_URL] = value
+
+        when:
+        def parameters = buildParametersProvider.getParameters(sBuild, false)
+
+        then:
+        sProject.getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE) >> [sProjectFeatureDescriptor, higherProjectFeatureDescriptor]
+        parameters.get(GRADLE_ENTERPRISE_URL_CONFIG_PARAM) == value
+    }
+
+    def "clears configuration parameter when UNDEFINED is passed"() {
+        given:
+        descriptorParams[GRADLE_ENTERPRISE_URL] = 'UNDEFINED'
+        higherDescriptorParams[GRADLE_ENTERPRISE_URL] = 'https://ge.example.invalid'
+
+        when:
+        def parameters = buildParametersProvider.getParameters(sBuild, false)
+
+        then:
+        sProject.getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE) >> [sProjectFeatureDescriptor, higherProjectFeatureDescriptor]
+        parameters.get(GRADLE_ENTERPRISE_URL_CONFIG_PARAM) == null
+    }
 }

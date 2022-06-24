@@ -6,11 +6,12 @@ import jetbrains.buildServer.serverSide.SProjectFeatureDescriptor;
 import jetbrains.buildServer.serverSide.oauth.OAuthConstants;
 import jetbrains.buildServer.serverSide.parameters.BuildParametersProvider;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER;
@@ -42,54 +43,63 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
  * needed in order to automatically apply Gradle Enterprise to Gradle and Maven builds, based on the configuration of
  * the connection.
  */
+@SuppressWarnings({"DuplicatedCode", "Convert2Diamond"})
 public final class GradleEnterpriseParametersProvider implements BuildParametersProvider {
+    private static final String OVERRIDE_STRING = "UNDEFINED";
 
-    @SuppressWarnings("DuplicatedCode")
     @NotNull
     @Override
     public Map<String, String> getParameters(@NotNull SBuild build, boolean emulationMode) {
-        SProjectFeatureDescriptor descriptor = getProjectFeatureDescriptor(build);
-        if (descriptor == null) {
-            return Collections.emptyMap();
-        }
-
-        Map<String, String> descriptorParameters = descriptor.getParameters();
+        List<Map<String, String>> allConnectionParameters = getAllConnectionParameters(build);
 
         // descriptorParameters can contain null values, but TeamCity handles these null parameters as if they were not set
         Map<String, String> params = new HashMap<>();
-        params.put(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
-        params.put(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, descriptorParameters.get(GRADLE_ENTERPRISE_URL));
-        params.put(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, descriptorParameters.get(ALLOW_UNTRUSTED_SERVER));
-        params.put(GE_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(GE_PLUGIN_VERSION));
-        params.put(CCUD_PLUGIN_VERSION_CONFIG_PARAM, descriptorParameters.get(CCUD_PLUGIN_VERSION));
-        params.put(GE_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(GE_EXTENSION_VERSION));
-        params.put(CCUD_EXTENSION_VERSION_CONFIG_PARAM, descriptorParameters.get(CCUD_EXTENSION_VERSION));
-        params.put(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, descriptorParameters.get(CUSTOM_GE_EXTENSION_COORDINATES));
-        params.put(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, descriptorParameters.get(CUSTOM_CCUD_EXTENSION_COORDINATES));
-        params.put(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, descriptorParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
-        params.put(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, descriptorParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
+
+        for(int i = allConnectionParameters.size() - 1; i >= 0; i--) {
+            Map<String, String> connectionParameters = allConnectionParameters.get(i);
+
+            setParameter(params, GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, connectionParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
+            setParameter(params, GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParameters.get(GRADLE_ENTERPRISE_URL));
+            setParameter(params, ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, connectionParameters.get(ALLOW_UNTRUSTED_SERVER));
+            setParameter(params, GE_PLUGIN_VERSION_CONFIG_PARAM, connectionParameters.get(GE_PLUGIN_VERSION));
+            setParameter(params, CCUD_PLUGIN_VERSION_CONFIG_PARAM, connectionParameters.get(CCUD_PLUGIN_VERSION));
+            setParameter(params, GE_EXTENSION_VERSION_CONFIG_PARAM, connectionParameters.get(GE_EXTENSION_VERSION));
+            setParameter(params, CCUD_EXTENSION_VERSION_CONFIG_PARAM, connectionParameters.get(CCUD_EXTENSION_VERSION));
+            setParameter(params, CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParameters.get(CUSTOM_GE_EXTENSION_COORDINATES));
+            setParameter(params, CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParameters.get(CUSTOM_CCUD_EXTENSION_COORDINATES));
+            setParameter(params, INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, connectionParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
+            setParameter(params, GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, connectionParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
+        }
         return params;
     }
 
-    @Nullable
-    private SProjectFeatureDescriptor getProjectFeatureDescriptor(@NotNull SBuild build) {
+    private static void setParameter(Map<String, String> params, String key, String value) {
+        if (params.containsKey(key) && OVERRIDE_STRING.equals(value)) {
+            params.remove(key);
+        } else if (value != null) {
+            params.put(key, value);
+        }
+    }
+
+    @NotNull
+    private List<Map<String, String>> getAllConnectionParameters(@NotNull SBuild build) {
+        List<Map<String, String>> descriptors = new ArrayList<Map<String, String>>();
+
         SBuildType buildType = build.getBuildType();
         if (buildType == null) {
-            return null;
+            return descriptors;
         }
 
-        // Find the first connection that matches the GE provider type. From testing, this seems to have the following ordering behavior:
-        // - If there are duplicate connections on a project, the newest one wins
-        // - Connections on subprojects can override connections on the root project regardless of age
         Collection<SProjectFeatureDescriptor> connections = buildType.getProject().getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE);
         for (SProjectFeatureDescriptor descriptor : connections) {
-            String oauthProviderType = descriptor.getParameters().get(OAuthConstants.OAUTH_TYPE_PARAM);
+            Map<String, String> parameters = descriptor.getParameters();
+            String oauthProviderType = parameters.get(OAuthConstants.OAUTH_TYPE_PARAM);
             if (GRADLE_ENTERPRISE_CONNECTION_PROVIDER.equals(oauthProviderType)) {
-                return descriptor;
+                descriptors.add(parameters);
             }
         }
 
-        return null;
+        return descriptors;
     }
 
     @NotNull
