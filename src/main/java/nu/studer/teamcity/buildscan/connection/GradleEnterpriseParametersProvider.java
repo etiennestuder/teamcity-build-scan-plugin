@@ -46,8 +46,6 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 @SuppressWarnings({"DuplicatedCode", "Convert2Diamond"})
 public final class GradleEnterpriseParametersProvider implements BuildParametersProvider {
 
-    private static final String OVERRIDE_STRING = "UNDEFINED";
-
     @NotNull
     @Override
     public Map<String, String> getParameters(@NotNull SBuild build, boolean emulationMode) {
@@ -73,9 +71,7 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
     }
 
     private static void setParameter(String key, String value, Map<String, String> params) {
-        if (params.containsKey(key) && OVERRIDE_STRING.equals(value)) {
-            params.remove(key);
-        } else if (value != null) {
+        if (value != null) {
             params.put(key, value);
         }
     }

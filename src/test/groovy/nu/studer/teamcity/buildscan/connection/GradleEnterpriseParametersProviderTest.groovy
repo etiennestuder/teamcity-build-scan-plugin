@@ -162,16 +162,4 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         parameters.get(GRADLE_ENTERPRISE_URL_CONFIG_PARAM) == value
     }
 
-    def "clears configuration parameter when UNDEFINED is passed"() {
-        given:
-        descriptorParams[GRADLE_ENTERPRISE_URL] = 'UNDEFINED'
-        higherDescriptorParams[GRADLE_ENTERPRISE_URL] = 'https://ge.example.invalid'
-
-        when:
-        def parameters = buildParametersProvider.getParameters(sBuild, false)
-
-        then:
-        parameters.get(GRADLE_ENTERPRISE_URL_CONFIG_PARAM) == null
-    }
-
 }
