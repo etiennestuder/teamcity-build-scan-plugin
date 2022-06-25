@@ -14,9 +14,9 @@ import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbit
 import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.MAVEN_RUNNER
 import static nu.studer.teamcity.buildscan.internal.DefaultBuildScanDisplayArbiter.SIMPLE_RUNNER
 
+@Unroll
 class DefaultBuildScanDisplayArbiterTest extends Specification {
 
-    @Unroll
     def "show build scan info if Gradle runner is present and build created a build scan"() {
         given:
         BuildScanLookup buildScanLookup = Stub(BuildScanLookup)
@@ -48,7 +48,6 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
         []                                                                                 | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | false
     }
 
-    @Unroll
     def "show build scan info if Maven runner is present and build created a build scan"() {
         given:
         BuildScanLookup buildScanLookup = Stub(BuildScanLookup)
@@ -80,7 +79,6 @@ class DefaultBuildScanDisplayArbiterTest extends Specification {
         []                                                                                | BuildScanReferences.of(new BuildScanReference('someScanId', 'someScanUrl')) | false
     }
 
-    @Unroll
     def "show build scan info if CmdLine runner is present and build created a build scan"() {
         given:
         BuildScanLookup buildScanLookup = Stub(BuildScanLookup)

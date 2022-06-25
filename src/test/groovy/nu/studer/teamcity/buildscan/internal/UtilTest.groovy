@@ -3,9 +3,9 @@ package nu.studer.teamcity.buildscan.internal
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@Unroll
 class UtilTest extends Specification {
 
-    @Unroll
     def "build scan url detection works for Gradle and Maven builds"() {
         expect:
         Util.isBuildScanUrl(text) == isScanUrl
@@ -17,7 +17,6 @@ class UtilTest extends Specification {
         '> Task :help'                                    | false
     }
 
-    @Unroll
     def "can get build scan ID"() {
         expect:
         Util.getBuildScanId(text) == buildScanId
@@ -28,7 +27,6 @@ class UtilTest extends Specification {
         '[INFO] https://gradle.chess.com/s/urh37ke7awlrk' | 'urh37ke7awlrk'
     }
 
-    @Unroll
     def "can get build scan url"() {
         expect:
         Util.getBuildScanUrl(text) == buildScanUrl

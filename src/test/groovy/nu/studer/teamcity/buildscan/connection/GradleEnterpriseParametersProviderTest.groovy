@@ -33,6 +33,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM
 
+@Unroll
 class GradleEnterpriseParametersProviderTest extends Specification {
 
     BuildParametersProvider buildParametersProvider
@@ -98,8 +99,7 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         parameters.isEmpty()
     }
 
-    @Unroll
-    def "sets #configParam config param when #descriptorParam descriptor param is set"(String descriptorParam, String configParam, String value) {
+    def "sets #configParam config param when #descriptorParam descriptor param is set"() {
         given:
         descriptorParams[descriptorParam] = value
 

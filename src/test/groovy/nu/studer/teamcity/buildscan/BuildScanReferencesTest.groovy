@@ -3,9 +3,9 @@ package nu.studer.teamcity.buildscan
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@Unroll
 class BuildScanReferencesTest extends Specification {
 
-    @Unroll
     def "can serialize and deserialize through custom serialization"() {
         when:
         def bytes = new ByteArrayOutputStream()
@@ -41,7 +41,6 @@ class BuildScanReferencesTest extends Specification {
         !buildScanReferences.isEmpty()
     }
 
-    @Unroll
     def "can get number of elements"() {
         expect:
         buildScanReferences.size() == expectedSize

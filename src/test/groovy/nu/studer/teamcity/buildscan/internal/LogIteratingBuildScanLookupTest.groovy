@@ -9,6 +9,7 @@ import nu.studer.teamcity.buildscan.TeamCityConfiguration
 import spock.lang.Specification
 import spock.lang.Unroll
 
+@Unroll
 class LogIteratingBuildScanLookupTest extends Specification {
 
     def "iterates build log iff configuration parameter present and set to true"() {
@@ -127,7 +128,6 @@ class LogIteratingBuildScanLookupTest extends Specification {
         buildScans.isEmpty()
     }
 
-    @Unroll
     def "finds one or more build scan publications if preceded by publishing message"() {
         given:
         LogIteratingBuildScanLookup lookup = new LogIteratingBuildScanLookup()

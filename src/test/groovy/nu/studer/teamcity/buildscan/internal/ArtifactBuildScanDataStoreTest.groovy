@@ -7,6 +7,7 @@ import spock.lang.Unroll
 
 import java.nio.file.Files
 
+@Unroll
 class ArtifactBuildScanDataStoreTest extends Specification {
 
     ArtifactBuildScanDataStore store
@@ -34,7 +35,6 @@ class ArtifactBuildScanDataStoreTest extends Specification {
         store.getBuildScanLinksFile(sbuild).toFile().readLines() == []
     }
 
-    @Unroll
     def "build scans urls are appended to build scan links file line by line"() {
         given:
         SBuild sbuild = Stub(SBuild)
@@ -51,7 +51,6 @@ class ArtifactBuildScanDataStoreTest extends Specification {
         buildScanUrls << [['http://gradle.com/s/1'], ['http://gradle.com/s/1', 'http://gradle.com/s/2']]
     }
 
-    @Unroll
     def "fetched build scan references contain previously persisted build scan urls"() {
         given:
         SBuild sbuild = Stub(SBuild)
