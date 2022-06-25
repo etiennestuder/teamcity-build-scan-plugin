@@ -45,35 +45,34 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
  */
 @SuppressWarnings({"DuplicatedCode", "Convert2Diamond"})
 public final class GradleEnterpriseParametersProvider implements BuildParametersProvider {
+
     private static final String OVERRIDE_STRING = "UNDEFINED";
 
     @NotNull
     @Override
     public Map<String, String> getParameters(@NotNull SBuild build, boolean emulationMode) {
-        List<Map<String, String>> allConnectionParameters = getAllConnectionParameters(build);
+        List<Map<String, String>> connections = getAllGeConnections(build);
 
         // descriptorParameters can contain null values, but TeamCity handles these null parameters as if they were not set
         Map<String, String> params = new HashMap<>();
-
-        for(int i = allConnectionParameters.size() - 1; i >= 0; i--) {
-            Map<String, String> connectionParameters = allConnectionParameters.get(i);
-
-            setParameter(params, GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, connectionParameters.get(GRADLE_PLUGIN_REPOSITORY_URL));
-            setParameter(params, GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParameters.get(GRADLE_ENTERPRISE_URL));
-            setParameter(params, ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, connectionParameters.get(ALLOW_UNTRUSTED_SERVER));
-            setParameter(params, GE_PLUGIN_VERSION_CONFIG_PARAM, connectionParameters.get(GE_PLUGIN_VERSION));
-            setParameter(params, CCUD_PLUGIN_VERSION_CONFIG_PARAM, connectionParameters.get(CCUD_PLUGIN_VERSION));
-            setParameter(params, GE_EXTENSION_VERSION_CONFIG_PARAM, connectionParameters.get(GE_EXTENSION_VERSION));
-            setParameter(params, CCUD_EXTENSION_VERSION_CONFIG_PARAM, connectionParameters.get(CCUD_EXTENSION_VERSION));
-            setParameter(params, CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParameters.get(CUSTOM_GE_EXTENSION_COORDINATES));
-            setParameter(params, CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParameters.get(CUSTOM_CCUD_EXTENSION_COORDINATES));
-            setParameter(params, INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, connectionParameters.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP));
-            setParameter(params, GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, connectionParameters.get(GRADLE_ENTERPRISE_ACCESS_KEY));
+        for (int i = connections.size() - 1; i >= 0; i--) {
+            Map<String, String> connectionParams = connections.get(i);
+            setParameter(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, connectionParams.get(GRADLE_PLUGIN_REPOSITORY_URL), params);
+            setParameter(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParams.get(GRADLE_ENTERPRISE_URL), params);
+            setParameter(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, connectionParams.get(ALLOW_UNTRUSTED_SERVER), params);
+            setParameter(GE_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(GE_PLUGIN_VERSION), params);
+            setParameter(CCUD_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_PLUGIN_VERSION), params);
+            setParameter(GE_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(GE_EXTENSION_VERSION), params);
+            setParameter(CCUD_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_EXTENSION_VERSION), params);
+            setParameter(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_GE_EXTENSION_COORDINATES), params);
+            setParameter(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_CCUD_EXTENSION_COORDINATES), params);
+            setParameter(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, connectionParams.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP), params);
+            setParameter(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, connectionParams.get(GRADLE_ENTERPRISE_ACCESS_KEY), params);
         }
         return params;
     }
 
-    private static void setParameter(Map<String, String> params, String key, String value) {
+    private static void setParameter(String key, String value, Map<String, String> params) {
         if (params.containsKey(key) && OVERRIDE_STRING.equals(value)) {
             params.remove(key);
         } else if (value != null) {
@@ -82,24 +81,22 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
     }
 
     @NotNull
-    private List<Map<String, String>> getAllConnectionParameters(@NotNull SBuild build) {
-        List<Map<String, String>> descriptors = new ArrayList<Map<String, String>>();
-
+    private static List<Map<String, String>> getAllGeConnections(@NotNull SBuild build) {
         SBuildType buildType = build.getBuildType();
         if (buildType == null) {
-            return descriptors;
+            return Collections.emptyList();
         }
 
-        Collection<SProjectFeatureDescriptor> connections = buildType.getProject().getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE);
-        for (SProjectFeatureDescriptor descriptor : connections) {
+        List<Map<String, String>> connections = new ArrayList<Map<String, String>>();
+        Collection<SProjectFeatureDescriptor> descriptors = buildType.getProject().getAvailableFeaturesOfType(OAuthConstants.FEATURE_TYPE);
+        for (SProjectFeatureDescriptor descriptor : descriptors) {
             Map<String, String> parameters = descriptor.getParameters();
-            String oauthProviderType = parameters.get(OAuthConstants.OAUTH_TYPE_PARAM);
-            if (GRADLE_ENTERPRISE_CONNECTION_PROVIDER.equals(oauthProviderType)) {
-                descriptors.add(parameters);
+            String connectionType = parameters.get(OAuthConstants.OAUTH_TYPE_PARAM);
+            if (GRADLE_ENTERPRISE_CONNECTION_PROVIDER.equals(connectionType)) {
+                connections.add(parameters);
             }
         }
-
-        return descriptors;
+        return connections;
     }
 
     @NotNull
