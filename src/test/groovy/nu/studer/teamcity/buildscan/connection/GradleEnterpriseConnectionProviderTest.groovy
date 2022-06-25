@@ -13,10 +13,12 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP
 
+@Unroll
 class GradleEnterpriseConnectionProviderTest extends Specification {
 
     OAuthProvider connectionProvider
@@ -25,8 +27,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         connectionProvider = new GradleEnterpriseConnectionProvider(Stub(PluginDescriptor))
     }
 
-    @Unroll
-    def "default version of #key is set"(String key) {
+    def "default version of #key is set"() {
         when:
         def defaultProperties = connectionProvider.getDefaultProperties()
 
@@ -42,8 +43,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         ]
     }
 
-    @Unroll
-    def "description includes value of #parameter"(String parameter, String value, String text) {
+    def "description includes value of #parameter"() {
         given:
         OAuthConnectionDescriptor connection = Stub()
         connection.getParameters() >> [(parameter): value]
@@ -66,6 +66,18 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Gradle Enterprise Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP | 'true'                          | 'Instrument Command Line Build Steps'
+    }
+
+    def "description includes includes placeholder value for access key"() {
+        given:
+        OAuthConnectionDescriptor connection = Stub()
+        connection.getParameters() >> [(GRADLE_ENTERPRISE_ACCESS_KEY): 'secret']
+
+        when:
+        def description = connectionProvider.describeConnection(connection)
+
+        then:
+        description.contains('Gradle Enterprise Access Key: ******')
     }
 
 }

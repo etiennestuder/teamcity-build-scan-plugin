@@ -24,6 +24,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
@@ -76,6 +77,11 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);
         if (allowUntrustedServer != null) {
             description += String.format("* Allow Untrusted Server: %s\n", allowUntrustedServer);
+        }
+
+        String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
+        if (geAccessKey != null) {
+            description += String.format("* Gradle Enterprise Access Key: %s\n", "******");
         }
 
         description += "\nGradle Settings:\n";
