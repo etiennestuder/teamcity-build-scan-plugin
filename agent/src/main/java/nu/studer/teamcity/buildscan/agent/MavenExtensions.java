@@ -22,7 +22,7 @@ import java.io.IOException;
  */
 final class MavenExtensions {
 
-    private static final Logger LOG = Logger.getInstance("jetbrains.buildAgent.BUILDSCAN");
+    private static final Logger LOG = Logger.getInstance("jetbrains.buildServer.BUILDSCAN");
 
     private static final XPath XPATH = XPathFactory.newInstance().newXPath();
 
