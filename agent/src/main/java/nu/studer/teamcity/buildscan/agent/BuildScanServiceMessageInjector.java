@@ -28,7 +28,7 @@ import java.util.Map;
 @SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
-    private static final Logger LOG = Logger.getInstance(BuildScanServiceMessageInjector.class.getName());
+    private static final Logger LOG = Logger.getInstance("jetbrains.buildAgent.BUILDSCAN");
 
     // TeamCity Gradle runner
 
