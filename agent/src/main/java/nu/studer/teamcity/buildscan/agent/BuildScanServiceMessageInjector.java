@@ -99,11 +99,14 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
+            LOG.info("Attempt to instrument Gradle build with Gradle Enterprise");
             instrumentGradleRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
+            LOG.info("Attempt to instrument Maven build with Gradle Enterprise");
             instrumentMavenRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(COMMAND_LINE_RUNNER)) {
             if (getBooleanConfigParam(INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM, runner)) {
+                LOG.info("Attempt to instrument command line build with Gradle Enterprise");
                 instrumentCommandLineRunner(runner);
             }
         }
