@@ -254,31 +254,31 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         LOG.info("Working dir: " + workingDirParam);
         LOG.info("POM location: " + pomLocation);
 
-        File workingDir;
+        final List<File> searchLocations = new ArrayList<File>();
+
+        // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
         if (checkoutDirParam != null && pomLocation != null) {
-            // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
-            workingDir = new File(checkoutDirParam, pomLocation).getParentFile();
-        } else if (workingDirParam != null) {
-            // either the working dir is set explicitly in the TC config, or it is set implicitly as the value of the checkout dir
-            workingDir = new File(workingDirParam);
-        } else {
-            // should never be the case
-            workingDir = null;
+            searchLocations.add(new File(checkoutDirParam, pomLocation).getParentFile());
         }
 
-        if (workingDir != null) {
-            File extensionsFile = new File(workingDir, ".mvn/extensions.xml");
+        // either the working dir is set explicitly in the TC config, or it is set implicitly as the value of the checkout dir
+        if (workingDirParam != null) {
+            searchLocations.add(new File(workingDirParam));
+        }
+
+        for (File dir : searchLocations) {
+            File extensionsFile = new File(dir, ".mvn/extensions.xml");
+            LOG.info("Searching for extensions file in: " + extensionsFile.getParentFile());
             if (extensionsFile.exists()) {
                 LOG.info("Found extensions file: " + extensionsFile);
                 return MavenExtensions.fromFile(extensionsFile);
             } else {
-                LOG.info("Could not find extensions file: " + extensionsFile);
-                return MavenExtensions.empty();
+                LOG.info("No extensions file found at: " + extensionsFile);
             }
-        } else {
-            LOG.warn("Unable to determine Maven project working dir");
-            return MavenExtensions.empty();
         }
+
+        LOG.warn("Unable to determine Maven project working dir");
+        return MavenExtensions.empty();
     }
 
     @Nullable

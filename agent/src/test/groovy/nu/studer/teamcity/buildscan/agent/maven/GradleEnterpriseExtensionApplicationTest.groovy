@@ -544,6 +544,47 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "publishes build scan when pom is in a subdirectory and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+
+        and:
+        moveProjectToSubDir()
+        setProjectDefinedExtensions('1.14.2', null)
+
+        and:
+        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
+        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+
+        when:
+        injector.beforeRunnerStart(context)
+        def output = run(runnerParameters)
+
+        then:
+        outputContainsBuildSuccess(output)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
+    void moveProjectToSubDir() {
+        def subDir = new File(testProjectDir, "subDir")
+        def movedPom = new File(subDir, "pom.xml")
+
+        subDir.mkdirs()
+        new File(testProjectDir, "pom.xml").renameTo(movedPom)
+
+        runnerParameters['pomLocation'] = testProjectDir.toPath().relativize(movedPom.toPath()).toString()
+    }
+
     void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension = null) {
         def extensionsXml = new File(dotMvn, 'extensions.xml')
         extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
@@ -673,9 +714,14 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
         if (runnerArgs.trim()) {
             command += runnerArgs.split(' ').toList()
         }
+        if (runnerParameters.containsKey('pomLocation')) {
+            command += '-f'
+            command += new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath
+        }
 
+        def workingDir = runnerParameters.get('teamcity.build.checkoutDir') ? new File(runnerParameters.get('teamcity.build.checkoutDir')) : testProjectDir
         new ProcessBuilder(command)
-            .directory(testProjectDir)
+            .directory(workingDir)
             .start()
             .text
     }
