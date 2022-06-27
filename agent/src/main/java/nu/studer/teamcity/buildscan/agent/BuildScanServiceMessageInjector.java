@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.agent;
 
+import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.agent.AgentLifeCycleAdapter;
 import jetbrains.buildServer.agent.AgentLifeCycleListener;
 import jetbrains.buildServer.agent.BuildAgent;
@@ -26,6 +27,8 @@ import java.util.Map;
  */
 @SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
+
+    private static final Logger LOG = Logger.getInstance(BuildScanServiceMessageInjector.class.getName());
 
     // TeamCity Gradle runner
 
@@ -244,6 +247,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         String workingDirParam = getOptionalRunnerParam("teamcity.build.workingDir", runner);
         String pomLocation = getOptionalRunnerParam("pomLocation", runner);
 
+        LOG.info("Checkout dir: " + checkoutDirParam);
+        LOG.info("Working dir: " + workingDirParam);
+        LOG.info("POM location: " + pomLocation);
+
         File workingDir;
         if (checkoutDirParam != null && pomLocation != null) {
             // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
@@ -256,7 +263,19 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             workingDir = null;
         }
 
-        return workingDir != null ? MavenExtensions.fromFile(new File(workingDir, ".mvn/extensions.xml")) : MavenExtensions.empty();
+        if (workingDir != null) {
+            File extensionsFile = new File(workingDir, ".mvn/extensions.xml");
+            if (extensionsFile.exists()) {
+                LOG.info("Found extensions file: " + extensionsFile);
+                return MavenExtensions.fromFile(extensionsFile);
+            } else {
+                LOG.info("Could not find extensions file: " + extensionsFile);
+                return MavenExtensions.empty();
+            }
+        } else {
+            LOG.warn("Unable to determine Maven project working dir");
+            return MavenExtensions.empty();
+        }
     }
 
     @Nullable

@@ -40,23 +40,19 @@ final class MavenExtensions {
     }
 
     static MavenExtensions fromFile(@NotNull File extensionsFile) {
-        if (!extensionsFile.exists()) {
-            return MavenExtensions.empty();
-        }
-
         //noinspection TryWithIdenticalCatches
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(extensionsFile);
             document.normalizeDocument();
             return new MavenExtensions(document);
         } catch (ParserConfigurationException e) {
-            LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
+            LOG.warn("Failed to parse extensions file: " + extensionsFile.getAbsolutePath(), e);
             return MavenExtensions.empty();
         } catch (IOException e) {
-            LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
+            LOG.warn("Failed to parse extensions file: " + extensionsFile.getAbsolutePath(), e);
             return MavenExtensions.empty();
         } catch (SAXException e) {
-            LOG.warn("Failed to parse file: " + extensionsFile.getAbsolutePath(), e);
+            LOG.warn("Failed to parse extensions file: " + extensionsFile.getAbsolutePath(), e);
             return MavenExtensions.empty();
         }
     }
