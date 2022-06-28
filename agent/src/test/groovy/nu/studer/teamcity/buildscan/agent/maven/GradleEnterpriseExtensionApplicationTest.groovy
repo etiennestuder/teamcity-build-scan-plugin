@@ -6,6 +6,7 @@ import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
 import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.TempDir
 
@@ -544,13 +545,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         given:
         File pom = projectConfiguration.with (true) {
+            geUrl = GE_URL
             geExtensionVersion = '1.14.2'
-            pomDir = 'subdir'
+            pomDirName = 'subdir'
         }.buildIn(checkoutDir)
 
         and:
         teamCityConfiguration.with(true) {
-            geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             pathToPomFile = getRelativePomPath(checkoutDir, pom)
         }.applyTo(configParameters, runnerParameters)
@@ -563,7 +564,71 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         and:
         outputContainsTeamCityServiceMessageBuildStarted(output)
-        outputMissesTeamCityServiceMessageBuildScanUrl(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
+    def "publishes build scan when pom is in a subdirectory and the subdirectory is specified as the pom path and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        File pom = projectConfiguration.with (true) {
+            geUrl = GE_URL
+            geExtensionVersion = '1.14.2'
+            pomDirName = 'subdir'
+        }.buildIn(checkoutDir)
+
+        and:
+        teamCityConfiguration.with(true) {
+            geExtensionVersion = GE_EXTENSION_VERSION
+            pathToPomFile = getRelativePomPath(checkoutDir, pom.parentFile)
+        }.applyTo(configParameters, runnerParameters)
+
+        when:
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
+
+        then:
+        outputContainsBuildSuccess(output)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
+
+    @Ignore
+    def "publishes build scan when pom is in a subdirectory and extensions.xml is in a higher subdirectory (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        File pom = projectConfiguration.with (true) {
+            geUrl = GE_URL
+            geExtensionVersion = '1.14.2'
+            pomDirName = 'subdir1/subdir2'
+            dotMvnParentDirName = 'subdir1'
+        }.buildIn(checkoutDir)
+
+        and:
+        teamCityConfiguration.with(true) {
+            geExtensionVersion = GE_EXTENSION_VERSION
+            pathToPomFile = getRelativePomPath(checkoutDir, pom)
+        }.applyTo(configParameters, runnerParameters)
+
+        when:
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
+
+        then:
+        outputContainsBuildSuccess(output)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
