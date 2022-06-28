@@ -1,20 +1,18 @@
 package nu.studer.teamcity.buildscan.agent
 
-import org.w3c.dom.Document
 import spock.lang.Specification
 import spock.lang.TempDir
 
 class MavenExtensionsTest extends Specification {
 
-    private static final GE_MAVEN_EXTENSION_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension", "0.1.0")
-    private static final CCUD_MAVEN_EXTENSION_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension", "0.2.0")
+    private static final SOME_EXTENSION_COORDINATES = new MavenCoordinates('com.gradle', 'some-artifact-id', '0.1.0')
 
     @TempDir
     File extensionsDir
     File extensionsXml
 
     def setup() {
-        extensionsXml = new File(extensionsDir, "extensions.xml")
+        extensionsXml = new File(extensionsDir, 'extensions.xml')
     }
 
     def 'hasExtension returns false when MavenExtensions is created via empty'() {
@@ -22,20 +20,7 @@ class MavenExtensionsTest extends Specification {
         def mavenExtensions = MavenExtensions.empty()
 
         then:
-        assert !mavenExtensions.hasExtension(GE_MAVEN_EXTENSION_COORDINATES)
-        assert !mavenExtensions.hasExtension(CCUD_MAVEN_EXTENSION_COORDINATES)
-    }
-
-    def 'hasExtension returns false when extensions xml file is not valid xml'() {
-        given:
-        extensionsXml << ""
-
-        when:
-        def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
-
-        then:
-        assert !mavenExtensions.hasExtension(GE_MAVEN_EXTENSION_COORDINATES)
-        assert !mavenExtensions.hasExtension(CCUD_MAVEN_EXTENSION_COORDINATES)
+        !mavenExtensions.hasExtension(SOME_EXTENSION_COORDINATES)
     }
 
     def 'hasExtension returns false when extensions xml file is not present'() {
@@ -46,70 +31,97 @@ class MavenExtensionsTest extends Specification {
         def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
 
         then:
-        assert !mavenExtensions.hasExtension(GE_MAVEN_EXTENSION_COORDINATES)
-        assert !mavenExtensions.hasExtension(CCUD_MAVEN_EXTENSION_COORDINATES)
+        !mavenExtensions.hasExtension(SOME_EXTENSION_COORDINATES)
     }
 
-    def 'hasExtension returns true when extensions xml contains extensions'() {
+    def 'hasExtension returns false when extensions xml file is not valid xml'() {
         given:
-        extensionsXml << generateExtensionsXml(GE_MAVEN_EXTENSION_COORDINATES, CCUD_MAVEN_EXTENSION_COORDINATES)
+        extensionsXml << ""
 
         when:
         def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
 
         then:
-        assert mavenExtensions.hasExtension(GE_MAVEN_EXTENSION_COORDINATES)
-        assert mavenExtensions.hasExtension(CCUD_MAVEN_EXTENSION_COORDINATES)
+        !mavenExtensions.hasExtension(SOME_EXTENSION_COORDINATES)
     }
 
-    def 'hasExtension returns false when extension argument is null'() {
+    def 'hasExtension returns false when coordinates argument is null'() {
         given:
-        MavenCoordinates nullCoordinates = null
-        extensionsXml << generateExtensionsXml(GE_MAVEN_EXTENSION_COORDINATES, CCUD_MAVEN_EXTENSION_COORDINATES)
+        MavenCoordinates nullCoords = null
+        extensionsXml << generateExtensionsXml(SOME_EXTENSION_COORDINATES)
 
         when:
         def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
 
         then:
-        assert !mavenExtensions.hasExtension(nullCoordinates)
+        !mavenExtensions.hasExtension(nullCoords)
     }
 
-    def 'hasExtension returns false when Document is null'() {
+    def 'hasExtension returns false when coordinates argument has invalid characters for xpath expression'() {
         given:
-        Document document = null
-
-        when:
-        def mavenExtensions = new MavenExtensions(document)
-
-        then:
-        assert !mavenExtensions.hasExtension(GE_MAVEN_EXTENSION_COORDINATES)
-        assert !mavenExtensions.hasExtension(CCUD_MAVEN_EXTENSION_COORDINATES)
-    }
-
-    def 'hasExtension returns false when extension has invalid characters for xpath expression'() {
-        given:
-        def extensionWithInvalidCharacters = new MavenCoordinates("com.example", "\'", "0.1.0")
-        extensionsXml << generateExtensionsXml(GE_MAVEN_EXTENSION_COORDINATES, CCUD_MAVEN_EXTENSION_COORDINATES)
+        def coordsWithInvalidCharacters = new MavenCoordinates('com.example', "\'")
+        extensionsXml << generateExtensionsXml(SOME_EXTENSION_COORDINATES)
 
         when:
         def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
-        mavenExtensions.hasExtension(extensionWithInvalidCharacters)
 
         then:
-        assert !mavenExtensions.hasExtension(extensionWithInvalidCharacters)
+        !mavenExtensions.hasExtension(coordsWithInvalidCharacters)
+    }
+
+    def 'hasExtension returns false when only group or artifact of coordinates argument matches'() {
+        given:
+        def coordsInExtensionsXml = new MavenCoordinates('com.gradle', 'some-artifact-id', '0.1.0')
+        def coordsToMatchSameGroup = new MavenCoordinates('com.gradle', 'different-artifact-d')
+        def coordsToMatchSameArtifact = new MavenCoordinates('com.different', 'some-artifact-id')
+        extensionsXml << generateExtensionsXml(coordsInExtensionsXml)
+
+        when:
+        def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
+
+        then:
+        !mavenExtensions.hasExtension(coordsToMatchSameGroup)
+        !mavenExtensions.hasExtension(coordsToMatchSameArtifact)
+    }
+
+    def 'hasExtension returns true when group and artifact of coordinates argument matches'() {
+        given:
+        def coordinatesInExtensionsXml = new MavenCoordinates('com.gradle', 'some-artifact-id', '0.1.0')
+        def coordinatesToMatch = new MavenCoordinates('com.gradle', 'some-artifact-id', '0.2.0')
+        extensionsXml << generateExtensionsXml(coordinatesInExtensionsXml)
+
+        when:
+        def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
+
+        then:
+        mavenExtensions.hasExtension(coordinatesToMatch)
+    }
+
+    def 'hasExtension returns true when group, artifact, and version of coordinates argument matches'() {
+        given:
+        def coordinatesInExtensionsXml = new MavenCoordinates('com.example', 'example-artifact-id', '0.1.0')
+        extensionsXml << generateExtensionsXml(SOME_EXTENSION_COORDINATES, coordinatesInExtensionsXml)
+
+        when:
+        def mavenExtensions = MavenExtensions.fromFile(extensionsXml)
+
+        then:
+        mavenExtensions.hasExtension(SOME_EXTENSION_COORDINATES)
+        mavenExtensions.hasExtension(coordinatesInExtensionsXml)
     }
 
     def generateExtensionsXml(MavenCoordinates... extensions) {
         """<?xml version="1.0" encoding="UTF-8"?>
             <extensions>
-                ${ extensions.collect {
-                    extension ->
-                        """<extension>
-                            <groupId>${extension.groupId}</groupId>
-                            <artifactId>${extension.artifactId}</artifactId>
-                            <version>${extension.version}</version>
-                        </extension>"""
-                }.join("\n") }
+                ${extensions.collect {
+            extension ->
+                """<extension>
+                           <groupId>${extension.groupId}</groupId>
+                           <artifactId>${extension.artifactId}</artifactId>
+                           <version>${extension.version}</version>
+                       </extension>"""
+        }.join("\n")}
             </extensions>"""
     }
+
 }
