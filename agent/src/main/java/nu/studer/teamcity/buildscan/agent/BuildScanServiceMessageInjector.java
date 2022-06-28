@@ -284,18 +284,18 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             searchLocations.add(new File(workingDirParam));
         }
 
+        LOG.info("Searching for extensions file");
         for (File dir : searchLocations) {
             File extensionsFile = new File(dir, ".mvn/extensions.xml");
-            LOG.info("Searching for extensions file in: " + extensionsFile.getParentFile());
             if (extensionsFile.exists()) {
                 LOG.info("Found extensions file: " + extensionsFile);
                 return MavenExtensions.fromFile(extensionsFile);
             } else {
-                LOG.info("No extensions file found at: " + extensionsFile);
+                LOG.info("Extensions file not found: " + extensionsFile);
             }
         }
 
-        LOG.warn("Unable to determine Maven project working dir");
+        LOG.warn("Unable to find extensions file");
         return MavenExtensions.empty();
     }
 
