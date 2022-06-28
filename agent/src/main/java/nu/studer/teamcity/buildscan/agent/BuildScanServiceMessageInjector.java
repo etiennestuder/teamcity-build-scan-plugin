@@ -248,21 +248,38 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private MavenExtensions getMavenExtensions(BuildRunnerContext runner) {
         String checkoutDirParam = getOptionalRunnerParam("teamcity.build.checkoutDir", runner);
         String workingDirParam = getOptionalRunnerParam("teamcity.build.workingDir", runner);
-        String pomLocation = getOptionalRunnerParam("pomLocation", runner);
+        String pomLocationParam = getOptionalRunnerParam("pomLocation", runner);
 
         LOG.info("Checkout dir: " + checkoutDirParam);
         LOG.info("Working dir: " + workingDirParam);
-        LOG.info("POM location: " + pomLocation);
+        LOG.info("POM location: " + pomLocationParam);
+
+        // checkout dir should always be set
+        if (checkoutDirParam == null) {
+            LOG.warn("Checkout dir is null: unable to determine location of .mvn/extensions.xml");
+            return MavenExtensions.empty();
+        }
+
+        // working dir should always be set, either the working dir is set explicitly in the TC config, or it is set implicitly as the value of the checkout dir
+        if (workingDirParam == null) {
+            LOG.warn("Working dir is null: unable to determine location of .mvn/extensions.xml");
+            return MavenExtensions.empty();
+        }
 
         final List<File> searchLocations = new ArrayList<File>();
 
         // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
-        if (checkoutDirParam != null && pomLocation != null) {
-            searchLocations.add(new File(checkoutDirParam, pomLocation).getParentFile());
-        }
+        if (pomLocationParam != null) {
+            File pomLocation = new File(checkoutDirParam, pomLocationParam);
+            File pomContainingDir = pomLocation.isFile() ? pomLocation.getParentFile() : pomLocation;
 
-        // either the working dir is set explicitly in the TC config, or it is set implicitly as the value of the checkout dir
-        if (workingDirParam != null) {
+            searchLocations.add(pomContainingDir);
+
+            while (!pomContainingDir.getAbsoluteFile().equals(new File(checkoutDirParam).getAbsoluteFile())) {
+                pomContainingDir = pomContainingDir.getParentFile();
+                searchLocations.add(pomContainingDir);
+            }
+        } else {
             searchLocations.add(new File(workingDirParam));
         }
 
