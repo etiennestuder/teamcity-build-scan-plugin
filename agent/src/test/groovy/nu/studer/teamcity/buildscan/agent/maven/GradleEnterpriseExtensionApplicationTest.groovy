@@ -27,13 +27,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     static final String CCUD_EXTENSION_VERSION = '1.10.1'
 
     @TempDir
-    File testProjectDir
+    File checkoutDir
 
     @TempDir
     File agentTempDir
 
-    File wrapperDir
-    File dotMvn
+    @TempDir
+    File agentMavenInstallation
 
     Map<String, String> configParameters
     Map<String, String> runnerParameters
@@ -42,39 +42,22 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     ExtensionApplicationListener extensionApplicationListener
     BuildScanServiceMessageInjector injector
 
+    ProjectConfiguration projectConfiguration
+    TeamCityConfiguration teamCityConfiguration
+
     void setup() {
-        extractTestProject()
-
         configParameters = new HashMap<String, String>()
-        runnerParameters = new HashMap<String, String>()
-
-        runnerParameters.put('teamcity.build.checkoutDir', testProjectDir.absolutePath)
-        runnerParameters.put('teamcity.build.workingDir', testProjectDir.absolutePath)
+        runnerParameters = [
+            'teamcity.build.checkoutDir': checkoutDir.absolutePath,
+            'teamcity.build.workingDir':  checkoutDir.absolutePath,
+        ]
 
         context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         extensionApplicationListener = Mock(ExtensionApplicationListener)
         injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
-    }
 
-    void extractTestProject() {
-        ['pom.xml', 'mvnw', 'mvnw.cmd'].each {
-            def file = new File(testProjectDir, it)
-            file << getClass().getResourceAsStream("/maven-test-project/$it")
-            if (it.startsWith("mvnw")) {
-                file.setExecutable(true)
-            }
-        }
-
-        dotMvn = new File(testProjectDir, '.mvn')
-        dotMvn.mkdirs()
-
-        wrapperDir = new File(dotMvn, 'wrapper')
-        wrapperDir.mkdirs()
-
-        ['maven-wrapper.jar'].each {
-            def file = new File(wrapperDir, it)
-            file << getClass().getResourceAsStream("/maven-test-project/.mvn/wrapper/$it")
-        }
+        projectConfiguration = new ProjectConfiguration()
+        teamCityConfiguration = new TeamCityConfiguration()
     }
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
@@ -82,11 +65,13 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
+
+        and:
+        teamCityConfiguration.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -105,15 +90,16 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -132,19 +118,19 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.with(true){
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.buildIn(checkoutDir)
 
         and:
-        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
-        setProjectDefinedGeConfiguration()
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -163,18 +149,17 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        def pom = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        runnerParameters.put('pomLocation', 'pom.xml')
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            pathToPomFile = getRelativePomPath(checkoutDir, pom)
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters, '-f ' + new File(testProjectDir, 'pom.xml').path)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -193,22 +178,20 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        File pom = projectConfiguration.with(true){
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.buildIn(checkoutDir)
 
         and:
-        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
-        setProjectDefinedGeConfiguration()
-
-        and:
-        runnerParameters.put('pomLocation', 'pom.xml')
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            pathToPomFile = getRelativePomPath(checkoutDir, pom)
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters, '-f ' + new File(testProjectDir, 'pom.xml').path)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -227,19 +210,20 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
 
         and:
         runnerParameters.remove('teamcity.build.checkoutDir')
         runnerParameters.remove('teamcity.build.workingDir')
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -258,20 +242,21 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-
-        and: // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
-        setProjectDefinedExtensions(null, null, new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre'))
-        setProjectDefinedGeConfiguration()
+        projectConfiguration.with(true){
+            geUrl = GE_URL
+            // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
+            customExtension = new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
+        }.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.custom.coordinates', 'com.google.guava:guava')
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            geExtensionCustomCoordinates = 'com.google.guava:guava'
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -290,15 +275,17 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            ccudExtensionVersion = CCUD_EXTENSION_VERSION
+            geExtensionCustomCoordinates = 'com.google.guava:guava'
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -317,16 +304,17 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
-        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            ccudExtensionVersion = CCUD_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -345,20 +333,20 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.with(true){
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.buildIn(checkoutDir)
 
         and:
-        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
-        setProjectDefinedGeConfiguration()
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
-        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            ccudExtensionVersion = CCUD_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -377,20 +365,21 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.with(true){
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            ccudExtensionVersion = CCUD_EXTENSION_VERSION
+        }.buildIn(checkoutDir)
 
         and:
-        setProjectDefinedExtensions(GE_EXTENSION_VERSION, CCUD_EXTENSION_VERSION)
-        setProjectDefinedGeConfiguration()
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
-        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            ccudExtensionVersion = CCUD_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -409,20 +398,22 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
-
-        and: // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
-        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null, new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre'))
-        setProjectDefinedGeConfiguration()
+        projectConfiguration.with(true){
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
+            customExtension = new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
+        }.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
-        configParameters.put('buildScanPlugin.ccud.extension.custom.coordinates', 'com.google.guava:guava')
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            ccudExtensionVersion = CCUD_EXTENSION_VERSION
+            ccudExtensionCustomCoordinates = 'com.google.guava:guava'
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -441,19 +432,19 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.with(true){
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.buildIn(checkoutDir)
 
         and:
-        setProjectDefinedExtensions(GE_EXTENSION_VERSION, null)
-        setProjectDefinedGeConfiguration()
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', 'https://ge-server.invalid')
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -472,19 +463,19 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.with(true){
+            geUrl = 'https://ge-server.invalid'
+        }.buildIn(checkoutDir)
 
         and:
-        setProjectDefinedGeConfiguration('https://ge-server.invalid')
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.allow-untrusted-server', 'true')
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            allowUntrustedServer = true
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -503,15 +494,17 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            goals = 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info'
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters, '', 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info')
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -526,14 +519,15 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        projectConfiguration.buildIn(checkoutDir)
 
         and:
-        configParameters.put('buildScanPlugin.command-line-build-step.enabled', 'true')
+        teamCityConfiguration.with(true) {
+            commandLineBuildStepEnabled = true
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         outputContainsBuildSuccess(output)
@@ -549,20 +543,20 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        setMavenVersion(jdkCompatibleMavenVersion.mavenVersion)
+        File pom = projectConfiguration.with (true) {
+            geExtensionVersion = '1.14.2'
+            pomDir = 'subdir'
+        }.buildIn(checkoutDir)
 
         and:
-        moveProjectToSubDir()
-        setProjectDefinedExtensions('1.14.2', null)
-
-        and:
-        configParameters.put('buildScanPlugin.gradle-enterprise.url', GE_URL)
-        configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', GE_EXTENSION_VERSION)
-        configParameters.put('buildScanPlugin.ccud.extension.version', CCUD_EXTENSION_VERSION)
+        teamCityConfiguration.with(true) {
+            geUrl = GE_URL
+            geExtensionVersion = GE_EXTENSION_VERSION
+            pathToPomFile = getRelativePomPath(checkoutDir, pom)
+        }.applyTo(configParameters, runnerParameters)
 
         when:
-        injector.beforeRunnerStart(context)
-        def output = run(runnerParameters)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, runnerParameters)
 
         then:
         outputContainsBuildSuccess(output)
@@ -575,60 +569,20 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    void moveProjectToSubDir() {
-        def subDir = new File(testProjectDir, "subDir")
-        def movedPom = new File(subDir, "pom.xml")
+    String run(String mavenVersion, Map<String, String> runnerParameters) {
+        injector.beforeRunnerStart(context)
 
-        subDir.mkdirs()
-        new File(testProjectDir, "pom.xml").renameTo(movedPom)
+        def runner = new MavenRunner()
+            .withVersion(mavenVersion)
+            .withArguments("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
+            .withProjectDir(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath)
+            .withInstallationDirectory(agentMavenInstallation)
 
-        runnerParameters['pomLocation'] = testProjectDir.toPath().relativize(movedPom.toPath()).toString()
-    }
-
-    void setProjectDefinedExtensions(String geExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension = null) {
-        def extensionsXml = new File(dotMvn, 'extensions.xml')
-        extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
-
-        if (geExtensionVersion) {
-            extensionsXml << """
-            <extension>
-                <groupId>com.gradle</groupId>
-                <artifactId>gradle-enterprise-maven-extension</artifactId>
-                <version>$geExtensionVersion</version>
-            </extension>"""
+        if (runnerParameters.containsKey('pomLocation')) {
+            runner.withArguments(runner.arguments + ['-f', new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath])
         }
 
-        if (ccudExtensionVersion) {
-            extensionsXml << """
-            <extension>
-                <groupId>com.gradle</groupId>
-                <artifactId>common-custom-user-data-maven-extension</artifactId>
-                <version>$ccudExtensionVersion</version>
-            </extension>"""
-        }
-
-        if (customExtension) {
-            extensionsXml << """
-            <extension>
-                <groupId>${customExtension.group}</groupId>
-                <artifactId>${customExtension.artifact}</artifactId>
-                <version>${customExtension.version}</version>
-            </extension>"""
-        }
-
-        extensionsXml << """</extensions>"""
-    }
-
-    void setProjectDefinedGeConfiguration(String geUrl = GE_URL) {
-        File geConfig = new File(dotMvn, "gradle-enterprise.xml")
-        geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-            <gradleEnterprise
-                xmlns="https://www.gradle.com/gradle-enterprise-maven" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="https://www.gradle.com/gradle-enterprise-maven https://www.gradle.com/schema/gradle-enterprise-maven.xsd">
-              <server>
-                <url>$geUrl</url>
-              </server>
-            </gradleEnterprise>"""
+        return runner.build()
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
@@ -693,39 +647,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     }
 
-    void setMavenVersion(String version) {
-        def mavenWrapperProperties = new File(wrapperDir, 'maven-wrapper.properties')
-        mavenWrapperProperties << """distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$version/apache-maven-$version-bin.zip
-wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar
-"""
-    }
-
-    String run(Map<String, String> runnerParameters, String arguments = '', String goals = 'clean package') {
-        def mvnExecutable = System.getProperty('os.name').startsWith('Windows') ? './mvnw.cmd' : './mvnw'
-        def runnerArgs = runnerParameters.get('runnerArgs')
-
-        def command = [mvnExecutable, '-B']
-        if (goals.trim()) {
-            command += goals.split(' ').toList()
-        }
-        if (arguments.trim()) {
-            command += arguments.split(' ').toList()
-        }
-        if (runnerArgs.trim()) {
-            command += runnerArgs.split(' ').toList()
-        }
-        if (runnerParameters.containsKey('pomLocation')) {
-            command += '-f'
-            command += new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath
-        }
-
-        def workingDir = runnerParameters.get('teamcity.build.checkoutDir') ? new File(runnerParameters.get('teamcity.build.checkoutDir')) : testProjectDir
-        new ProcessBuilder(command)
-            .directory(workingDir)
-            .start()
-            .text
-    }
-
     static final class GroupArtifactVersion {
 
         String group
@@ -734,4 +655,141 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
 
     }
 
+    static final class TeamCityConfiguration {
+        String goals = 'clean package'
+        String pathToPomFile = null
+        String workingDirectory = null
+
+        String geUrl = null
+        String geExtensionVersion = null
+        String ccudExtensionVersion = null
+        String geExtensionCustomCoordinates = null
+        String ccudExtensionCustomCoordinates = null
+        Boolean allowUntrustedServer = null
+        Boolean commandLineBuildStepEnabled = null
+
+        void applyTo(Map<String, String> configParameters, Map<String, String> runnerParameters) {
+            applyRunnerParameters(runnerParameters)
+            applyConfigParameters(configParameters)
+        }
+
+        private void applyRunnerParameters(Map<String, String> runnerParameters) {
+            runnerParameters.put('goals', goals)
+
+            if (workingDirectory) {
+                runnerParameters.put('teamcity.build.workingDir', workingDirectory)
+            }
+
+            if (pathToPomFile)
+                runnerParameters.put('pomLocation', pathToPomFile)
+        }
+
+        private void applyConfigParameters(Map<String, String> configParameters) {
+            if (geUrl)
+                configParameters.put('buildScanPlugin.gradle-enterprise.url', geUrl)
+
+            if (geExtensionVersion)
+                configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', geExtensionVersion)
+
+            if (ccudExtensionVersion)
+                configParameters.put('buildScanPlugin.ccud.extension.version', ccudExtensionVersion)
+
+            if (geExtensionCustomCoordinates)
+                configParameters.put('buildScanPlugin.gradle-enterprise.extension.custom.coordinates', geExtensionCustomCoordinates)
+
+            if (ccudExtensionCustomCoordinates)
+                configParameters.put('buildScanPlugin.ccud.extension.custom.coordinates', ccudExtensionCustomCoordinates)
+
+            if (allowUntrustedServer != null)
+                configParameters.put('buildScanPlugin.gradle-enterprise.allow-untrusted-server', allowUntrustedServer.toString())
+
+            if (commandLineBuildStepEnabled != null)
+                configParameters.put('buildScanPlugin.command-line-build-step.enabled', commandLineBuildStepEnabled.toString())
+        }
+    }
+
+    static final class ProjectConfiguration {
+        String geExtensionVersion = null
+        String ccudExtensionVersion = null
+        GroupArtifactVersion customExtension = null
+        String geUrl = null
+        String pomDirName = null
+        String dotMvnParentDirName = null
+
+        File buildIn(File directory) {
+            def pomDir = pomDirName ? new File(directory, pomDirName) : directory
+            def dotMvnParentDir = dotMvnParentDirName ? new File(directory, dotMvnParentDirName) : directory
+
+            [pomDir, dotMvnParentDir].each { it.mkdirs() }
+
+            setProjectDefinedExtensions(dotMvnParentDir, geExtensionVersion, ccudExtensionVersion, customExtension)
+            setProjectDefinedGeConfiguration(dotMvnParentDir, geUrl)
+            setPomFile(pomDir, 'pom.xml')
+        }
+
+        private static File setPomFile(File directory, String name) {
+            def pom = new File(directory, name)
+            pom << getClass().getResourceAsStream("/pom.xml")
+            pom
+        }
+
+        private static void setProjectDefinedExtensions(File directory, String geExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension) {
+            def extensionsXml = getFileInDotMvn(directory, "extensions.xml")
+            extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
+
+            if (geExtensionVersion) {
+                extensionsXml << """
+            <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>gradle-enterprise-maven-extension</artifactId>
+                <version>$geExtensionVersion</version>
+            </extension>"""
+            }
+
+            if (ccudExtensionVersion) {
+                extensionsXml << """
+            <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>common-custom-user-data-maven-extension</artifactId>
+                <version>$ccudExtensionVersion</version>
+            </extension>"""
+            }
+
+            if (customExtension) {
+                extensionsXml << """
+            <extension>
+                <groupId>${customExtension.group}</groupId>
+                <artifactId>${customExtension.artifact}</artifactId>
+                <version>${customExtension.version}</version>
+            </extension>"""
+            }
+
+            extensionsXml << """</extensions>"""
+        }
+
+        private static void setProjectDefinedGeConfiguration(File directory, String geUrl) {
+            if (geUrl) {
+                def geConfig = getFileInDotMvn(directory, 'gradle-enterprise.xml')
+                geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+            <gradleEnterprise
+                xmlns="https://www.gradle.com/gradle-enterprise-maven" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xsi:schemaLocation="https://www.gradle.com/gradle-enterprise-maven https://www.gradle.com/schema/gradle-enterprise-maven.xsd">
+              <server>
+                <url>$geUrl</url>
+              </server>
+            </gradleEnterprise>"""
+            }
+        }
+
+        private static File getFileInDotMvn(File parent, String child) {
+            def dotMvn = new File(parent, ".mvn")
+            dotMvn.mkdirs()
+            return new File(dotMvn, child)
+        }
+
+    }
+
+    static String getRelativePomPath(File parent, File child) {
+        parent.toPath().relativize(child.toPath()).toString()
+    }
 }
