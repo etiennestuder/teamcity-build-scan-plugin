@@ -1,1 +1,1 @@
-TBD
+- Looks for .mvn/extensions.xml file similar to how Maven searches for it.
