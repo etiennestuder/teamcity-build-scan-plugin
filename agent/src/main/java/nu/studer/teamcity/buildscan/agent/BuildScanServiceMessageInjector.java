@@ -270,12 +270,13 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
         // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
         if (pomLocationParam != null) {
-            File pomLocation = new File(checkoutDirParam, pomLocationParam);
+            File checkoutDir = new File(checkoutDirParam);
+            File pomLocation = new File(checkoutDir, pomLocationParam);
             File pomContainingDir = pomLocation.isFile() ? pomLocation.getParentFile() : pomLocation;
 
             searchLocations.add(pomContainingDir);
 
-            while (!pomContainingDir.getAbsoluteFile().equals(new File(checkoutDirParam).getAbsoluteFile())) {
+            while (!pomContainingDir.getAbsoluteFile().equals(checkoutDir.getAbsoluteFile())) {
                 pomContainingDir = pomContainingDir.getParentFile();
                 searchLocations.add(pomContainingDir);
             }
