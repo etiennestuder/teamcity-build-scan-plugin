@@ -51,6 +51,9 @@ final class MavenRunner {
     private String run() {
         def mvnExecutableName = System.getProperty('os.name').startsWith('Windows') ? 'mvn.cmd' : 'mvn'
         def mvn = new File(installationDir, mvnExecutableName)
+
+        // because we are running a maven wrapper from a different directory, we set the multiModuleProjectDirectory to where the .mvn folder is
+        // this is how Maven finds the .mvn folder, but the maven wrapper only finds it relative to the mvn wrapper itself
         def defaultArgs = ['-B', "-Dmaven.multiModuleProjectDirectory=${multiModuleProjectDirectory}".toString()]
         def userArgs = arguments.collectMany { s -> s.trim().split(' ').toList() }
         def command = [mvn.absolutePath] + defaultArgs + userArgs

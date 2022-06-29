@@ -42,8 +42,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     ExtensionApplicationListener extensionApplicationListener
     BuildScanServiceMessageInjector injector
 
-    ProjectConfiguration projectConfiguration
-    TeamCityConfiguration teamCityConfiguration
+    Project.Configuration projectConfiguration
+    MavenBuildStepConfiguration teamCityConfiguration
 
     void setup() {
         configParameters = new HashMap<String, String>()
@@ -56,8 +56,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         extensionApplicationListener = Mock(ExtensionApplicationListener)
         injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
-        projectConfiguration = new ProjectConfiguration()
-        teamCityConfiguration = new TeamCityConfiguration()
+        projectConfiguration = new Project.Configuration()
+        teamCityConfiguration = new MavenBuildStepConfiguration()
     }
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
@@ -675,6 +675,10 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assert output.contains("[INFO] BUILD SUCCESS")
     }
 
+    static String getRelativePath(File parent, File child) {
+        parent.toPath().relativize(child.toPath()).toString()
+    }
+
     static final class JdkCompatibleMavenVersion {
 
         private final String mavenVersion
@@ -709,153 +713,5 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
                 '}'
         }
 
-    }
-
-    static final class GroupArtifactVersion {
-
-        String group
-        String artifact
-        String version
-
-    }
-
-    static final class TeamCityConfiguration {
-        String goals = 'clean package'
-        String pathToPomFile = null
-        String workingDirectory = null
-
-        String geUrl = null
-        String geExtensionVersion = null
-        String ccudExtensionVersion = null
-        String geExtensionCustomCoordinates = null
-        String ccudExtensionCustomCoordinates = null
-        Boolean allowUntrustedServer = null
-        Boolean commandLineBuildStepEnabled = null
-
-        void applyTo(Map<String, String> configParameters, Map<String, String> runnerParameters) {
-            applyRunnerParameters(runnerParameters)
-            applyConfigParameters(configParameters)
-        }
-
-        private void applyRunnerParameters(Map<String, String> runnerParameters) {
-            runnerParameters.put('goals', goals)
-
-            if (workingDirectory) {
-                runnerParameters.put('teamcity.build.workingDir', workingDirectory)
-            }
-
-            if (pathToPomFile)
-                runnerParameters.put('pomLocation', pathToPomFile)
-        }
-
-        private void applyConfigParameters(Map<String, String> configParameters) {
-            if (geUrl)
-                configParameters.put('buildScanPlugin.gradle-enterprise.url', geUrl)
-
-            if (geExtensionVersion)
-                configParameters.put('buildScanPlugin.gradle-enterprise.extension.version', geExtensionVersion)
-
-            if (ccudExtensionVersion)
-                configParameters.put('buildScanPlugin.ccud.extension.version', ccudExtensionVersion)
-
-            if (geExtensionCustomCoordinates)
-                configParameters.put('buildScanPlugin.gradle-enterprise.extension.custom.coordinates', geExtensionCustomCoordinates)
-
-            if (ccudExtensionCustomCoordinates)
-                configParameters.put('buildScanPlugin.ccud.extension.custom.coordinates', ccudExtensionCustomCoordinates)
-
-            if (allowUntrustedServer != null)
-                configParameters.put('buildScanPlugin.gradle-enterprise.allow-untrusted-server', allowUntrustedServer.toString())
-
-            if (commandLineBuildStepEnabled != null)
-                configParameters.put('buildScanPlugin.command-line-build-step.enabled', commandLineBuildStepEnabled.toString())
-        }
-    }
-
-    static final class ProjectConfiguration {
-        String geExtensionVersion = null
-        String ccudExtensionVersion = null
-        GroupArtifactVersion customExtension = null
-        String geUrl = null
-        String pomDirName = null
-        String dotMvnParentDirName = null
-
-        Project buildIn(File directory) {
-            def pomDir = pomDirName ? new File(directory, pomDirName) : directory
-            def dotMvn = new File(dotMvnParentDirName ? new File(directory, dotMvnParentDirName) : directory, '.mvn')
-
-            [pomDir, dotMvn].each { it.mkdirs() }
-
-            setProjectDefinedExtensions(dotMvn, geExtensionVersion, ccudExtensionVersion, customExtension)
-            setProjectDefinedGeConfiguration(dotMvn, geUrl)
-
-            return new Project(
-                pom: setPomFile(pomDir, 'pom.xml'),
-                dotMvn: dotMvn
-            )
-        }
-
-        private static File setPomFile(File directory, String name) {
-            def pom = new File(directory, name)
-            pom << getClass().getResourceAsStream("/pom.xml")
-            pom
-        }
-
-        private static void setProjectDefinedExtensions(File directory, String geExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension) {
-            def extensionsXml = new File(directory, "extensions.xml")
-            extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
-
-            if (geExtensionVersion) {
-                extensionsXml << """
-            <extension>
-                <groupId>com.gradle</groupId>
-                <artifactId>gradle-enterprise-maven-extension</artifactId>
-                <version>$geExtensionVersion</version>
-            </extension>"""
-            }
-
-            if (ccudExtensionVersion) {
-                extensionsXml << """
-            <extension>
-                <groupId>com.gradle</groupId>
-                <artifactId>common-custom-user-data-maven-extension</artifactId>
-                <version>$ccudExtensionVersion</version>
-            </extension>"""
-            }
-
-            if (customExtension) {
-                extensionsXml << """
-            <extension>
-                <groupId>${customExtension.group}</groupId>
-                <artifactId>${customExtension.artifact}</artifactId>
-                <version>${customExtension.version}</version>
-            </extension>"""
-            }
-
-            extensionsXml << """</extensions>"""
-        }
-
-        private static void setProjectDefinedGeConfiguration(File directory, String geUrl) {
-            if (geUrl) {
-                def geConfig = new File(directory, 'gradle-enterprise.xml')
-                geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-            <gradleEnterprise
-                xmlns="https://www.gradle.com/gradle-enterprise-maven" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="https://www.gradle.com/gradle-enterprise-maven https://www.gradle.com/schema/gradle-enterprise-maven.xsd">
-              <server>
-                <url>$geUrl</url>
-              </server>
-            </gradleEnterprise>"""
-            }
-        }
-    }
-
-    static final class Project {
-        File pom
-        File dotMvn
-    }
-
-    static String getRelativePath(File parent, File child) {
-        parent.toPath().relativize(child.toPath()).toString()
     }
 }
