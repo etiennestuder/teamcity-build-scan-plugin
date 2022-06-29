@@ -6,6 +6,7 @@ final class MavenRunner {
     File projectDir
     File installationDir
     List<String> arguments
+    File multiModuleProjectDirectory
 
     MavenRunner withVersion(String version) {
         this.version = version
@@ -36,6 +37,11 @@ final class MavenRunner {
         this
     }
 
+    MavenRunner withMultiModuleProjectDirectory(File multiModuleProjectDirectory) {
+        this.multiModuleProjectDirectory = multiModuleProjectDirectory
+        this
+    }
+
     String build() {
         checkForRequiredProperties()
         installMaven()
@@ -45,7 +51,9 @@ final class MavenRunner {
     private String run() {
         def mvnExecutableName = System.getProperty('os.name').startsWith('Windows') ? 'mvn.cmd' : 'mvn'
         def mvn = new File(installationDir, mvnExecutableName)
-        def command = [mvn.absolutePath, '-B'] + arguments.collectMany {s -> s.trim().split(' ').toList() }
+        def defaultArgs = ['-B', "-Dmaven.multiModuleProjectDirectory=${multiModuleProjectDirectory}".toString()]
+        def userArgs = arguments.collectMany { s -> s.trim().split(' ').toList() }
+        def command = [mvn.absolutePath] + defaultArgs + userArgs
 
         new ProcessBuilder(command)
             .directory(projectDir)
@@ -65,6 +73,10 @@ final class MavenRunner {
         if (!version) {
             throw new IllegalStateException("Maven version is not set")
         }
+
+        if (!multiModuleProjectDirectory) {
+            throw new IllegalStateException("multiModuleProjectDirectory is not set")
+        }
     }
 
     private void installMaven() {
@@ -74,13 +86,8 @@ final class MavenRunner {
             file.setExecutable(true)
         }
 
-        def mavenWrapperDir = new File(projectDir, '.mvn/wrapper')
-        mavenWrapperDir.mkdirs()
-
-        def mavenWrapperJar = new File(mavenWrapperDir, 'maven-wrapper.jar')
-        mavenWrapperJar << getClass().getResourceAsStream("/maven-wrapper.jar")
-
-        def mavenWrapperProperties = new File(mavenWrapperDir, 'maven-wrapper.properties')
+        def mavenWrapperProperties = new File(installationDir, '.mvn/wrapper/maven-wrapper.properties')
+        mavenWrapperProperties.parentFile.mkdirs()
         mavenWrapperProperties << """distributionUrl=https://repo.maven.apache.org/maven2/org/apache/maven/apache-maven/$version/apache-maven-$version-bin.zip
 wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar
 """
