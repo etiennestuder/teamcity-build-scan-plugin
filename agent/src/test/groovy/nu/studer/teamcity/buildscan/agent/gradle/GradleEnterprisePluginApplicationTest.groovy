@@ -316,4 +316,5 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         assert result.output.contains(repositoryInfo)
         assert 1 == result.output.count(repositoryInfo)
     }
+
 }

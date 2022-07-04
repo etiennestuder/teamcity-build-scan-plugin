@@ -638,8 +638,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         def runner = new MavenRunner(
             version: mavenVersion,
-            projectDir: new File(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath),
             installationDir: agentMavenInstallation,
+            projectDir: new File(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath),
             multiModuleProjectDir: project.dotMvn.parentFile,
             arguments: ("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
         )
