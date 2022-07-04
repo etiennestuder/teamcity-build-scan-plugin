@@ -3,13 +3,18 @@ package nu.studer.teamcity.buildscan.agent.maven
 final class MavenRunner {
 
     String version
-    File projectDir
     File installationDir
+    File projectDir
     File multiModuleProjectDir
     List<String> arguments
 
     MavenRunner withVersion(String version) {
         this.version = version
+        this
+    }
+
+    MavenRunner withInstallationDirectory(File installationDir) {
+        this.installationDir = installationDir
         this
     }
 
@@ -20,11 +25,6 @@ final class MavenRunner {
 
     MavenRunner withProjectDir(String projectDir) {
         withProjectDir(new File(projectDir))
-    }
-
-    MavenRunner withInstallationDirectory(File installationDir) {
-        this.installationDir = installationDir
-        this
     }
 
     MavenRunner withMultiModuleProjectDirectory(File multiModuleProjectDirectory) {
@@ -53,12 +53,12 @@ final class MavenRunner {
             throw new IllegalStateException("Maven version is not set")
         }
 
-        if (!projectDir) {
-            throw new IllegalStateException("Maven project directory is not set")
-        }
-
         if (!installationDir) {
             throw new IllegalStateException("Maven installation directory is not set")
+        }
+
+        if (!projectDir) {
+            throw new IllegalStateException("Maven project directory is not set")
         }
 
         if (!multiModuleProjectDir) {
