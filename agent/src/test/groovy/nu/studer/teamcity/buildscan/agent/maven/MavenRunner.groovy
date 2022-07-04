@@ -9,29 +9,10 @@ final class MavenRunner {
     List<String> arguments
 
     String build() {
-        checkForRequiredProperties()
         installMaven()
         run()
     }
-
-    private void checkForRequiredProperties() {
-        if (!version) {
-            throw new IllegalStateException("Maven version is not set")
-        }
-
-        if (!installationDir) {
-            throw new IllegalStateException("Maven installation directory is not set")
-        }
-
-        if (!projectDir) {
-            throw new IllegalStateException("Maven project directory is not set")
-        }
-
-        if (!multiModuleProjectDir) {
-            throw new IllegalStateException("multiModuleProjectDirectory is not set")
-        }
-    }
-
+    
     private void installMaven() {
         ["mvn", "mvn.cmd"].each { mvn ->
             def file = new File(installationDir, mvn)
