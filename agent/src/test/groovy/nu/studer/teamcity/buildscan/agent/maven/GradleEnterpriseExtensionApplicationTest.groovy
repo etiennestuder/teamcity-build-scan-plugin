@@ -1,7 +1,6 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
 import jetbrains.buildServer.agent.AgentLifeCycleListener
-import jetbrains.buildServer.agent.BuildRunnerContext
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
@@ -41,7 +40,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     ExtensionApplicationListener extensionApplicationListener
 
     Project.Configuration projectConfiguration
-    MavenBuildStepConfiguration teamCityConfiguration
 
     void setup() {
         configParameters = [:]
@@ -53,7 +51,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         extensionApplicationListener = Mock(ExtensionApplicationListener)
 
         projectConfiguration = new Project.Configuration()
-        teamCityConfiguration = new MavenBuildStepConfiguration()
     }
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
@@ -64,7 +61,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.applyTo(configParameters, runnerParameters)
+        new MavenBuildStepConfiguration().applyTo(configParameters, runnerParameters)
 
         when:
         def output = run(jdkCompatibleMavenVersion.mavenVersion, project)
@@ -89,7 +86,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.applyTo(configParameters, runnerParameters)
@@ -120,7 +117,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.applyTo(configParameters, runnerParameters)
@@ -148,7 +145,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             pathToPomFile = getRelativePath(checkoutDir, project.pom)
@@ -180,7 +177,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             pathToPomFile = getRelativePath(checkoutDir, project.pom)
@@ -213,7 +210,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         runnerParameters.remove('teamcity.build.workingDir')
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.applyTo(configParameters, runnerParameters)
@@ -245,7 +242,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             geExtensionCustomCoordinates = 'com.google.guava:guava'
@@ -274,7 +271,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
         }.applyTo(configParameters, runnerParameters)
@@ -302,7 +299,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
@@ -334,7 +331,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
@@ -367,7 +364,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
@@ -401,7 +398,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
             ccudExtensionCustomCoordinates = 'com.google.guava:guava'
@@ -433,7 +430,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = 'https://ge-server.invalid'
             allowUntrustedServer = true
             geExtensionVersion = GE_EXTENSION_VERSION
@@ -465,7 +462,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geUrl = GE_URL
             allowUntrustedServer = true
             geExtensionVersion = GE_EXTENSION_VERSION
@@ -494,7 +491,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             goals = 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info'
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
@@ -519,7 +516,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         Project project = projectConfiguration.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             commandLineBuildStepEnabled = true
         }.applyTo(configParameters, runnerParameters)
 
@@ -547,7 +544,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geExtensionVersion = GE_EXTENSION_VERSION
             pathToPomFile = getRelativePath(checkoutDir, project.pom)
         }.applyTo(configParameters, runnerParameters)
@@ -578,7 +575,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geExtensionVersion = GE_EXTENSION_VERSION
             pathToPomFile = getRelativePath(checkoutDir, project.pom.parentFile)
         }.applyTo(configParameters, runnerParameters)
@@ -610,7 +607,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }.buildIn(checkoutDir)
 
         and:
-        teamCityConfiguration.with(true) {
+        new MavenBuildStepConfiguration().with(true) {
             geExtensionVersion = GE_EXTENSION_VERSION
             pathToPomFile = getRelativePath(checkoutDir, project.pom)
         }.applyTo(configParameters, runnerParameters)
