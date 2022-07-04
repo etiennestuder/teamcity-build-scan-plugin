@@ -19,7 +19,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.6.0', 7, 11),
         new JdkCompatibleMavenVersion('3.6.3', 7, 11),
         new JdkCompatibleMavenVersion('3.8.1', 7, 11),
-new JdkCompatibleMavenVersion('3.8.6', 7, 11)
+        new JdkCompatibleMavenVersion('3.8.6', 7, 11)
     ]
 
     static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE') ?: null
@@ -636,15 +636,16 @@ new JdkCompatibleMavenVersion('3.8.6', 7, 11)
     String run(String mavenVersion, Project project) {
         injector.beforeRunnerStart(context)
 
-        def runner = new MavenRunner()
-            .withVersion(mavenVersion)
-            .withProjectDir(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath)
-            .withInstallationDirectory(agentMavenInstallation)
-            .withMultiModuleProjectDirectory(project.dotMvn.parentFile)
-            .withArguments("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
+        def runner = new MavenRunner(
+            version: mavenVersion,
+            projectDir: new File(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath),
+            installationDir: agentMavenInstallation,
+            multiModuleProjectDir: project.dotMvn.parentFile,
+            arguments: ("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
+        )
 
         if (runnerParameters.containsKey('pomLocation')) {
-            runner.withArguments(runner.arguments + ['-f', new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath])
+            runner.arguments += ['-f', new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath]
         }
 
         return runner.build()

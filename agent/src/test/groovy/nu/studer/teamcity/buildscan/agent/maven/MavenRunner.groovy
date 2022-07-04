@@ -8,40 +8,6 @@ final class MavenRunner {
     File multiModuleProjectDir
     List<String> arguments
 
-    MavenRunner withVersion(String version) {
-        this.version = version
-        this
-    }
-
-    MavenRunner withInstallationDirectory(File installationDir) {
-        this.installationDir = installationDir
-        this
-    }
-
-    MavenRunner withProjectDir(File projectDir) {
-        this.projectDir = projectDir
-        this
-    }
-
-    MavenRunner withProjectDir(String projectDir) {
-        withProjectDir(new File(projectDir))
-    }
-
-    MavenRunner withMultiModuleProjectDirectory(File multiModuleProjectDirectory) {
-        this.multiModuleProjectDir = multiModuleProjectDirectory
-        this
-    }
-
-    MavenRunner withArguments(String... arguments) {
-        this.arguments = arguments
-        this
-    }
-
-    MavenRunner withArguments(List<String> arguments) {
-        this.arguments = arguments
-        this
-    }
-
     String build() {
         checkForRequiredProperties()
         installMaven()
