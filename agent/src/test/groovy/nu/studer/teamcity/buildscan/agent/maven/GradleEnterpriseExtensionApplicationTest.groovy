@@ -39,8 +39,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
     ExtensionApplicationListener extensionApplicationListener
 
-    Project.Configuration projectConfiguration
-
     void setup() {
         configParameters = [:]
         runnerParameters = [
@@ -49,8 +47,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         ]
 
         extensionApplicationListener = Mock(ExtensionApplicationListener)
-
-        projectConfiguration = new Project.Configuration()
     }
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
@@ -58,7 +54,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().applyTo(configParameters, runnerParameters)
@@ -83,7 +79,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().with(true) {
@@ -111,7 +107,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -142,7 +138,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().with(true) {
@@ -171,7 +167,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -203,7 +199,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         runnerParameters.remove('teamcity.build.checkoutDir')
@@ -235,7 +231,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
             customExtension = new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
@@ -268,7 +264,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().with(true) {
@@ -296,7 +292,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().with(true) {
@@ -325,7 +321,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -357,7 +353,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
@@ -390,7 +386,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
@@ -424,7 +420,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -456,7 +452,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = 'https://ge-server.invalid'
             geExtensionVersion = null
         }.buildIn(checkoutDir)
@@ -488,7 +484,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().with(true) {
@@ -513,7 +509,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.buildIn(checkoutDir)
+        Project project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         new MavenBuildStepConfiguration().with(true) {
@@ -537,7 +533,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             pomDirName = 'subdir'
@@ -568,7 +564,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             pomDirName = 'subdir'
@@ -599,7 +595,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true) {
+        Project project = new Project.Configuration().with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             pomDirName = 'subdir1/subdir2'
