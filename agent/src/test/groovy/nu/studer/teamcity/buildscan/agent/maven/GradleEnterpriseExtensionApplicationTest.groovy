@@ -46,7 +46,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     MavenBuildStepConfiguration teamCityConfiguration
 
     void setup() {
-        configParameters = new HashMap<String, String>()
+        configParameters = [:]
         runnerParameters = [
             'teamcity.build.checkoutDir': checkoutDir.absolutePath,
             'teamcity.build.workingDir':  checkoutDir.absolutePath,
