@@ -19,7 +19,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.6.0', 7, 11),
         new JdkCompatibleMavenVersion('3.6.3', 7, 11),
         new JdkCompatibleMavenVersion('3.8.1', 7, 11),
-        new JdkCompatibleMavenVersion('3.8.6', 7, 11)
+new JdkCompatibleMavenVersion('3.8.6', 7, 11)
     ]
 
     static final String GE_URL = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE') ?: null
@@ -49,7 +49,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         configParameters = [:]
         runnerParameters = [
             'teamcity.build.checkoutDir': checkoutDir.absolutePath,
-            'teamcity.build.workingDir':  checkoutDir.absolutePath,
+            'teamcity.build.workingDir' : checkoutDir.absolutePath,
         ]
 
         context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
@@ -118,7 +118,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -178,7 +178,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -242,7 +242,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
             customExtension = new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
@@ -281,7 +281,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         teamCityConfiguration.with(true) {
             geUrl = GE_URL
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
-            geExtensionCustomCoordinates = 'com.google.guava:guava'
         }.applyTo(configParameters, runnerParameters)
 
         when:
@@ -333,7 +332,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
@@ -365,7 +364,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             ccudExtensionVersion = CCUD_EXTENSION_VERSION
@@ -398,7 +397,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
@@ -432,14 +431,15 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
             geExtensionVersion = GE_EXTENSION_VERSION
         }.buildIn(checkoutDir)
 
         and:
         teamCityConfiguration.with(true) {
-            geUrl = GE_URL
+            geUrl = 'https://ge-server.invalid'
+            allowUntrustedServer = true
             geExtensionVersion = GE_EXTENSION_VERSION
         }.applyTo(configParameters, runnerParameters)
 
@@ -463,15 +463,16 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with(true){
+        Project project = projectConfiguration.with(true) {
             geUrl = 'https://ge-server.invalid'
+            geExtensionVersion = null
         }.buildIn(checkoutDir)
 
         and:
         teamCityConfiguration.with(true) {
             geUrl = GE_URL
-            geExtensionVersion = GE_EXTENSION_VERSION
             allowUntrustedServer = true
+            geExtensionVersion = GE_EXTENSION_VERSION
         }.applyTo(configParameters, runnerParameters)
 
         when:
@@ -543,9 +544,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with (true) {
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
-            geExtensionVersion = '1.14.2'
+            geExtensionVersion = GE_EXTENSION_VERSION
             pomDirName = 'subdir'
         }.buildIn(checkoutDir)
 
@@ -569,14 +570,14 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "publishes build scan when pom is in a subdirectory and the subdirectory is specified as the pom path and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
+    def "publishes build scan when pom is in a subdirectory and subdirectory is specified as pom path and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with (true) {
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
-            geExtensionVersion = '1.14.2'
+            geExtensionVersion = GE_EXTENSION_VERSION
             pomDirName = 'subdir'
         }.buildIn(checkoutDir)
 
@@ -605,9 +606,9 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         assumeTrue GE_URL != null
 
         given:
-        Project project = projectConfiguration.with (true) {
+        Project project = projectConfiguration.with(true) {
             geUrl = GE_URL
-            geExtensionVersion = '1.14.2'
+            geExtensionVersion = GE_EXTENSION_VERSION
             pomDirName = 'subdir1/subdir2'
             dotMvnParentDirName = 'subdir1'
         }.buildIn(checkoutDir)
@@ -637,10 +638,10 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
 
         def runner = new MavenRunner()
             .withVersion(mavenVersion)
-            .withArguments("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
             .withProjectDir(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath)
             .withInstallationDirectory(agentMavenInstallation)
             .withMultiModuleProjectDirectory(project.dotMvn.parentFile)
+            .withArguments("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
 
         if (runnerParameters.containsKey('pomLocation')) {
             runner.withArguments(runner.arguments + ['-f', new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath])
@@ -714,4 +715,5 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         }
 
     }
+
 }
