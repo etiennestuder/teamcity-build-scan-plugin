@@ -38,7 +38,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     Map<String, String> configParameters
     Map<String, String> runnerParameters
 
-    BuildRunnerContext context
     ExtensionApplicationListener extensionApplicationListener
     BuildScanServiceMessageInjector injector
 
@@ -52,7 +51,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
             'teamcity.build.workingDir' : checkoutDir.absolutePath,
         ]
 
-        context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         extensionApplicationListener = Mock(ExtensionApplicationListener)
         injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
@@ -634,6 +632,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     }
 
     String run(String mavenVersion, Project project) {
+        TestBuildRunnerContext context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         injector.beforeRunnerStart(context)
 
         def runner = new MavenRunner(
