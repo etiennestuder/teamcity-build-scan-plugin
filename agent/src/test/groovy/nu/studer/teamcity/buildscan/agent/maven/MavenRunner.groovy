@@ -8,11 +8,11 @@ final class MavenRunner {
     File multiModuleProjectDir
     List<String> arguments
 
-    String build() {
+    String run() {
         installMaven()
-        run()
+        runBuild()
     }
-    
+
     private void installMaven() {
         ["mvn", "mvn.cmd"].each { mvn ->
             def file = new File(installationDir, mvn)
@@ -27,7 +27,7 @@ wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-w
 """
     }
 
-    private String run() {
+    private String runBuild() {
         def mvnExecutableName = System.getProperty('os.name').startsWith('Windows') ? 'mvn.cmd' : 'mvn'
         def mvn = new File(installationDir, mvnExecutableName)
 

@@ -648,7 +648,7 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
             runner.arguments += ['-f', new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath]
         }
 
-        return runner.build()
+        return runner.run()
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
