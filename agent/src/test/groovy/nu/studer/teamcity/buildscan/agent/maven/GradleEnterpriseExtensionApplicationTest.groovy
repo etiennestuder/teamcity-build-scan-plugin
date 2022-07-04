@@ -39,7 +39,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     Map<String, String> runnerParameters
 
     ExtensionApplicationListener extensionApplicationListener
-    BuildScanServiceMessageInjector injector
 
     Project.Configuration projectConfiguration
     MavenBuildStepConfiguration teamCityConfiguration
@@ -52,7 +51,6 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
         ]
 
         extensionApplicationListener = Mock(ExtensionApplicationListener)
-        injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
         projectConfiguration = new Project.Configuration()
         teamCityConfiguration = new MavenBuildStepConfiguration()
@@ -632,6 +630,8 @@ class GradleEnterpriseExtensionApplicationTest extends Specification {
     }
 
     String run(String mavenVersion, Project project) {
+        def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
+
         TestBuildRunnerContext context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         injector.beforeRunnerStart(context)
 
