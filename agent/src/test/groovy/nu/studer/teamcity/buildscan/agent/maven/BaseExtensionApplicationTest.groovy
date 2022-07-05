@@ -29,14 +29,9 @@ class BaseExtensionApplicationTest extends Specification {
     @TempDir
     File agentMavenInstallation
 
-    MavenBuildStepConfiguration mavenBuildStepConfiguration
-
     ExtensionApplicationListener extensionApplicationListener
 
     void setup() {
-        mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
-            checkoutDir: checkoutDir
-        )
         extensionApplicationListener = Mock(ExtensionApplicationListener)
     }
 
