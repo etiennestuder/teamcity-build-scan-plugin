@@ -4,7 +4,7 @@ final class MavenBuildStepConfiguration {
     String goals = 'clean package'
     String pathToPomFile = null
 
-    Map<String, String> applyTo(Map<String, String> configParameters, Map<String, String> runnerParameters) {
+    Map<String, String> applyTo(Map<String, String> runnerParameters) {
         applyRunnerParameters(runnerParameters)
 
         return runnerParameters
