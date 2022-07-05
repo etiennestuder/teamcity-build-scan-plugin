@@ -4,6 +4,7 @@ import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.util.EventDispatcher
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
+import nu.studer.teamcity.buildscan.agent.TcPluginConfig
 import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
 import spock.lang.Specification
 import spock.lang.TempDir
@@ -43,10 +44,10 @@ class BaseExtensionApplicationTest extends Specification {
         extensionApplicationListener = Mock(ExtensionApplicationListener)
     }
 
-    String run(String mavenVersion, Project project) {
+    String run(String mavenVersion, TcPluginConfig tcPluginConfig, MavenBuildStepConfiguration mavenBuildStepConfiguration, Project project) {
         def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
-        TestBuildRunnerContext context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
+        TestBuildRunnerContext context = new TestBuildRunnerContext("Maven2", agentTempDir, tcPluginConfig.toConfigParameters(), mavenBuildStepConfiguration.applyTo(configParameters, runnerParameters))
         injector.beforeRunnerStart(context)
 
         def runner = new MavenRunner(
