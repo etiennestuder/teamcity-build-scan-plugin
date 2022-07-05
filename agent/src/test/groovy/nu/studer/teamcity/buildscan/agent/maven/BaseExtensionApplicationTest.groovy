@@ -29,23 +29,22 @@ class BaseExtensionApplicationTest extends Specification {
     @TempDir
     File agentMavenInstallation
 
-    Map<String, String> runnerParameters
+    MavenBuildStepConfiguration mavenBuildStepConfiguration
 
     ExtensionApplicationListener extensionApplicationListener
 
     void setup() {
-        runnerParameters = [
-            'teamcity.build.checkoutDir': checkoutDir.absolutePath,
-            'teamcity.build.workingDir' : checkoutDir.absolutePath,
-        ]
-
+        mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+            checkoutDir: checkoutDir
+        )
         extensionApplicationListener = Mock(ExtensionApplicationListener)
     }
 
     String run(String mavenVersion, TcPluginConfig tcPluginConfig, MavenBuildStepConfiguration mavenBuildStepConfiguration, Project project) {
         def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
+        def runnerParameters = mavenBuildStepConfiguration.toRunnerParameters()
 
-        TestBuildRunnerContext context = new TestBuildRunnerContext("Maven2", agentTempDir, tcPluginConfig.toConfigParameters(), mavenBuildStepConfiguration.applyTo(runnerParameters))
+        TestBuildRunnerContext context = new TestBuildRunnerContext("Maven2", agentTempDir, tcPluginConfig.toConfigParameters(), runnerParameters)
         injector.beforeRunnerStart(context)
 
         def runner = new MavenRunner(
