@@ -17,7 +17,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -47,7 +47,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -80,7 +80,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -116,7 +116,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -150,7 +150,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -187,7 +187,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -220,7 +220,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
             customExtension: new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
@@ -258,7 +258,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -291,7 +291,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -325,7 +325,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -362,7 +362,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION
@@ -400,7 +400,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
@@ -439,7 +439,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -476,7 +476,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: 'https://ge-server.invalid',
             geExtensionVersion: null,
         ).buildIn(checkoutDir)
@@ -513,7 +513,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -543,7 +543,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration().buildIn(checkoutDir)
+        def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
         def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
@@ -572,7 +572,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             pomDirName: 'subdir'
@@ -608,7 +608,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             pomDirName: 'subdir'
@@ -644,7 +644,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        Project project = new Project.Configuration(
+        def project = new Project.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             pomDirName: 'subdir1/subdir2',
