@@ -3,7 +3,6 @@ package nu.studer.teamcity.buildscan.agent.maven
 final class MavenBuildStepConfiguration {
      String goals = 'clean package'
      String pathToPomFile = null
-     String workingDirectory = null
 
      String geUrl = null
      String geExtensionVersion = null
@@ -20,10 +19,6 @@ final class MavenBuildStepConfiguration {
 
      private void applyRunnerParameters(Map<String, String> runnerParameters) {
          runnerParameters.put('goals', goals)
-
-         if (workingDirectory) {
-             runnerParameters.put('teamcity.build.workingDir', workingDirectory)
-         }
 
          if (pathToPomFile)
              runnerParameters.put('pomLocation', pathToPomFile)
