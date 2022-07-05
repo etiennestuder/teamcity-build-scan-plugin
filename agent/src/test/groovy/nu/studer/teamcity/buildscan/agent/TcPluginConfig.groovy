@@ -10,6 +10,8 @@ class TcPluginConfig {
     String geExtensionVersion
     String ccudExtensionVersion
     boolean enableCommandLineRunner
+    String geExtensionCustomCoordinates
+    String ccudExtensionCustomCoordinates
 
     // configuration params as they would be set by the user in the TeamCity configuration
     Map<String, String> toConfigParameters() {
@@ -37,6 +39,12 @@ class TcPluginConfig {
         }
         if (enableCommandLineRunner) {
             configProps.put 'buildScanPlugin.command-line-build-step.enabled', 'true'
+        }
+        if (geExtensionCustomCoordinates) {
+            configProps.put('buildScanPlugin.gradle-enterprise.extension.custom.coordinates', geExtensionCustomCoordinates)
+        }
+        if (ccudExtensionCustomCoordinates) {
+            configProps.put('buildScanPlugin.ccud.extension.custom.coordinates', ccudExtensionCustomCoordinates)
         }
         configProps
     }
