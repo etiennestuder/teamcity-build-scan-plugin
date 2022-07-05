@@ -12,9 +12,11 @@ final class MavenBuildStepConfiguration {
     Boolean allowUntrustedServer = null
     Boolean commandLineBuildStepEnabled = null
 
-    void applyTo(Map<String, String> configParameters, Map<String, String> runnerParameters) {
+    Map<String, String> applyTo(Map<String, String> configParameters, Map<String, String> runnerParameters) {
         applyRunnerParameters(runnerParameters)
         applyConfigParameters(configParameters)
+
+        return runnerParameters
     }
 
     private void applyRunnerParameters(Map<String, String> runnerParameters) {
