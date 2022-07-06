@@ -614,6 +614,39 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "does not apply GE / CCUD extensions when Maven version < 3.3.1 (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
+
+        and:
+        def gePluginConfig = new TcPluginConfig(
+            geExtensionVersion: GE_EXTENSION_VERSION,
+            ccudExtensionVersion: CCUD_EXTENSION_VERSION,
+        )
+
+        and:
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom)
+        )
+
+        when:
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
+
+        then:
+        outputContainsBuildSuccess(output)
+
+        and:
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS
+    }
+
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
         assert output.contains(serviceMsg)

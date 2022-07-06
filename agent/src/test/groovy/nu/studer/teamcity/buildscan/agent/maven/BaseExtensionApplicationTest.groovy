@@ -20,6 +20,15 @@ class BaseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.8.6', 7, 11)
     ]
 
+    static final List<JdkCompatibleMavenVersion> UNSUPPORTED_MAVEN_VERSIONS = [
+        new JdkCompatibleMavenVersion('3.0', 7, 11),
+        new JdkCompatibleMavenVersion('3.0.5', 7, 11),
+        new JdkCompatibleMavenVersion('3.1.0', 7, 11),
+        new JdkCompatibleMavenVersion('3.1.1', 7, 11),
+        new JdkCompatibleMavenVersion('3.2.1', 7, 11),
+        new JdkCompatibleMavenVersion('3.2.5', 7, 11),
+    ]
+
     @TempDir
     File checkoutDir
 
