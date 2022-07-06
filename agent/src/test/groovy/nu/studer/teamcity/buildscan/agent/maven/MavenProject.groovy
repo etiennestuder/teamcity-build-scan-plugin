@@ -1,6 +1,6 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
-final class Project {
+final class MavenProject {
 
     File pom
     File dotMvn
@@ -14,7 +14,7 @@ final class Project {
         String pomDirName
         String dotMvnParentDirName
 
-        Project buildIn(File directory) {
+        MavenProject buildIn(File directory) {
             def pomDir = pomDirName ? new File(directory, pomDirName) : directory
             def dotMvnParentDir = dotMvnParentDirName ? new File(directory, dotMvnParentDirName) : directory
             def dotMvn = new File(dotMvnParentDir, '.mvn')
@@ -24,7 +24,7 @@ final class Project {
             setProjectDefinedExtensions(dotMvn, geExtensionVersion, ccudExtensionVersion, customExtension)
             setProjectDefinedGeConfiguration(dotMvn, geUrl)
 
-            return new Project(
+            return new MavenProject(
                 pom: setPomFile(pomDir, 'pom.xml'),
                 dotMvn: dotMvn
             )
