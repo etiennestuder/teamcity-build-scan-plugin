@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
 final class MavenBuildStepConfiguration {
+
     File checkoutDir = null
     String goals = 'clean package'
     String pathToPomFile = null
@@ -10,8 +11,9 @@ final class MavenBuildStepConfiguration {
 
         runnerParameters.put('goals', goals)
 
-        if (pathToPomFile)
+        if (pathToPomFile) {
             runnerParameters.put('pomLocation', pathToPomFile)
+        }
 
         if (checkoutDir) {
             runnerParameters.put('teamcity.build.checkoutDir', checkoutDir.absolutePath)

@@ -1,10 +1,12 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
 final class Project {
-     File pom
-     File dotMvn
+
+    File pom
+    File dotMvn
 
     static final class Configuration {
+
         String geExtensionVersion = null
         String ccudExtensionVersion = null
         GroupArtifactVersion customExtension = null
@@ -82,4 +84,4 @@ final class Project {
             }
         }
     }
- }
+}

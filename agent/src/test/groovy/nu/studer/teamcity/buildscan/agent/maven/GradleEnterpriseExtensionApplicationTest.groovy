@@ -1,6 +1,5 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
-
 import nu.studer.teamcity.buildscan.agent.TcPluginConfig
 
 import static org.junit.Assume.assumeTrue
