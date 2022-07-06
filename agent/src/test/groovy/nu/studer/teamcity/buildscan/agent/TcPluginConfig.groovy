@@ -48,4 +48,5 @@ class TcPluginConfig {
         }
         configProps
     }
+
 }

@@ -2,24 +2,23 @@ package nu.studer.teamcity.buildscan.agent.maven
 
 final class MavenBuildStepConfig {
 
-    File checkoutDir = null
+    File checkoutDir
+    String pathToPomFile
     String goals = 'clean package'
-    String pathToPomFile = null
 
     Map<String, String> toRunnerParameters() {
-        Map<String, String> runnerParameters = [:]
-
-        runnerParameters.put('goals', goals)
-
-        if (pathToPomFile) {
-            runnerParameters.put('pomLocation', pathToPomFile)
-        }
-
+        Map<String, String> runnerParams = [:]
         if (checkoutDir) {
-            runnerParameters.put('teamcity.build.checkoutDir', checkoutDir.absolutePath)
-            runnerParameters.put('teamcity.build.workingDir', checkoutDir.absolutePath)
+            runnerParams.put('teamcity.build.checkoutDir', checkoutDir.absolutePath)
+            runnerParams.put('teamcity.build.workingDir', checkoutDir.absolutePath)
         }
-
-        return runnerParameters
+        if (pathToPomFile) {
+            runnerParams.put('pomLocation', pathToPomFile)
+        }
+        if (goals) {
+            runnerParams.put('goals', goals)
+        }
+        return runnerParams
     }
+
 }
