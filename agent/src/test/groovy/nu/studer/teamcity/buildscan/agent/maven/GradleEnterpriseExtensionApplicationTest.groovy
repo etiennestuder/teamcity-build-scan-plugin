@@ -19,7 +19,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -27,7 +27,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def gePluginConfig = new TcPluginConfig()
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -49,7 +49,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -60,7 +60,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -85,7 +85,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -96,7 +96,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -118,7 +118,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom),
         )
@@ -130,7 +130,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -155,7 +155,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom),
         )
@@ -167,7 +167,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -189,7 +189,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: null
         )
 
@@ -200,7 +200,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -226,7 +226,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -238,7 +238,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -260,7 +260,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -271,7 +271,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -293,7 +293,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -305,7 +305,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -330,7 +330,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -342,7 +342,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -368,7 +368,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -380,7 +380,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -407,7 +407,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -419,7 +419,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -444,7 +444,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -456,7 +456,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -481,7 +481,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -493,7 +493,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -515,7 +515,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             goals: 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info',
         )
@@ -527,7 +527,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -545,7 +545,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -555,7 +555,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         outputContainsBuildSuccess(output)
@@ -578,7 +578,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom)
         )
@@ -589,7 +589,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         outputContainsBuildSuccess(output)
@@ -614,7 +614,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom.parentFile)
         )
@@ -625,7 +625,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         outputContainsBuildSuccess(output)
@@ -651,7 +651,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom)
         )
@@ -662,7 +662,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mavenBuildStepConfiguration, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
 
         then:
         outputContainsBuildSuccess(output)
