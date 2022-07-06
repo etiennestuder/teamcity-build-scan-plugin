@@ -103,17 +103,16 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom),
-        )
-
-        and:
         def gePluginConfig = new TcPluginConfig(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         )
 
+        and:
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, project.pom),
+        )
         when:
         def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
@@ -140,15 +139,15 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom),
-        )
-
-        and:
         def gePluginConfig = new TcPluginConfig(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
+        )
+
+        and:
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, project.pom),
         )
 
         when:
@@ -174,14 +173,14 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: null
-        )
-
-        and:
         def gePluginConfig = new TcPluginConfig(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
+        )
+
+        and:
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: null
         )
 
         when:
@@ -460,15 +459,15 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            goals: 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info',
-        )
-
-        and:
         def gePluginConfig = new TcPluginConfig(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
+        )
+
+        and:
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            goals: 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info',
         )
 
         when:
@@ -518,14 +517,14 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom)
+        def gePluginConfig = new TcPluginConfig(
+            geExtensionVersion: GE_EXTENSION_VERSION,
         )
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, project.pom)
         )
 
         when:
@@ -554,14 +553,14 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom.parentFile)
+        def gePluginConfig = new TcPluginConfig(
+            geExtensionVersion: GE_EXTENSION_VERSION,
         )
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, project.pom.parentFile)
         )
 
         when:
@@ -591,14 +590,14 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom)
+        def gePluginConfig = new TcPluginConfig(
+            geExtensionVersion: GE_EXTENSION_VERSION,
         )
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, project.pom)
         )
 
         when:
