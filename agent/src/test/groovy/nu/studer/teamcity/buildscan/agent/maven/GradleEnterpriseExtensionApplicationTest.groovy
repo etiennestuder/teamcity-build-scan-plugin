@@ -22,7 +22,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def gePluginConfig = new TcPluginConfig()
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -50,7 +50,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -81,7 +81,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -115,7 +115,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -152,7 +152,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -185,7 +185,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -218,7 +218,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -246,7 +246,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -275,7 +275,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -307,7 +307,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -340,7 +340,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -374,7 +374,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -406,7 +406,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -438,7 +438,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -472,7 +472,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -495,7 +495,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -529,7 +529,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -565,7 +565,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -602,7 +602,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, gePluginConfig, mvnBuildStepConfig, project)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
