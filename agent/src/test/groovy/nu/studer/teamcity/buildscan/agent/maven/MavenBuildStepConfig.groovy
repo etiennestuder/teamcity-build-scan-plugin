@@ -1,6 +1,6 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
-final class MavenBuildStepConfiguration {
+final class MavenBuildStepConfig {
 
     File checkoutDir = null
     String goals = 'clean package'

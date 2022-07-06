@@ -7,12 +7,12 @@ final class Project {
 
     static final class Configuration {
 
-        String geExtensionVersion = null
-        String ccudExtensionVersion = null
-        GroupArtifactVersion customExtension = null
-        String geUrl = null
-        String pomDirName = null
-        String dotMvnParentDirName = null
+        String geExtensionVersion
+        String ccudExtensionVersion
+        GroupArtifactVersion customExtension
+        String geUrl
+        String pomDirName
+        String dotMvnParentDirName
 
         Project buildIn(File directory) {
             def pomDir = pomDirName ? new File(directory, pomDirName) : directory
@@ -83,5 +83,7 @@ final class Project {
             </gradleEnterprise>"""
             }
         }
+
     }
+
 }

@@ -35,11 +35,11 @@ class BaseExtensionApplicationTest extends Specification {
         extensionApplicationListener = Mock(ExtensionApplicationListener)
     }
 
-    String run(String mavenVersion, TcPluginConfig tcPluginConfig, MavenBuildStepConfiguration mavenBuildStepConfiguration, Project project) {
+    String run(String mavenVersion, TcPluginConfig tcPluginConfig, MavenBuildStepConfig mavenBuildStepConfig, Project project) {
         def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
         def configParameters = tcPluginConfig.toConfigParameters()
-        def runnerParameters = mavenBuildStepConfiguration.toRunnerParameters()
+        def runnerParameters = mavenBuildStepConfig.toRunnerParameters()
 
         def context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         injector.beforeRunnerStart(context)

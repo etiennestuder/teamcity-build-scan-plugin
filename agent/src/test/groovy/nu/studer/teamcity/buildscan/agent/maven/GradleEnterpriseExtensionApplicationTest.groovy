@@ -19,7 +19,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -49,7 +49,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -85,7 +85,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -118,7 +118,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom),
         )
@@ -155,7 +155,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom),
         )
@@ -189,7 +189,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: null
         )
 
@@ -226,7 +226,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -260,7 +260,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -293,7 +293,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -330,7 +330,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -368,7 +368,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -407,7 +407,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -444,7 +444,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -481,7 +481,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -515,7 +515,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             goals: 'org.jetbrains.maven:info-maven3-plugin:1.0.2:info',
         )
@@ -545,7 +545,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def project = new Project.Configuration().buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
         )
 
@@ -578,7 +578,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom)
         )
@@ -614,7 +614,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom.parentFile)
         )
@@ -651,7 +651,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         ).buildIn(checkoutDir)
 
         and:
-        def mavenBuildStepConfiguration = new MavenBuildStepConfiguration(
+        def mavenBuildStepConfiguration = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, project.pom)
         )
