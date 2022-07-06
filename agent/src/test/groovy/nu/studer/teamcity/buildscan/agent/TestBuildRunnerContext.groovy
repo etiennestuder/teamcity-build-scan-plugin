@@ -28,13 +28,15 @@ class TestBuildRunnerContext implements BuildRunnerContext {
     private final BuildParametersMap buildParameters
     private final Map<String, String> configParameters
     private final Map<String, String> runnerParameters
+    private final Map<String, String> toolPaths
 
-    TestBuildRunnerContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters) {
+    TestBuildRunnerContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters, Map<String, String> toolPaths = [:]) {
         this.runType = runType
         this.agentRunningBuild = new TestAgentRunningBuild(agentTempDirectory)
         this.buildParameters = new TestBuildParametersMap()
         this.configParameters = configParameters
         this.runnerParameters = runnerParameters
+        this.toolPaths = toolPaths
     }
 
     @Override
@@ -83,12 +85,16 @@ class TestBuildRunnerContext implements BuildRunnerContext {
     }
 
     @Override
-    ValueResolver getParametersResolver() {
-        return null
+    String getToolPath(@NotNull String toolName) throws ToolCannotBeFoundException {
+        if (!toolPaths.containsKey(toolName)) {
+            throw new ToolCannotBeFoundException(toolName)
+        }
+
+        return toolPaths[toolName]
     }
 
     @Override
-    String getToolPath(@NotNull String toolName) throws ToolCannotBeFoundException {
+    ValueResolver getParametersResolver() {
         return null
     }
 
