@@ -42,14 +42,18 @@ class BaseExtensionApplicationTest extends Specification {
     String run(String mvnVersion, MavenProject mvnProject, TcPluginConfig tcPluginConfig, MavenBuildStepConfig mvnBuildStepConfig) {
         def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
+        new MavenInstaller(
+            version: mvnVersion,
+            installationDir: agentMavenInstallation,
+        ).installMaven()
+
         def configParameters = tcPluginConfig.toConfigParameters()
         def runnerParameters = mvnBuildStepConfig.toRunnerParameters()
 
-        def context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
+        def context = new TestBuildRunnerContext('Maven2', agentTempDir, configParameters, runnerParameters, ['maven': agentMavenInstallation.absolutePath])
         injector.beforeRunnerStart(context)
 
         def runner = new MavenRunner(
-            version: mvnVersion,
             installationDir: agentMavenInstallation,
             projectDir: new File(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath),
             multiModuleProjectDir: mvnProject.dotMvn.parentFile,
