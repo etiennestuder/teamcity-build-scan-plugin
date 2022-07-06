@@ -35,24 +35,24 @@ class BaseExtensionApplicationTest extends Specification {
         extensionApplicationListener = Mock(ExtensionApplicationListener)
     }
 
-    String run(String mavenVersion, MavenProject project, TcPluginConfig tcPluginConfig) {
-        run(mavenVersion, project, tcPluginConfig, new MavenBuildStepConfig(checkoutDir: checkoutDir))
+    String run(String mvnVersion, MavenProject mvnProject, TcPluginConfig tcPluginConfig) {
+        run(mvnVersion, mvnProject, tcPluginConfig, new MavenBuildStepConfig(checkoutDir: checkoutDir))
     }
 
-    String run(String mavenVersion, MavenProject project, TcPluginConfig tcPluginConfig, MavenBuildStepConfig mavenBuildStepConfig) {
+    String run(String mvnVersion, MavenProject mvnProject, TcPluginConfig tcPluginConfig, MavenBuildStepConfig mvnBuildStepConfig) {
         def injector = new BuildScanServiceMessageInjector(EventDispatcher.create(AgentLifeCycleListener.class), extensionApplicationListener)
 
         def configParameters = tcPluginConfig.toConfigParameters()
-        def runnerParameters = mavenBuildStepConfig.toRunnerParameters()
+        def runnerParameters = mvnBuildStepConfig.toRunnerParameters()
 
         def context = new TestBuildRunnerContext("Maven2", agentTempDir, configParameters, runnerParameters)
         injector.beforeRunnerStart(context)
 
         def runner = new MavenRunner(
-            version: mavenVersion,
+            version: mvnVersion,
             installationDir: agentMavenInstallation,
             projectDir: new File(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath),
-            multiModuleProjectDir: project.dotMvn.parentFile,
+            multiModuleProjectDir: mvnProject.dotMvn.parentFile,
             arguments: ("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
         )
 

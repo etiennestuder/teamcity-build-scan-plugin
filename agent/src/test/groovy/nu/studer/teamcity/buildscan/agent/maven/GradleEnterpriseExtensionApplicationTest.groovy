@@ -16,13 +16,13 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig()
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -41,7 +41,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -50,7 +50,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -69,7 +69,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -81,7 +81,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -100,7 +100,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -111,10 +111,10 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         and:
         def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom),
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
         )
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -133,7 +133,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -147,11 +147,11 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         and:
         def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom),
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -170,7 +170,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -184,7 +184,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -203,7 +203,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
             customExtension: new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
@@ -217,7 +217,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -236,7 +236,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -245,7 +245,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -264,7 +264,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -274,7 +274,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -293,7 +293,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -306,7 +306,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -325,7 +325,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION
@@ -339,7 +339,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -358,7 +358,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
@@ -373,7 +373,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -392,7 +392,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
@@ -405,7 +405,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         0 * extensionApplicationListener.geExtensionApplied(_)
@@ -424,7 +424,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: 'https://ge-server.invalid',
             geExtensionVersion: null,
         ).buildIn(checkoutDir)
@@ -437,7 +437,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
@@ -456,7 +456,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -471,7 +471,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -486,7 +486,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration().buildIn(checkoutDir)
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
         def gePluginConfig = new TcPluginConfig(
@@ -494,7 +494,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -510,7 +510,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             pomDirName: 'subdir'
@@ -524,11 +524,11 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         and:
         def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom)
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom)
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -546,7 +546,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             pomDirName: 'subdir'
@@ -560,11 +560,11 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         and:
         def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom.parentFile)
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom.parentFile)
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -582,7 +582,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         assumeTrue GE_URL != null
 
         given:
-        def project = new MavenProject.Configuration(
+        def mvnProject = new MavenProject.Configuration(
             geUrl: GE_URL,
             geExtensionVersion: GE_EXTENSION_VERSION,
             pomDirName: 'subdir1/subdir2',
@@ -597,11 +597,11 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         and:
         def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, project.pom)
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom)
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, project, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
