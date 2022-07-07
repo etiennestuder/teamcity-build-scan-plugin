@@ -13,10 +13,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.isVersionAtLeast;
+import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.parseVersion;
 
 /**
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself registers a callback on the build scan plugin for any
@@ -25,7 +29,7 @@ import java.util.Map;
  * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
-@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored", "TryWithIdenticalCatches"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final Logger LOG = Logger.getInstance("jetbrains.buildServer.BUILDSCAN");
@@ -208,6 +212,12 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
+        final String mavenVersion = getMavenVersion(runner);
+        if (!isMavenVersionAtLeast3_3_1(mavenVersion)) {
+            LOG.info("Detected Maven version " + mavenVersion + ". Gradle Enterprise Maven Extension only supported for Maven 3.3.1 or higher.");
+            return "";
+        }
+
         List<File> extensionJars = new ArrayList<File>();
         List<String> sysProps = new ArrayList<String>();
 
@@ -237,6 +247,24 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
 
         return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
+    }
+
+    private boolean isMavenVersionAtLeast3_3_1(String mavenVersion) {
+        return isVersionAtLeast(mavenVersion, "3.3.1");
+    }
+
+    @Nullable
+    private String getMavenVersion(BuildRunnerContext runner) {
+        try {
+            String output = new MavenCommandExecutor(runner).execute("-v").getOutput();
+            return parseVersion(output);
+        } catch (IOException e) {
+            LOG.warn("Unable to get Maven version", e);
+            return null;
+        } catch (InterruptedException e) {
+            LOG.warn("Unable to get Maven version", e);
+            return null;
+        }
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
