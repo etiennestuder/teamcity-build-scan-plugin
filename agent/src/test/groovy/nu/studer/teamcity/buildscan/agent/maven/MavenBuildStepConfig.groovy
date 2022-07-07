@@ -5,6 +5,7 @@ final class MavenBuildStepConfig {
     File checkoutDir
     String pathToPomFile
     String goals = 'clean package'
+    boolean isVirtualContext = false
 
     Map<String, String> toRunnerParameters() {
         Map<String, String> runnerParams = [:]

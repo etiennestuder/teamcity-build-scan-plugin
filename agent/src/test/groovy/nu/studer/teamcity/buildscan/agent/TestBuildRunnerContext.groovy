@@ -29,14 +29,16 @@ class TestBuildRunnerContext implements BuildRunnerContext {
     private final Map<String, String> configParameters
     private final Map<String, String> runnerParameters
     private final Map<String, String> toolPaths
+    private final isVirtualContext
 
-    TestBuildRunnerContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters, Map<String, String> toolPaths = [:]) {
+    TestBuildRunnerContext(String runType, File agentTempDirectory, Map<String, String> configParameters, Map<String, String> runnerParameters, Map<String, String> toolPaths = [:], isVirtualContext = false) {
         this.runType = runType
         this.agentRunningBuild = new TestAgentRunningBuild(agentTempDirectory)
         this.buildParameters = new TestBuildParametersMap()
         this.configParameters = configParameters
         this.runnerParameters = runnerParameters
         this.toolPaths = toolPaths
+        this.isVirtualContext = isVirtualContext
     }
 
     @Override
@@ -94,17 +96,17 @@ class TestBuildRunnerContext implements BuildRunnerContext {
     }
 
     @Override
+    boolean isVirtualContext() {
+        return isVirtualContext
+    }
+
+    @Override
     ValueResolver getParametersResolver() {
         return null
     }
 
     @Override
     boolean parametersHaveReferencesTo(@NotNull Collection<String> keys) {
-        return false
-    }
-
-    @Override
-    boolean isVirtualContext() {
         return false
     }
 
