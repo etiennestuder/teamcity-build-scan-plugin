@@ -20,7 +20,7 @@ public final class MavenVersionUtils {
     }
 
     public static boolean isVersionAtLeast(String version, String requiredVersion) {
-        if (version == null || requiredVersion == null) {
+        if (isNullOrEmpty(version) || isNullOrEmpty(requiredVersion)) {
             return false;
         }
 
@@ -37,6 +37,10 @@ public final class MavenVersionUtils {
             }
         }
         return true;
+    }
+
+    private static boolean isNullOrEmpty(String str) {
+        return str == null || str.isEmpty();
     }
 
     private MavenVersionUtils() {}
