@@ -80,7 +80,7 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         assert !versionMeetsRequirement
     }
 
-    def "isVersionAtLeast returns false when versionRequirement is null" () {
+    def "isVersionAtLeast returns false when requiredVersion is null" () {
         when:
         def versionMeetsRequirement = isVersionAtLeast("3.3.1", null)
 
@@ -88,4 +88,19 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         assert !versionMeetsRequirement
     }
 
+    def "isVersionAtLeast returns false when version is empty" () {
+        when:
+        def versionMeetsRequirement = isVersionAtLeast("", "3.3.1")
+
+        then:
+        assert !versionMeetsRequirement
+    }
+
+    def "isVersionAtLeast returns false when requiredVersion is empty" () {
+        when:
+        def versionMeetsRequirement = isVersionAtLeast("3.3.1", "")
+
+        then:
+        assert !versionMeetsRequirement
+    }
 }
