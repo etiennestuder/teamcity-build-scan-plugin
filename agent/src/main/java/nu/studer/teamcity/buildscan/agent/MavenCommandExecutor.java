@@ -1,14 +1,14 @@
 package nu.studer.teamcity.buildscan.agent;
 
 import jetbrains.buildServer.agent.BuildRunnerContext;
+import jetbrains.buildServer.agent.ToolCannotBeFoundException;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This class executes Maven commands and returns their output, both standard output and standard error, when given a
@@ -24,32 +24,58 @@ final class MavenCommandExecutor {
 
     @NotNull
     public Result execute(String args) throws IOException {
-        String command = getMavenExe().getAbsolutePath() + " " + args;
+        File mavenExe = getMavenExe();
+        if (mavenExe == null) {
+            return new Result();
+        }
+
+        String command = mavenExe.getAbsolutePath() + " " + args;
         ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "))
             .redirectErrorStream(true);
         return new Result(processBuilder.start());
     }
 
+    @Nullable
     private File getMavenExe() {
-        String mavenPath = runnerContext.getToolPath("maven");
-        String mvnExe = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
-        return new File(mavenPath, "bin/" + mvnExe);
+        try {
+            String mavenPath = runnerContext.getToolPath("maven");
+            String mvnExe = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
+            return new File(mavenPath, "bin/" + mvnExe);
+        } catch (ToolCannotBeFoundException e) {
+            return null;
+        }
     }
 
     public static class Result {
 
-        public final Process process;
+        private final Process process;
         private String output;
+
+        public Result() {
+            process = null;
+        }
 
         public Result(Process process) {
             this.process = process;
         }
 
+        public boolean isSuccessful() throws InterruptedException {
+            if (process == null) {
+                return false;
+            }
+
+            process.waitFor();
+
+            return process.exitValue() == 0;
+        }
+
         @NotNull
         public String getOutput() throws InterruptedException, IOException {
-            if (output == null) {
-                process.waitFor();
+            if (!isSuccessful() || process == null) {
+                return "";
+            }
 
+            if (output == null) {
                 // this logic eagerly consumes the entire output into memory, which should not be an issue when only
                 // used for `mvn --version`, which generates ~5 lines of output
                 // this may should be revisited if other commands are executed here
@@ -65,11 +91,6 @@ final class MavenCommandExecutor {
             }
 
             return output;
-        }
-
-        @NotNull
-        public Matcher match(Pattern pattern) throws InterruptedException, IOException {
-            return pattern.matcher(getOutput());
         }
     }
 }
