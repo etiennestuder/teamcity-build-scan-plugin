@@ -213,7 +213,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
         final String mavenVersion = getMavenVersion(runner);
-        if (!isMavenVersionAtLeast3_3_1(mavenVersion)) {
+        if (!runner.isVirtualContext() && !isMavenVersionAtLeast3_3_1(mavenVersion)) {
             LOG.info("Detected Maven version " + mavenVersion + ". Gradle Enterprise Maven Extension only supported for Maven 3.3.1 or higher.");
             return "";
         }
