@@ -13,8 +13,12 @@ tasks.register('buildExtension', Exec).configure {
     def launcherFor = toolchain.launcherFor { it.languageVersion.set(JavaLanguageVersion.of(8)) }
     def cmdLineArgProvider = new JavaLauncherCommandLineArgumentProvider(javaLauncher: launcherFor.get())
 
-    inputs.file 'pom.xml'
-    inputs.dir 'src/main'
+    inputs.file('pom.xml')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+        .withPropertyName('pomFile')
+    inputs.dir('src/main')
+        .withPathSensitivity(PathSensitivity.RELATIVE)
+        .withPropertyName('sourceDir')
     outputs.file 'target/service-message-maven-extension-1.0.jar'
     outputs.cacheIf { true }
     argumentProviders.add cmdLineArgProvider
