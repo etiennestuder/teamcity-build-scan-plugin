@@ -6,6 +6,7 @@ import spock.lang.Specification
 import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.isVersionAtLeast
 import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.parseVersion
 
+@SuppressWarnings('GroovyAccessibility')
 class MavenVersionUtilsTest extends Specification {
 
     private static final def MVN_VERSION_OUTPUT_TEMPLATE = """
