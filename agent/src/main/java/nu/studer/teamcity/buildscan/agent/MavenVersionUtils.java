@@ -5,7 +5,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class MavenVersionUtils {
+/**
+ * Provides utilities related to version parsing and comparison.
+ */
+final class MavenVersionUtils {
 
     private static final Pattern VERSION_OUTPUT_REGEX = Pattern.compile("Apache Maven\\s+(.*)\\s+\\(.*\\)");
 
