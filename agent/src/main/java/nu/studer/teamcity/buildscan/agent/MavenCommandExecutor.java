@@ -1,5 +1,6 @@
 package nu.studer.teamcity.buildscan.agent;
 
+import com.intellij.openapi.diagnostic.Logger;
 import jetbrains.buildServer.agent.BuildRunnerContext;
 import jetbrains.buildServer.agent.ToolCannotBeFoundException;
 import org.jetbrains.annotations.NotNull;
@@ -14,6 +15,8 @@ import java.io.InputStreamReader;
  * Executes Maven commands and returns their output, both standard output and standard error, when given a {@link BuildRunnerContext}.
  */
 final class MavenCommandExecutor {
+
+    private static final Logger LOG = Logger.getInstance("jetbrains.buildServer.BUILDSCAN");
 
     private final BuildRunnerContext runnerContext;
 
@@ -53,7 +56,6 @@ final class MavenCommandExecutor {
     public static class Result {
 
         private final Process process;
-        private String output;
 
         public Result() {
             process = null;
@@ -72,27 +74,34 @@ final class MavenCommandExecutor {
         }
 
         @NotNull
-        public String getOutput() throws IOException {
+        public String getOutput() {
             if (process == null || !isSuccessful()) {
                 return "";
             }
 
-            if (output == null) {
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+            try {
                 // this logic eagerly consumes the entire output into memory, which should not be an issue when only
                 // used for `mvn --version`, which generates ~5 lines of output
                 // this should be revisited if other commands are executed here
-                StringBuilder sb = new StringBuilder();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
                 int ch;
                 while ((ch = reader.read()) != -1) {
                     sb.append((char) ch);
                 }
-
-                output = sb.toString();
+            } catch (IOException e) {
+                LOG.warn("Unable to read output from Maven process", e);
+            } finally {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    LOG.warn("Unable to close reader", e);
+                }
             }
 
-            return output;
+            return sb.toString();
         }
 
     }
