@@ -12,6 +12,7 @@ import spock.lang.TempDir
 class BaseExtensionApplicationTest extends Specification {
 
     static final List<JdkCompatibleMavenVersion> SUPPORTED_MAVEN_VERSIONS = [
+        new JdkCompatibleMavenVersion('3.3.1', 7, 11),
         new JdkCompatibleMavenVersion('3.5.0', 7, 11),
         new JdkCompatibleMavenVersion('3.5.4', 7, 11),
         new JdkCompatibleMavenVersion('3.6.0', 7, 11),
@@ -21,12 +22,12 @@ class BaseExtensionApplicationTest extends Specification {
     ]
 
     static final List<JdkCompatibleMavenVersion> UNSUPPORTED_MAVEN_VERSIONS = [
-        new JdkCompatibleMavenVersion('3.0', 7, 11),
-        new JdkCompatibleMavenVersion('3.0.5', 7, 11),
-        new JdkCompatibleMavenVersion('3.1.0', 7, 11),
-        new JdkCompatibleMavenVersion('3.1.1', 7, 11),
-        new JdkCompatibleMavenVersion('3.2.1', 7, 11),
-        new JdkCompatibleMavenVersion('3.2.5', 7, 11),
+        new JdkCompatibleMavenVersion('3.0', 5, 11),
+        new JdkCompatibleMavenVersion('3.0.5', 5, 11),
+        new JdkCompatibleMavenVersion('3.1.0', 5, 11),
+        new JdkCompatibleMavenVersion('3.1.1', 5, 11),
+        new JdkCompatibleMavenVersion('3.2.1', 6, 11),
+        new JdkCompatibleMavenVersion('3.2.5', 6, 11)
     ]
 
     @TempDir
