@@ -614,7 +614,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "does not apply GE / CCUD extensions when Maven version < 3.3.1 (#jdkCompatibleMavenVersion)"() {
+    def "does not apply GE / CCUD extensions when in non-virtual context and Maven version < 3.3.1 (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
 
@@ -648,42 +648,8 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies GE / CCUD extensions when running in a virtual context for supported versions (#jdkCompatibleMavenVersion)"() {
-        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
-
-        given:
-        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
-
-        and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
-            ccudExtensionVersion: CCUD_EXTENSION_VERSION,
-        )
-
-        and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
-            isVirtualContext: true,
-        )
-
-        when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
-
-        then:
-        outputContainsBuildSuccess(output)
-
-        and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
-        outputContainsTeamCityServiceMessageBuildScanUrl(output)
-
-        where:
-        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
-    }
-
-    def "does not check maven version when applying to a virtual context (#jdkCompatibleMavenVersion)"() {
+    // this test should fail with a non-successful output given the Maven version used to run the build is too old and we run in virtual mode
+    def "tries to apply GE / CCUD extensions when in virtual context for any Maven version (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
 
@@ -709,13 +675,8 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         then:
         outputContainsBuildSuccess(output)
 
-        and:
-        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
-        1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
-
         where:
-        // This fails in different ways for different versions, so specifically check 3.2.5
-        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS.findAll { it.mavenVersion == "3.2.5" }
+        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
