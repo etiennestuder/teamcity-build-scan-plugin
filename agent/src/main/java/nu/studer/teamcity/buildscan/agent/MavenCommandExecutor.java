@@ -22,7 +22,7 @@ final class MavenCommandExecutor {
     }
 
     @NotNull
-    Result execute(String args) throws IOException {
+    Result execute(String args) throws IOException, InterruptedException {
         File mavenExec = getMvnExec();
         if (mavenExec == null) {
             return new Result();
@@ -30,7 +30,10 @@ final class MavenCommandExecutor {
 
         String command = mavenExec.getAbsolutePath() + " " + args;
         ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")).redirectErrorStream(true);
-        return new Result(processBuilder.start());
+        Process process = processBuilder.start();
+        process.waitFor();
+
+        return new Result(process);
     }
 
     @Nullable
@@ -60,18 +63,16 @@ final class MavenCommandExecutor {
             this.process = process;
         }
 
-        public boolean isSuccessful() throws InterruptedException {
+        public boolean isSuccessful() {
             if (process == null) {
                 return false;
             }
-
-            process.waitFor();
 
             return process.exitValue() == 0;
         }
 
         @NotNull
-        public String getOutput() throws InterruptedException, IOException {
+        public String getOutput() throws IOException {
             if (process == null || !isSuccessful()) {
                 return "";
             }
