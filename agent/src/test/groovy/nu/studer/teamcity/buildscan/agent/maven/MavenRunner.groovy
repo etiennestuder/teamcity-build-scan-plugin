@@ -7,9 +7,10 @@ final class MavenRunner {
     File multiModuleProjectDir
     List<String> arguments
 
-    String run() {
+    String runBuild() {
+        def installationBinDir = new File(installationDir, 'bin')
         def mvnExecutableName = System.getProperty('os.name').startsWith('Windows') ? 'mvn.cmd' : 'mvn'
-        def mvn = new File(installationDir, "bin/$mvnExecutableName")
+        def mvn = new File(installationBinDir, mvnExecutableName)
         def defaultArgs = ['-B', "-Dmaven.multiModuleProjectDirectory=${multiModuleProjectDir}".toString()]
         def userArgs = arguments.collectMany { s -> s.trim().split(' ').toList() }
         def command = [mvn.absolutePath] + defaultArgs + userArgs
@@ -18,4 +19,5 @@ final class MavenRunner {
             .start()
             .text
     }
+
 }

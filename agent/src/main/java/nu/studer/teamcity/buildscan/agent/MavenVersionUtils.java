@@ -12,11 +12,7 @@ public final class MavenVersionUtils {
     @Nullable
     public static String parseVersion(String output) {
         Matcher matcher = VERSION_OUTPUT_REGEX.matcher(output);
-        if (matcher.find()) {
-            return matcher.group(1);
-        } else {
-            return null;
-        }
+        return matcher.find() ? matcher.group(1) : null;
     }
 
     public static boolean isVersionAtLeast(String version, String requiredVersion) {
@@ -40,8 +36,10 @@ public final class MavenVersionUtils {
     }
 
     private static boolean isNullOrEmpty(String str) {
-        return str == null || str.isEmpty();
+        return str == null || str.trim().isEmpty();
     }
 
-    private MavenVersionUtils() {}
+    private MavenVersionUtils() {
+    }
+
 }

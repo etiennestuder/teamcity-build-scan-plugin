@@ -73,7 +73,7 @@ class BaseExtensionApplicationTest extends Specification {
             runner.arguments += ['-f', new File(runnerParameters.get('teamcity.build.checkoutDir'), runnerParameters.get('pomLocation')).absolutePath]
         }
 
-        return runner.run()
+        return runner.runBuild()
     }
 
     static final class JdkCompatibleMavenVersion {

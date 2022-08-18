@@ -6,7 +6,7 @@ final class MavenInstaller {
     File installationDir
 
     void installMaven() {
-        def installationBinDir = new File(installationDir, "bin")
+        def installationBinDir = new File(installationDir, 'bin')
         installationBinDir.mkdirs()
 
         ["mvn", "mvn.cmd"].each { mvn ->
@@ -21,4 +21,5 @@ final class MavenInstaller {
 wrapperUrl=https://repo.maven.apache.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.1.0/maven-wrapper-3.1.0.jar
 """
     }
+
 }
