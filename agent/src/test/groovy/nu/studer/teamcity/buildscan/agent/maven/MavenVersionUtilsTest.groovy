@@ -3,7 +3,8 @@ package nu.studer.teamcity.buildscan.agent.maven
 import groovy.text.SimpleTemplateEngine
 import spock.lang.Specification
 
-import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.*
+import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.isVersionAtLeast
+import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.parseVersion
 
 class MavenVersionUtilsTest extends Specification {
 
@@ -16,7 +17,7 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
 
 """
 
-    def "parseVersion returns null when no match is found"() {
+    def "parseVersion returns null when no version pattern match is found"() {
         given:
         def output = ""
 
@@ -24,10 +25,10 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         def parsedVersion = parseVersion(output)
 
         then:
-        assert !parsedVersion
+        assert parsedVersion == null
     }
 
-    def "parseVersion correctly parses full maven version from `mvn --version` output (#version)"() {
+    def "parseVersion correctly parses full Maven version from `mvn --version` output (#version)"() {
         given:
         def output = new SimpleTemplateEngine().createTemplate(MVN_VERSION_OUTPUT_TEMPLATE).make(version: version).toString()
 
@@ -38,7 +39,7 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         assert parsedVersion == version
 
         where:
-        // sampling of actual maven versions that are distinct from a parsing perspective
+        // sampling of actual Maven versions that are distinct from a parsing perspective
         version << [
             "1.0-RC2",
             "1.1-RC-1",
@@ -49,7 +50,7 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         ]
     }
 
-    def "isVersionAtLeast correctly evaluates version requirements when required version is #versionRequirement and version is #version" () {
+    def "isVersionAtLeast correctly evaluates version requirements when required version is #versionRequirement and version is #version"() {
         when:
         def versionMeetsRequirement = isVersionAtLeast(version, versionRequirement)
 
@@ -72,35 +73,19 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         "3.3.1"            | "4.0.0"         | true
     }
 
-    def "isVersionAtLeast returns false when version is null" () {
+    def "isVersionAtLeast returns false when one of the versions is null or empty"() {
         when:
-        def versionMeetsRequirement = isVersionAtLeast(null, "3.3.1")
+        def versionMeetsRequirement = isVersionAtLeast(version, versionRequirement)
 
         then:
         assert !versionMeetsRequirement
+
+        where:
+        versionRequirement | version
+        null               | "3.3.1"
+        ""                 | "3.3.1"
+        "3.3.1"            | null
+        "3.3.1"            | ""
     }
 
-    def "isVersionAtLeast returns false when requiredVersion is null" () {
-        when:
-        def versionMeetsRequirement = isVersionAtLeast("3.3.1", null)
-
-        then:
-        assert !versionMeetsRequirement
-    }
-
-    def "isVersionAtLeast returns false when version is empty" () {
-        when:
-        def versionMeetsRequirement = isVersionAtLeast("", "3.3.1")
-
-        then:
-        assert !versionMeetsRequirement
-    }
-
-    def "isVersionAtLeast returns false when requiredVersion is empty" () {
-        when:
-        def versionMeetsRequirement = isVersionAtLeast("3.3.1", "")
-
-        then:
-        assert !versionMeetsRequirement
-    }
 }

@@ -88,11 +88,11 @@ class TestBuildRunnerContext implements BuildRunnerContext {
 
     @Override
     String getToolPath(@NotNull String toolName) throws ToolCannotBeFoundException {
-        if (!toolPaths.containsKey(toolName)) {
+        if (toolPaths.containsKey(toolName)) {
+            return toolPaths[toolName]
+        } else {
             throw new ToolCannotBeFoundException(toolName)
         }
-
-        return toolPaths[toolName]
     }
 
     @Override
