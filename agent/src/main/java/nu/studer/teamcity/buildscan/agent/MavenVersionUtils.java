@@ -13,12 +13,12 @@ final class MavenVersionUtils {
     private static final Pattern VERSION_OUTPUT_REGEX = Pattern.compile("Apache Maven\\s+(.*)\\s+\\(.*\\)");
 
     @Nullable
-    public static String parseVersion(String output) {
+    static String parseVersion(String output) {
         Matcher matcher = VERSION_OUTPUT_REGEX.matcher(output);
         return matcher.find() ? matcher.group(1) : null;
     }
 
-    public static boolean isVersionAtLeast(String version, String requiredVersion) {
+    static boolean isVersionAtLeast(String version, String requiredVersion) {
         if (isNullOrEmpty(version) || isNullOrEmpty(requiredVersion)) {
             return false;
         }

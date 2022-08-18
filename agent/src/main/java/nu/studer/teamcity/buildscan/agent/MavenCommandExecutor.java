@@ -11,19 +11,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * This class executes Maven commands and returns their output, both standard output and standard error, when given a
- * {@link BuildRunnerContext}.
+ * Executes Maven commands and returns their output, both standard output and standard error, when given a {@link BuildRunnerContext}.
  */
 final class MavenCommandExecutor {
 
     private final BuildRunnerContext runnerContext;
 
-    public MavenCommandExecutor(BuildRunnerContext context) {
+    MavenCommandExecutor(BuildRunnerContext context) {
         this.runnerContext = context;
     }
 
     @NotNull
-    public Result execute(String args) throws IOException {
+    Result execute(String args) throws IOException {
         File mavenExe = getMavenExe();
         if (mavenExe == null) {
             return new Result();
@@ -92,5 +91,7 @@ final class MavenCommandExecutor {
 
             return output;
         }
+
     }
+
 }
