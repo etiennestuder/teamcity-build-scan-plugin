@@ -249,10 +249,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
     }
 
-    private boolean isMavenVersionAtLeast3_3_1(String mavenVersion) {
-        return isVersionAtLeast(mavenVersion, "3.3.1");
-    }
-
     @Nullable
     private String getMavenVersion(BuildRunnerContext runner) {
         try {
@@ -269,6 +265,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
 
         return null;
+    }
+
+    private boolean isMavenVersionAtLeast3_3_1(String mavenVersion) {
+        return isVersionAtLeast(mavenVersion, "3.3.1");
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
