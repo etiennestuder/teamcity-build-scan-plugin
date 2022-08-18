@@ -23,26 +23,28 @@ final class MavenCommandExecutor {
 
     @NotNull
     Result execute(String args) throws IOException {
-        File mavenExe = getMavenExe();
-        if (mavenExe == null) {
+        File mavenExec = getMvnExec();
+        if (mavenExec == null) {
             return new Result();
         }
 
-        String command = mavenExe.getAbsolutePath() + " " + args;
-        ProcessBuilder processBuilder = new ProcessBuilder(command.split(" "))
-            .redirectErrorStream(true);
+        String command = mavenExec.getAbsolutePath() + " " + args;
+        ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")).redirectErrorStream(true);
         return new Result(processBuilder.start());
     }
 
     @Nullable
-    private File getMavenExe() {
+    private File getMvnExec() {
+        String mavenPath;
         try {
-            String mavenPath = runnerContext.getToolPath("maven");
-            String mvnExe = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
-            return new File(mavenPath, "bin/" + mvnExe);
+            mavenPath = runnerContext.getToolPath("maven");
         } catch (ToolCannotBeFoundException e) {
             return null;
         }
+
+        File installationBinDir = new File(mavenPath, "bin");
+        String mvnExecutableName = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
+        return new File(installationBinDir, mvnExecutableName);
     }
 
     public static class Result {
@@ -70,14 +72,14 @@ final class MavenCommandExecutor {
 
         @NotNull
         public String getOutput() throws InterruptedException, IOException {
-            if (!isSuccessful() || process == null) {
+            if (process == null || !isSuccessful()) {
                 return "";
             }
 
             if (output == null) {
                 // this logic eagerly consumes the entire output into memory, which should not be an issue when only
                 // used for `mvn --version`, which generates ~5 lines of output
-                // this may should be revisited if other commands are executed here
+                // this should be revisited if other commands are executed here
                 StringBuilder sb = new StringBuilder();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
