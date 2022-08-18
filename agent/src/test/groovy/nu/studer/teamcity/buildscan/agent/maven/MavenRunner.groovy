@@ -9,7 +9,7 @@ final class MavenRunner {
 
     String runBuild() {
         def installationBinDir = new File(installationDir, 'bin')
-        def mvnExecutableName = System.getProperty('os.name').startsWith('Windows') ? 'mvn.cmd' : 'mvn'
+        def mvnExecutableName = System.getProperty('os.name').toLowerCase().contains('win') ? 'mvn.cmd' : 'mvn'
         def mvn = new File(installationBinDir, mvnExecutableName)
         def defaultArgs = ['-B', "-Dmaven.multiModuleProjectDirectory=${multiModuleProjectDir}".toString()]
         def userArgs = arguments.collectMany { s -> s.trim().split(' ').toList() }
