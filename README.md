@@ -81,7 +81,27 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 
 The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters, though, and even disable the auto-injection by setting the configuration parameters to empty values.
 
-### Gradle Builds
+### Creating a Gradle Enterprise Connection
+
+A Gradle Enterprise connection can be applied to a project hierarchy on the Connections page of the root project's configuration. In the Add Connection dropdown, select the Gradle Enterprise connection type.
+
+Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, any plugin or extension versions to be applied, and any other fields in the dialog as needed. Some values, such as the plugin and extension versions, will be pre-populated.
+
+_Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
+
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14.4 and 1.10.1, respectively._
+
+#### Example Configuration
+
+<img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/625514/185425268-7d4b363f-941b-49c8-9d88-1e68e2551e9a.png">
+
+### Injecting Gradle Enterprise via Configuration Parameters
+
+<details>
+
+<summary>It is possible to inject Gradle Enterprise by manually setting configuration parameters. Click for more details.</summary>
+
+#### Gradle Builds
 
 1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create three configuration parameters:
 
@@ -102,11 +122,11 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
 
 _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
 
-#### Example Configuration
+##### Example Gradle Configuration
 
 <img width="1302" alt="image" src="https://user-images.githubusercontent.com/231070/171748029-590c9f99-9382-41f3-8597-8c049ce328ed.png">
 
-### Maven Builds
+#### Maven Builds
 
 1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create three configuration parameters:
 
@@ -126,9 +146,11 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
 _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.1 and 1.11, respectively._
 
-#### Example Configuration
+##### Example Maven Configuration
 
 <img width="1298" alt="image" src="https://user-images.githubusercontent.com/231070/171748453-243aa862-c31b-4367-bb90-49b257de1f3f.png">
+
+</details>
 
 ## Slack
 
