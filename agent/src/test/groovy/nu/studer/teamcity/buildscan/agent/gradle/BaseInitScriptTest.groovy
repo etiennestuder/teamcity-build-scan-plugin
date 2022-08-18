@@ -134,8 +134,8 @@ class BaseInitScriptTest extends Specification {
     }
 
     def declareGePluginAndCcudPluginApplication(GradleVersion gradleVersion) {
-        settingsFile << maybeAddPluginsToSettings(gradleVersion, '1.8.0')
-        buildFile << maybeAddPluginsToRootProject(gradleVersion, '1.8.0')
+        settingsFile << maybeAddPluginsToSettings(gradleVersion, '1.8')
+        buildFile << maybeAddPluginsToRootProject(gradleVersion, '1.8')
     }
 
     String maybeAddPluginsToSettings(GradleVersion gradleVersion, String ccudPluginVersion = null) {
