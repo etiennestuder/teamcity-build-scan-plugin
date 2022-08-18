@@ -13,7 +13,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -216,7 +215,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         if (!runner.isVirtualContext()) {
             final String mavenVersion = getMavenVersion(runner);
             LOG.info("Determined Maven version: " + mavenVersion);
-            if (!isMavenVersionAtLeast3_3_1(mavenVersion)) {
+            if (!isEmptyMavenVersion(mavenVersion) && !isMavenVersionAtLeast3_3_1(mavenVersion)) {
                 LOG.info("Cannot instrument Maven build with Gradle Enterprise. Gradle Enterprise Maven Extension is only supported for Maven 3.3.1 and higher.");
                 return "";
             }
@@ -262,6 +261,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             LOG.warn("Unable to determine Maven version", e);
             return null;
         }
+    }
+
+    private boolean isEmptyMavenVersion(String mavenVersion) {
+        return mavenVersion == null || mavenVersion.trim().isEmpty();
     }
 
     private boolean isMavenVersionAtLeast3_3_1(String mavenVersion) {
