@@ -75,21 +75,23 @@ previously downloaded plugin `.zip` file.
 
 ## Gradle Enterprise
 
-You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when they are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
+You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when the builds are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
 
 The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
 
-The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters, though, and even disable the auto-injection by setting the configuration parameters to empty values.
+The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
 ### Creating a Gradle Enterprise Connection
 
-A Gradle Enterprise connection can be applied to a project hierarchy on the Connections page of the root project's configuration. In the Add Connection dropdown, select the Gradle Enterprise connection type.
+A Gradle Enterprise connection is created in the _Connections_ section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
 
 Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, any plugin or extension versions to be applied, and any other fields in the dialog as needed. Some values, such as the plugin and extension versions, will be pre-populated.
 
+A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects. 
+
 _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
 
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14.4 and 1.10.1, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.1 and 1.11, respectively._
 
 #### Example Configuration
 
