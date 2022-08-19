@@ -81,6 +81,8 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 
 The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
+For convenience, the configuration parameter values can be conveniently entered by creating a Gradle Enterprise connection, as explained below.
+
 ### Creating a Gradle Enterprise Connection
 
 A Gradle Enterprise connection is created in the _Connections_ section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
