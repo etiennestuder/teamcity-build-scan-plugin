@@ -79,7 +79,7 @@ You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enter
 
 The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
 
-The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters, though, and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
+The higher in TeamCity's project hierarchy the configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
 ### Creating a Gradle Enterprise Connection
 
