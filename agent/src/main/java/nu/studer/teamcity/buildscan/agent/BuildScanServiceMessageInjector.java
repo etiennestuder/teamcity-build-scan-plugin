@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.isVersionAtLeast;
 import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.parseVersion;
@@ -255,9 +256,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     @Nullable
     private String getMavenVersion(BuildRunnerContext runner) {
         try {
-            MavenCommandExecutor.Result result = new MavenCommandExecutor(runner).execute("-v");
+            MavenCommandExecutor.Result result = new MavenCommandExecutor(runner).execute("-v", 10, TimeUnit.SECONDS);
             return result.isSuccessful() ? parseVersion(result.getOutput()) : null;
         } catch (Exception e) {
+            e.printStackTrace();
             LOG.warn("Unable to determine Maven version", e);
             return null;
         }
