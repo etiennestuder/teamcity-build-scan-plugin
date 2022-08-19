@@ -83,13 +83,15 @@ The higher in TeamCity's project hierarchy the configuration parameters are appl
 
 ### Creating a Gradle Enterprise Connection
 
-A Gradle Enterprise connection can be applied to a project hierarchy on the Connections page of the root project's configuration. In the Add Connection dropdown, select the Gradle Enterprise connection type.
+A Gradle Enterprise connection is created in the _Connections_ section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
 
 Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, any plugin or extension versions to be applied, and any other fields in the dialog as needed. Some values, such as the plugin and extension versions, will be pre-populated.
 
+A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects. 
+
 _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
 
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.14.4 and 1.10.1, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.1 and 1.11, respectively._
 
 #### Example Configuration
 
