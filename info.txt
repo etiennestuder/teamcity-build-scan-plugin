@@ -1,8 +1,0 @@
-Release process:
-- ensure `baseVersion` has correct value in build.gradle
-- Run `gr -i clean build generatePomFileForPluginPublicationPublication bintrayUpload -PRELEASE`
-- Tag release, e.g. `git tag v0.2`, and push the tag, e.g. `git push origin v0.2`
-- update `baseVersion` to next anticipated version in build.gradle
-
-Calling Slack webhook:
-curl -X POST -H 'Content-type: application/json' --data '{ "text": "Some text" }' https://hooks.slack.com/services/<ID>
