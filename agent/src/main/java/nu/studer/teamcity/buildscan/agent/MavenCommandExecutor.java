@@ -26,17 +26,28 @@ final class MavenCommandExecutor {
     }
 
     @NotNull
-    Result execute(String args, long timeout, TimeUnit unit) throws IOException, InterruptedException {
+    Result execute(String args, long timeout, TimeUnit unit)  {
         File mavenExec = getMvnExec();
         if (mavenExec == null) {
-            return Result.didNotExecute();
+            return Result.forFailedToExecute();
         }
 
         String command = mavenExec.getAbsolutePath() + " " + args;
         ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")).redirectErrorStream(true);
-        Process process = processBuilder.start();
-        waitFor(process, timeout, unit);
-        return Result.forExecutedProcess(process);
+
+        try {
+            Process process = processBuilder.start();
+            boolean finished = waitFor(process, timeout, unit);
+
+            if (finished) {
+                return Result.forExecutedProcess(process);
+            } else {
+                return Result.forFailedToExecute();
+            }
+        } catch (Exception e) {
+            LOG.warn("Failed to execute Maven command: " + command, e);
+            return Result.forFailedToExecute();
+        }
     }
 
     @Nullable
@@ -64,7 +75,7 @@ final class MavenCommandExecutor {
             this.output = output;
         }
 
-        static Result didNotExecute() {
+        static Result forFailedToExecute() {
             return new Result(false, "");
         }
 
