@@ -1,1 +1,1 @@
-- Looks for .mvn/extensions.xml file similar to how Maven searches for it.
+- Only applies GE and CCUD Maven extensions if Maven version is at least 3.3.1
