@@ -53,19 +53,19 @@ final class MavenCommandExecutor {
         return new File(installationBinDir, mvnExecutableName);
     }
 
-    public static class Result {
+    static class Result {
 
         private final Process process;
 
-        public Result() {
+        Result() {
             process = null;
         }
 
-        public Result(Process process) {
+        Result(Process process) {
             this.process = process;
         }
 
-        public boolean isSuccessful() {
+        boolean isSuccessful() {
             if (process == null) {
                 return false;
             }
@@ -74,14 +74,14 @@ final class MavenCommandExecutor {
         }
 
         @NotNull
-        public String getOutput() {
+        String getOutput() {
             if (process == null || !isSuccessful()) {
                 return "";
             }
 
             StringBuilder sb = new StringBuilder();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             try {
                 // this logic eagerly consumes the entire output into memory, which should not be an issue when only
                 // used for `mvn --version`, which generates ~5 lines of output
