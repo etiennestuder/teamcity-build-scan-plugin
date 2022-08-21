@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Executes Maven commands and returns their output, both standard output and standard error, when given a {@link BuildRunnerContext}.
@@ -25,17 +26,28 @@ final class MavenCommandExecutor {
     }
 
     @NotNull
-    Result execute(String args) throws IOException, InterruptedException {
+    Result execute(String args, long timeout, TimeUnit unit)  {
         File mavenExec = getMvnExec();
         if (mavenExec == null) {
-            return Result.didNotExecute();
+            return Result.forFailedToExecute();
         }
 
         String command = mavenExec.getAbsolutePath() + " " + args;
         ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")).redirectErrorStream(true);
-        Process process = processBuilder.start();
-        process.waitFor();
-        return Result.forExecutedProcess(process);
+
+        try {
+            Process process = processBuilder.start();
+            boolean finished = waitFor(process, timeout, unit);
+
+            if (finished) {
+                return Result.forExecutedProcess(process);
+            } else {
+                return Result.forFailedToExecute();
+            }
+        } catch (Exception e) {
+            LOG.warn("Failed to execute Maven command: " + command, e);
+            return Result.forFailedToExecute();
+        }
     }
 
     @Nullable
@@ -63,7 +75,7 @@ final class MavenCommandExecutor {
             this.output = output;
         }
 
-        static Result didNotExecute() {
+        static Result forFailedToExecute() {
             return new Result(false, "");
         }
 
@@ -110,4 +122,25 @@ final class MavenCommandExecutor {
 
     }
 
+    // this implementation of waitFor is adapted from later JDKs that implement waitFor(long, TimeUnit)
+    // this implementation polls the exit value every 100ms until the timeout is reached or an exit value is returned
+    private static boolean waitFor(Process process, long timeout, TimeUnit unit) throws InterruptedException {
+        long startTime = System.nanoTime();
+        long remaining = unit.toNanos(timeout);
+
+        do {
+            try {
+                process.exitValue();
+                return true;
+            } catch (IllegalThreadStateException e) {
+                if (remaining > 0) {
+                    long waitTime = Math.min(TimeUnit.NANOSECONDS.toMillis(remaining) + 1, 100);
+                    Thread.sleep(waitTime);
+                }
+            }
+            remaining = unit.toNanos(timeout) - (System.nanoTime() - startTime);
+        } while (remaining > 0);
+
+        return false;
+    }
 }
