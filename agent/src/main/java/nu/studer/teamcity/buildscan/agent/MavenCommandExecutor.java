@@ -36,6 +36,7 @@ final class MavenCommandExecutor {
         ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")).redirectErrorStream(true);
 
         try {
+            LOG.info("Executing Maven command: " + command);
             Process process = processBuilder.start();
             boolean finished = waitFor(process, timeout, unit);
 
@@ -56,6 +57,7 @@ final class MavenCommandExecutor {
         try {
             mavenPath = runnerContext.getToolPath("maven");
         } catch (ToolCannotBeFoundException e) {
+            LOG.warn("Could not find \"maven\" tool path in BuildRunnerContext", e);
             return null;
         }
 
@@ -69,23 +71,32 @@ final class MavenCommandExecutor {
         private final boolean success;
         @NotNull
         private final String output;
+        @Nullable
+        private final Integer exitValue;
 
-        private Result(boolean success, @NotNull String output) {
+
+        private Result(boolean success, @NotNull String output, @Nullable Integer exitValue) {
             this.success = success;
             this.output = output;
+            this.exitValue = exitValue;
         }
 
         static Result forFailedToExecute() {
-            return new Result(false, "");
+            return new Result(false, "", null);
         }
 
         static Result forExecutedProcess(Process process) {
             String output = readOutput(process);
-            return new Result(process.exitValue() == 0, output);
+            return new Result(process.exitValue() == 0, output, process.exitValue());
         }
 
         boolean isSuccessful() {
             return success;
+        }
+
+        @Nullable
+        Integer getExitValue() {
+            return exitValue;
         }
 
         @NotNull

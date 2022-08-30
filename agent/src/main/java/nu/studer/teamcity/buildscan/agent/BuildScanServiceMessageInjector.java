@@ -255,11 +255,18 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     @Nullable
     private String getMavenVersion(BuildRunnerContext runner) {
-        MavenCommandExecutor.Result result = new MavenCommandExecutor(runner).execute("-v", 10, TimeUnit.SECONDS);
-        if (result.isSuccessful()) {
-            return parseVersion(result.getOutput());
-        } else {
-            LOG.warn("Unable to determine Maven version");
+        try {
+            MavenCommandExecutor.Result result = new MavenCommandExecutor(runner).execute("-v", 10, TimeUnit.SECONDS);
+
+            if (result.isSuccessful()) {
+                return parseVersion(result.getOutput());
+            } else {
+                LOG.warn("Unable to determine Maven version: exit value =  " + result.getExitValue() + ", output = " + result.getOutput());
+                return null;
+            }
+
+        } catch (Exception e) {
+            LOG.warn("Unable to determine Maven version", e);
             return null;
         }
     }
