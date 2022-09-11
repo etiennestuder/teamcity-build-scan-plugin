@@ -89,11 +89,11 @@ A Gradle Enterprise connection is created in the _Connections_ section of the co
 
 Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, any plugin or extension versions to be applied, and any other fields in the dialog as needed. Some values, such as the plugin and extension versions, will be pre-populated.
 
-A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects. 
+A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects.
 
 _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
 
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.1 and 1.11, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.2 and 1.11, respectively._
 
 #### Example Configuration
 
@@ -150,7 +150,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
 4. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
 
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.1 and 1.11, respectively._
+_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.2 and 1.11, respectively._
 
 ##### Example Maven Configuration
 

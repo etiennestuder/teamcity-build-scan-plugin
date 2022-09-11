@@ -16,7 +16,7 @@ configurations {
 
 dependencies {
     mvnExtensions project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
-    mvnExtensions 'com.gradle:gradle-enterprise-maven-extension:1.15.1'
+    mvnExtensions 'com.gradle:gradle-enterprise-maven-extension:1.15.2'
     mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:1.11'
 
     testImplementation gradleTestKit()

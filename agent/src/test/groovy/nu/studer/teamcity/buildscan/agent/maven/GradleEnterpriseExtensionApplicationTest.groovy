@@ -8,7 +8,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     static final String GE_URL_STR = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
     static final URI GE_URL = GE_URL_STR ? new URI(GE_URL_STR) : null
-    static final String GE_EXTENSION_VERSION = '1.15.1'
+    static final String GE_EXTENSION_VERSION = '1.15.2'
     static final String CCUD_EXTENSION_VERSION = '1.11'
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
