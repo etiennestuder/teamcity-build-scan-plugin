@@ -30,6 +30,8 @@ class BaseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.2.5', 6, 11)
     ]
 
+    static final String ACCEPT_TOS_PARAMETERS = "-Dgradle.scan.termsOfService.url=https://gradle.com/terms-of-service -Dgradle.scan.termsOfService.accept=true"
+
     @TempDir
     File checkoutDir
 
@@ -63,11 +65,13 @@ class BaseExtensionApplicationTest extends Specification {
         def context = new TestBuildRunnerContext('Maven2', agentTempDir, configParameters, runnerParameters, ['maven': agentMavenInstallation.absolutePath], mvnBuildStepConfig.isVirtualContext)
         injector.beforeRunnerStart(context)
 
+        def goals = runnerParameters.get('goals')
+        def runnerArgs = runnerParameters.get('runnerArgs')
         def runner = new MavenRunner(
             installationDir: agentMavenInstallation,
             projectDir: new File(runnerParameters.get('teamcity.build.workingDir') ?: checkoutDir.absolutePath),
             multiModuleProjectDir: mvnProject.dotMvn.parentFile,
-            arguments: ("${runnerParameters.get('goals')} ${runnerParameters.get('runnerArgs')}".toString().trim().split(/\s+/))
+            arguments: ("$ACCEPT_TOS_PARAMETERS $goals $runnerArgs".toString().trim().split(/\s+/))
         )
 
         if (runnerParameters.containsKey('pomLocation')) {

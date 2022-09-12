@@ -6,14 +6,20 @@ import static org.junit.Assume.assumeTrue
 
 class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationTest {
 
-    static final String GE_URL_STR = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
+    static final String GE_URL_STR = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE') ?: "https://scans.gradle.com"
     static final URI GE_URL = GE_URL_STR ? new URI(GE_URL_STR) : null
+    static final boolean ACCEPTED_TOS = Boolean.valueOf(System.getProperty('teamcity-build-scan-plugin.acceptGradleTOS'))
     static final String GE_EXTENSION_VERSION = '1.15.2'
     static final String CCUD_EXTENSION_VERSION = '1.11.1'
 
+    static boolean canPublishScansToGeUrl() {
+        // This verifies that the Gradle TOS property is set if the GE URL is scans.gradle.com
+        !GE_URL.toString().contains("scans.gradle.com") || ACCEPTED_TOS
+    }
+
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -38,7 +44,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies GE extension via classpath when not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -66,7 +72,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies GE extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -97,7 +103,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies GE extension via classpath when not defined in project where pom location set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -130,7 +136,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies GE extension via project when defined in project where pom location set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -167,7 +173,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies GE extension via classpath when not defined in project where checkout dir and working dir not set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -200,7 +206,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "does not inject GE extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -233,7 +239,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies CCUD extension via classpath when not defined in project where GE extension not defined in project and not applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -261,7 +267,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies CCUD extension via classpath when not defined in project where GE extension applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -290,7 +296,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies CCUD extension via classpath when not defined in project where GE extension defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -322,7 +328,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "applies CCUD extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -355,7 +361,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "does not inject CCUD extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -389,7 +395,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "ignores GE URL requested via TC config when GE extension is not applied via the classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -421,7 +427,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "configures GE URL requested via TC config when GE extension is applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -453,7 +459,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "does not publish build scan for TeamCity specific info goal invocation (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -483,7 +489,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "build succeeds when service message maven extension is applied to a project without GE in the extension classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -507,7 +513,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "publishes build scan when pom is in a subdirectory and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -543,7 +549,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "publishes build scan when pom is in a subdirectory and subdirectory is specified as pom path and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -579,7 +585,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "publishes build scan when pom is in a subdirectory and extensions.xml is in a higher subdirectory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration(
@@ -616,7 +622,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "does not apply GE / CCUD extensions when in non-virtual context and Maven version < 3.3.1 (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -650,7 +656,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "tries to apply GE / CCUD extensions when in virtual context for any Maven version (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue canPublishScansToGeUrl()
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
@@ -694,14 +700,19 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
     }
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${normalizeGeUrl(GE_URL)}/s/"
         assert output.contains(serviceMsg)
         assert 1 == output.count(serviceMsg)
     }
 
     void outputMissesTeamCityServiceMessageBuildScanUrl(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
+        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${normalizeGeUrl(GE_URL)}/s/"
         assert !output.contains(serviceMsg)
+    }
+
+    String normalizeGeUrl(URI geUrl) {
+        // If the tests are run pointing at scans.gradle.com, the output scan URL will simply link to gradle.com
+        GE_URL.toString().replace("scans.gradle.com", "gradle.com")
     }
 
     void outputContainsBuildSuccess(String output) {
