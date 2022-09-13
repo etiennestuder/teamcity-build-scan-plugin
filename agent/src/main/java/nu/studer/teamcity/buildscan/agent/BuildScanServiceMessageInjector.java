@@ -69,6 +69,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
     private static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
     private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
+    private static final String IS_MAVEN_VERSION_CHECK_ENABLED_PARAM = "buildScanPlugin.maven-version-check.enabled";
 
     // Environment variables set to instrument the Gradle build
 
@@ -212,8 +213,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
+        boolean isMavenVersionCheckEnabled = getBooleanConfigParam(IS_MAVEN_VERSION_CHECK_ENABLED_PARAM, runner);
+
         // only check for the Maven version used by this build run in non-virtual environments since it cannot be checked reliably in virtual envs
-        if (!runner.isVirtualContext()) {
+        if (isMavenVersionCheckEnabled && !runner.isVirtualContext()) {
             LOG.info("Running in non-virtual context.");
             final String mavenVersion = getMavenVersion(runner);
             LOG.info("Determined Maven version: " + mavenVersion);
