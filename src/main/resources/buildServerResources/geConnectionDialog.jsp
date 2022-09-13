@@ -106,6 +106,14 @@
     </td>
 </tr>
 
+<tr class="advancedSetting">
+    <td><label for="${keys.isMavenVersionCheckEnabled}">Enable Maven Version Check:</label></td>
+    <td>
+        <props:checkboxProperty name="${keys.isMavenVersionCheckEnabled}"/>
+        <span class="smallNote">Enable a Maven version check to ensure that the Gradle Enterprise Maven Extension is not applied to Maven builds lower than version 3.3.1.</span>
+    </td>
+</tr>
+
 <tr class="groupingTitle">
     <td colspan="2">TeamCity Build Steps Settings</td>
 </tr>

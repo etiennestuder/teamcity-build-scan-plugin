@@ -17,6 +17,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.IS_MAVEN_VERSION_CHECK_ENABLED
 
 @Unroll
 class GradleEnterpriseConnectionProviderTest extends Specification {
@@ -65,6 +66,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         CCUD_EXTENSION_VERSION             | '1.11.1'                        | 'Common Custom User Data Maven Extension Version'
         CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Gradle Enterprise Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
+        IS_MAVEN_VERSION_CHECK_ENABLED     | 'false'                         | 'Maven Version Check Enabled'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP | 'true'                          | 'Instrument Command Line Build Steps'
     }
 
