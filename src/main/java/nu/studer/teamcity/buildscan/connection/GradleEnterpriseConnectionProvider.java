@@ -29,6 +29,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.IS_MAVEN_VERSION_CHECK_ENABLED;
 
 public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
@@ -121,6 +122,11 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         String customCcudExtensionCoordinates = params.get(CUSTOM_CCUD_EXTENSION_COORDINATES);
         if (customCcudExtensionCoordinates != null) {
             description += String.format("* Common Custom User Data Maven Extension Custom Coordinates: %s\n", customCcudExtensionCoordinates);
+        }
+
+        String isMavenVersionCheckEnabled = params.get(IS_MAVEN_VERSION_CHECK_ENABLED);
+        if (isMavenVersionCheckEnabled != null) {
+            description += String.format("* Maven Version Check Enabled: %s\n", isMavenVersionCheckEnabled);
         }
 
         description += "\nTeamCity Build Steps Settings:\n";
