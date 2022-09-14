@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import jetbrains.buildServer.agent.AgentLifeCycleListener
+import jetbrains.buildServer.agent.BuildFinishedStatus
 import jetbrains.buildServer.util.EventDispatcher
 import jetbrains.buildServer.util.FileUtil
 import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
@@ -229,7 +230,7 @@ class BaseInitScriptTest extends Specification {
             return testKitRunner.build()
         } finally {
             // Run the finish hook, and check that any file was deleted from Gradle User Home
-            injector.runnerFinished(context, null)
+            injector.runnerFinished(context, BuildFinishedStatus.FINISHED_SUCCESS)
 
             def initScriptsDir = new File(gradleUserHome, 'init.d')
             if (initScriptsDir.exists()) {
