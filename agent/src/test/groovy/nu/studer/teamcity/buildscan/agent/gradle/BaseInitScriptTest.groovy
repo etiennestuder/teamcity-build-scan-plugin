@@ -37,6 +37,7 @@ class BaseInitScriptTest extends Specification {
     static final JdkCompatibleGradleVersion GRADLE_5_6 = new JdkCompatibleGradleVersion(GradleVersion.version('5.6.4'), 8, 12)
     static final JdkCompatibleGradleVersion GRADLE_6_0 = new JdkCompatibleGradleVersion(GradleVersion.version('6.0.1'), 8, 13)
     static final JdkCompatibleGradleVersion GRADLE_6_7 = new JdkCompatibleGradleVersion(GradleVersion.version('6.7'), 8, 15)
+    static final JdkCompatibleGradleVersion GRADLE_6_9 = new JdkCompatibleGradleVersion(GradleVersion.version('6.9'), 8, 15)
     static final JdkCompatibleGradleVersion GRADLE_7_0 = new JdkCompatibleGradleVersion(GradleVersion.version('7.0.2'), 8, 16)
     static final JdkCompatibleGradleVersion GRADLE_7_4 = new JdkCompatibleGradleVersion(GradleVersion.version('7.4.2'), 8, 17)
 
@@ -51,6 +52,7 @@ class BaseInitScriptTest extends Specification {
         GRADLE_5_6,
         GRADLE_6_0,
         GRADLE_6_7,
+        GRADLE_6_9,
         GRADLE_7_0,
         GRADLE_7_4,
     ]
@@ -217,8 +219,7 @@ class BaseInitScriptTest extends Specification {
         }
         testKitRunner.withArguments(args)
 
-        def testKitSupportsEnvVars = config.gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
-        if (testKitSupportsEnvVars) {
+        if (testKitSupportsEnvVars(config)) {
             testKitRunner.withEnvironment(context.buildParameters.environmentVariables)
             testKitRunner.withJvmArguments(config.additionalJvmArgs)
         } else {
@@ -237,6 +238,15 @@ class BaseInitScriptTest extends Specification {
                 assert initScriptsDir.list() as List<String> == []
             }
         }
+    }
+
+    private boolean testKitSupportsEnvVars(BuildConfig config) {
+        // TestKit supports env vars for Gradle 3.5+, except on M1 Mac where only 6.9+ is supported
+        def isM1Mac = System.getProperty("os.arch") == "aarch64"
+        if (isM1Mac) {
+            return config.gradleVersion.baseVersion >= GRADLE_6_9.gradleVersion
+        }
+        return config.gradleVersion.baseVersion >= GRADLE_3_5.gradleVersion
     }
 
     void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
