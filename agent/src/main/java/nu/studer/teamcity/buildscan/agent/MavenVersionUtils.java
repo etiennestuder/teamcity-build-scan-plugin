@@ -27,7 +27,7 @@ final class MavenVersionUtils {
         String[] requiredVersionParts = requiredVersion.split("-")[0].split("\\.");
         for (int i = 0; i < versionParts.length; i++) {
             if (i >= requiredVersionParts.length) {
-                return false;
+                return true;
             }
             int versionPart = Integer.parseInt(versionParts[i]);
             int requiredVersionPart = Integer.parseInt(requiredVersionParts[i]);
