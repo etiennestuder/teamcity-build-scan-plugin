@@ -36,9 +36,9 @@ final class MavenCommandExecutor {
         ProcessBuilder processBuilder = new ProcessBuilder(command.split(" ")).redirectErrorStream(true);
 
         String m2Home = mavenExec.getParentFile().getParentFile().getAbsolutePath();
+        processBuilder.environment().put("M2_HOME", m2Home);
         LOG.info("Initial M2_HOME: " + System.getenv("M2_HOME"));
         LOG.info("Current M2_HOME: " + m2Home);
-        processBuilder.environment().put("M2_HOME", m2Home);
 
         try {
             LOG.info("Executing Maven command: " + command);
