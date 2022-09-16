@@ -68,7 +68,14 @@ final class MavenCommandExecutor {
 
         File installationBinDir = new File(mavenPath, "bin");
         String mvnExecutableName = System.getProperty("os.name").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
-        return new File(installationBinDir, mvnExecutableName);
+        File mvnExecutable = new File(installationBinDir, mvnExecutableName);
+
+        if (!mvnExecutable.exists()) {
+            LOG.warn("Could not find Maven executable: " + mvnExecutable.getAbsolutePath());
+            return null;
+        }
+
+        return mvnExecutable;
     }
 
     static class Result {
