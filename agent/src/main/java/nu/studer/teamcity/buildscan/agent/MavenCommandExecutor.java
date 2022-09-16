@@ -93,8 +93,9 @@ final class MavenCommandExecutor {
             return new Result(output, process.exitValue());
         }
 
-        boolean isSuccessful() {
-            return exitValue != null && exitValue == 0;
+        @NotNull
+        String getOutput() {
+            return output;
         }
 
         @Nullable
@@ -102,9 +103,8 @@ final class MavenCommandExecutor {
             return exitValue;
         }
 
-        @NotNull
-        String getOutput() {
-            return output;
+        boolean isSuccessful() {
+            return exitValue != null && exitValue == 0;
         }
 
         @NotNull
