@@ -215,14 +215,16 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
         boolean isMavenVersionCheckEnabled = getBooleanConfigParam(IS_MAVEN_VERSION_CHECK_ENABLED_PARAM, runner);
 
-        // only check for the Maven version used by this build run in non-virtual environments since it cannot be checked reliably in virtual envs
-        if (isMavenVersionCheckEnabled && !runner.isVirtualContext()) {
-            LOG.info("Running in non-virtual context.");
-            final String mavenVersion = getMavenVersion(runner);
-            LOG.info("Determined Maven version: " + mavenVersion);
-            if (!isEmptyMavenVersion(mavenVersion) && !isMavenVersionAtLeast3_3_1(mavenVersion)) {
-                LOG.info("Cannot instrument Maven build with Gradle Enterprise. Gradle Enterprise Maven Extension is only supported for Maven 3.3.1 and higher.");
-                return "";
+        if (isMavenVersionCheckEnabled) {
+            // only check for the Maven version used by this build run in non-virtual environments since it cannot be checked reliably in virtual envs
+            if (!runner.isVirtualContext()) {
+                LOG.info("Running in non-virtual context.");
+                final String mavenVersion = getMavenVersion(runner);
+                LOG.info("Determined Maven version: " + mavenVersion);
+                if (!isEmptyMavenVersion(mavenVersion) && !isMavenVersionAtLeast3_3_1(mavenVersion)) {
+                    LOG.info("Cannot instrument Maven build with Gradle Enterprise. Gradle Enterprise Maven Extension is only supported for Maven 3.3.1 and higher.");
+                    return "";
+                }
             }
         }
 
