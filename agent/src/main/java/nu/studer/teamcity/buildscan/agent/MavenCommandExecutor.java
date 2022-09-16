@@ -54,7 +54,7 @@ final class MavenCommandExecutor {
         if (finished) {
             return Result.forExecutedProcess(process);
         } else {
-            process.destroyForcibly();
+            process.destroy();
             return Result.forFailedToExecute();
         }
     }
