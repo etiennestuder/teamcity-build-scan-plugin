@@ -97,7 +97,7 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 
 #### Example Configuration
 
-<img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/625514/185425268-7d4b363f-941b-49c8-9d88-1e68e2551e9a.png">
+<img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/625514/190648291-0315b67a-e0bf-4c78-b54c-77a2c5858aa2.png">
 
 ### Injecting Gradle Enterprise via Configuration Parameters
 
