@@ -145,6 +145,7 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
     - `buildScanPlugin.ccud.extension.custom.coordinates` - the coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled
     - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
+    - `buildScanPlugin.maven-version-check.enabled` - enable a Maven version check to ensure that the Gradle Enterprise Maven Extension is not applied to Maven builds lower than version 3.3.1
 
 3. Trigger your Maven build.
 
