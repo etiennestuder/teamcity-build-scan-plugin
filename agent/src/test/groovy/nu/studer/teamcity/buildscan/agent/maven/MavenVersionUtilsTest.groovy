@@ -72,6 +72,7 @@ OS name: "mac os x", version: "12.4", arch: "aarch64", family: "mac"
         "3.3.1"            | "3.8.6"         | true
         "3.3.1"            | "4.0"           | true
         "3.3.1"            | "4.0.0"         | true
+     // fails   "3.0"              | "3.0.1"         | true
     }
 
     def "isVersionAtLeast returns false when one of the versions is null or empty"() {
