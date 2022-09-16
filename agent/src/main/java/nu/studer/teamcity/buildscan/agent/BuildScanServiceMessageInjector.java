@@ -214,6 +214,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
         // only check for the Maven version used by this build run in non-virtual environments since it cannot be checked reliably in virtual envs
         if (!runner.isVirtualContext()) {
+            LOG.info("Running in non-virtual context.");
             final String mavenVersion = getMavenVersion(runner);
             LOG.info("Determined Maven version: " + mavenVersion);
             if (!isEmptyMavenVersion(mavenVersion) && !isMavenVersionAtLeast3_3_1(mavenVersion)) {
