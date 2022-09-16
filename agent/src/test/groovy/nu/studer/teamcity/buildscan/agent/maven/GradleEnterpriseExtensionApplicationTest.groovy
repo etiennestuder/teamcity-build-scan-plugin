@@ -674,7 +674,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
-        assert output.contains("java.lang.NoClassDefFoundError: org/apache/maven/execution/MojoExecutionListener")
+        outputContainsNoClassDefFoundError(output)
 
         and:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -707,7 +707,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
-        assert output.contains("java.lang.NoClassDefFoundError: org/apache/maven/execution/MojoExecutionListener")
+        outputContainsNoClassDefFoundError(output)
 
         and:
         outputMissesTeamCityServiceMessageBuildStarted(output)
@@ -741,6 +741,10 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     void outputContainsBuildSuccess(String output) {
         assert output.contains("[INFO] BUILD SUCCESS")
+    }
+
+    void outputContainsNoClassDefFoundError(String output) {
+        assert output.contains("java.lang.NoClassDefFoundError: org/apache/maven/execution/MojoExecutionListener")
     }
 
     static String getRelativePath(File parent, File child) {
