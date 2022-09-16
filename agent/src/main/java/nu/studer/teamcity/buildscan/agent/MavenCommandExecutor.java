@@ -40,18 +40,21 @@ final class MavenCommandExecutor {
         LOG.info("Initial M2_HOME: " + System.getenv("M2_HOME"));
         LOG.info("Current M2_HOME: " + m2Home);
 
+        Process process;
         try {
             LOG.info("Executing Maven command: " + command);
-            Process process = processBuilder.start();
-            boolean finished = waitFor(process, timeout, unit);
-
-            if (finished) {
-                return Result.forExecutedProcess(process);
-            } else {
-                return Result.forFailedToExecute();
-            }
-        } catch (Exception e) {
+            process = processBuilder.start();
+        } catch (IOException e) {
             LOG.warn("Failed to execute Maven command: " + command, e);
+            return Result.forFailedToExecute();
+        }
+
+        boolean finished = waitFor(process, timeout, unit);
+
+        if (finished) {
+            return Result.forExecutedProcess(process);
+        } else {
+            process.destroyForcibly();
             return Result.forFailedToExecute();
         }
     }
@@ -145,7 +148,7 @@ final class MavenCommandExecutor {
 
     // this implementation of waitFor is adapted from later JDKs that implement waitFor(long, TimeUnit)
     // this implementation polls the exit value every 100ms until the timeout is reached or an exit value is returned
-    private static boolean waitFor(Process process, long timeout, TimeUnit unit) throws InterruptedException {
+    private static boolean waitFor(Process process, long timeout, TimeUnit unit) {
         long startTime = System.nanoTime();
         long remaining = unit.toNanos(timeout);
 
@@ -156,7 +159,11 @@ final class MavenCommandExecutor {
             } catch (IllegalThreadStateException e) {
                 if (remaining > 0) {
                     long waitTime = Math.min(TimeUnit.NANOSECONDS.toMillis(remaining) + 1, 100);
-                    Thread.sleep(waitTime);
+                    try {
+                        Thread.sleep(waitTime);
+                    } catch (InterruptedException ex) {
+                        return false;
+                    }
                 }
             }
             remaining = unit.toNanos(timeout) - (System.nanoTime() - startTime);
@@ -164,4 +171,5 @@ final class MavenCommandExecutor {
 
         return false;
     }
+
 }
