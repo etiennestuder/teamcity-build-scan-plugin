@@ -261,7 +261,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         if (result.isSuccessful()) {
             return parseVersion(result.getOutput());
         } else {
-            LOG.warn("Unable to determine Maven version: Exit value =  " + result.getExitValue() + ", output = " + result.getOutput());
+            LOG.warn("Unable to determine Maven version: Process exit value = " + result.getExitValue() + ", process output = " + result.getOutput());
             return null;
         }
     }
