@@ -684,6 +684,39 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS.findAll { it.mavenVersion == "3.1.1" }
     }
 
+    def "tries to apply GE / CCUD extensions when maven version check is disabled in a non-virtual context (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
+
+        and:
+        def gePluginConfig = new TcPluginConfig(
+            geExtensionVersion: GE_EXTENSION_VERSION,
+            ccudExtensionVersion: CCUD_EXTENSION_VERSION,
+        )
+
+        and:
+        def mvnBuildStepConfig = new MavenBuildStepConfig(
+            checkoutDir: checkoutDir,
+            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
+        )
+
+        when:
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
+
+        then:
+        assert output.contains("java.lang.NoClassDefFoundError: org/apache/maven/execution/MojoExecutionListener")
+
+        and:
+        outputMissesTeamCityServiceMessageBuildStarted(output)
+        outputMissesTeamCityServiceMessageBuildScanUrl(output)
+
+        where: // the unsupported versions all fail in different ways, restrict test to 3.1.1 which fails to find the MojoExecutionListener class
+        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS.findAll { it.mavenVersion == "3.1.1" }
+    }
+
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
         assert output.contains(serviceMsg)
