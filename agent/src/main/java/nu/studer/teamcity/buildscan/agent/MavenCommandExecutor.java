@@ -73,30 +73,28 @@ final class MavenCommandExecutor {
 
     static class Result {
 
-        private final boolean success;
         @NotNull
         private final String output;
         @Nullable
         private final Integer exitValue;
 
 
-        private Result(boolean success, @NotNull String output, @Nullable Integer exitValue) {
-            this.success = success;
+        private Result(@NotNull String output, @Nullable Integer exitValue) {
             this.output = output;
             this.exitValue = exitValue;
         }
 
         static Result forFailedToExecute() {
-            return new Result(false, "", null);
+            return new Result("", null);
         }
 
         static Result forExecutedProcess(Process process) {
             String output = readOutput(process);
-            return new Result(process.exitValue() == 0, output, process.exitValue());
+            return new Result(output, process.exitValue());
         }
 
         boolean isSuccessful() {
-            return success;
+            return exitValue != null && exitValue == 0;
         }
 
         @Nullable
