@@ -695,12 +695,14 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def gePluginConfig = new TcPluginConfig(
             geExtensionVersion: GE_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
+            enableMavenVersionCheck: false,
         )
 
         and:
         def mvnBuildStepConfig = new MavenBuildStepConfig(
             checkoutDir: checkoutDir,
             pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
+            isVirtualContext: false,
         )
 
         when:
