@@ -658,7 +658,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
         and:
         def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            geExtensionVersion: '1.15.2',
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
             enableMavenVersionCheck: true,
         )
@@ -693,7 +693,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
         and:
         def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            geExtensionVersion: '1.15.2',
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
             enableMavenVersionCheck: false,
         )
