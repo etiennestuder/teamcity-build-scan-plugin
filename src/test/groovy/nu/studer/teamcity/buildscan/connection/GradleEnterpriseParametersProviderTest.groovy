@@ -15,6 +15,8 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION_CONFIG_PARAM
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CHECK_MAVEN_VERSION
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CHECK_MAVEN_VERSION_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES
@@ -30,8 +32,6 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.IS_MAVEN_VERSION_CHECK_ENABLED
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.IS_MAVEN_VERSION_CHECK_ENABLED_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM
 
@@ -122,8 +122,8 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         CCUD_EXTENSION_VERSION             | CCUD_EXTENSION_VERSION_CONFIG_PARAM             | '1.0.0'
         CUSTOM_GE_EXTENSION_COORDINATES    | CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM    | '1.0.0'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM  | '1.0.0'
+        CHECK_MAVEN_VERSION                | CHECK_MAVEN_VERSION_CONFIG_PARAM                | 'false'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP | INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM | 'true'
-        IS_MAVEN_VERSION_CHECK_ENABLED     | IS_MAVEN_VERSION_CHECK_ENABLED_PARAM            | 'false'
         GRADLE_ENTERPRISE_ACCESS_KEY       | GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR            | 'ge.example.com=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
     }
 
