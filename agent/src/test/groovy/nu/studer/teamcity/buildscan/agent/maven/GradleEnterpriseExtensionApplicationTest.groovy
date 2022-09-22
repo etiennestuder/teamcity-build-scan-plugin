@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
 import nu.studer.teamcity.buildscan.agent.TcPluginConfig
+import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
 
@@ -649,6 +650,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS
     }
 
+    @Ignore("While the GE Maven extension version is hard-coded in the plugin, the behavior with older extension versions cannot be verified.")
     def "tries to apply GE / CCUD extensions when in virtual context for any Maven version (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
@@ -684,6 +686,7 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS.findAll { it.mavenVersion == "3.1.1" }
     }
 
+    @Ignore("While the GE Maven extension version is hard-coded in the plugin, the behavior with older extension versions cannot be verified.")
     def "tries to apply GE / CCUD extensions when maven version check is disabled in a non-virtual context (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
