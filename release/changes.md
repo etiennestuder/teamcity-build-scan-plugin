@@ -1,2 +1,1 @@
-- Improves only applying the GE and CCUD Maven extensions if Maven version is at least 3.3.1.
-- Bundles Gradle Enterprise Maven extension 1.15.3 and CCUD Maven extension 1.11.1.
+- TBD
