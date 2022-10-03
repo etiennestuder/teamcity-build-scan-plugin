@@ -68,7 +68,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
     private static final String CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
     private static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
-    private static final String CHECK_MAVEN_VERSION_CONFIG_PARAM = "buildScanPlugin.maven-version-check.enabled";
     private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
 
     // Environment variables set to instrument the Gradle build
@@ -213,20 +212,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
-        boolean checkMavenVersion = getBooleanConfigParam(CHECK_MAVEN_VERSION_CONFIG_PARAM, runner);
-        if (checkMavenVersion) {
-            // only check for the Maven version used by this build run in non-virtual environments since it cannot be checked reliably in virtual envs
-            if (!runner.isVirtualContext()) {
-                LOG.info("Running in non-virtual context.");
-                final String mavenVersion = getMavenVersion(runner);
-                LOG.info("Determined Maven version: " + mavenVersion);
-                if (!isEmptyMavenVersion(mavenVersion) && !isMavenVersionAtLeast3_3_1(mavenVersion)) {
-                    LOG.info("Cannot instrument Maven build with Gradle Enterprise. Gradle Enterprise Maven Extension is only supported for Maven 3.3.1 and higher.");
-                    return "";
-                }
-            }
-        }
-
         List<File> extensionJars = new ArrayList<File>();
         List<String> sysProps = new ArrayList<String>();
 

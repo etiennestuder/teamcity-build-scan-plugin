@@ -75,10 +75,6 @@ public final class GradleEnterpriseConnectionConstants {
         return CUSTOM_CCUD_EXTENSION_COORDINATES;
     }
 
-    public String getCheckMavenVersion() {
-        return CHECK_MAVEN_VERSION;
-    }
-
     public String getInstrumentCommandLineBuildStep() {
         return INSTRUMENT_COMMAND_LINE_BUILD_STEP;
     }
