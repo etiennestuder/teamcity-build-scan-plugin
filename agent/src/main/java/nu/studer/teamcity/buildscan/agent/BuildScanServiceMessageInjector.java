@@ -243,7 +243,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
-                addSysProp("scan.value.CIAutoInjection", "TeamCity", sysProps);
+                addSysProp("scan.value.CI-auto-injection", "TeamCity", sysProps);
             }
         }
 
