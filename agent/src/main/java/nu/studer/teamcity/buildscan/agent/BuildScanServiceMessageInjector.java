@@ -243,7 +243,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
-                addSysProp("scan.value.CI-auto-injection", "TeamCity", sysProps);
             }
         }
 
@@ -383,13 +382,9 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static void addSysPropIfSet(@NotNull String configParameter, @NotNull String property, List<String> sysProps, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(configParameter, runner);
         if (value != null) {
-            addSysProp(property, value, sysProps);
+            String sysProp = String.format("-D%s=%s", property, value);
+            sysProps.add(sysProp);
         }
-    }
-
-    private static void addSysProp(@NotNull String property, String value, List<String> sysProps) {
-        String sysProp = String.format("-D%s=%s", property, value);
-        sysProps.add(sysProp);
     }
 
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
