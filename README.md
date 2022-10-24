@@ -9,9 +9,9 @@ teamcity-build-scan-plugin
 
 # Overview
 
-[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with Build Scan for Gradle and Maven. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Gradle Enterprise](https://gradle.com/enterprise).
+[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with the Build Scan service and more generally with Gradle Enterprise for Gradle and Maven builds run via TeamCity. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Gradle Enterprise](https://gradle.com/enterprise).
 
-For each Gradle and Maven build that is run from TeamCity, this plugin exposes the links to the created build scans in the TeamCity UI. The plugin can also be configured to instrument Gradle and Maven with Gradle Enterprise.
+For each Gradle and Maven build that is run from TeamCity, this plugin exposes the links to the created build scans in the TeamCity UI. The plugin can also be configured to ad-hoc connect Gradle and Maven builds to an existing Gradle Enterprise instance such that a Build Scan is published each time a build is run from TeamCity.
 
 The plugin is available from the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
 
@@ -41,7 +41,7 @@ If you use TeamCity's _Gradle_ runner to launch your Gradle builds, there is not
 
 If you use TeamCity's _Command Line_ runner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
 
-If the first two mechanisms will not work for your Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs using the `buildScanPlugin.log-parsing.enabled` configuration paramter.
+If the first two mechanisms will not work for your Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs using the `buildScanPlugin.log-parsing.enabled` configuration parameter.
 
 ### Maven builds
 
