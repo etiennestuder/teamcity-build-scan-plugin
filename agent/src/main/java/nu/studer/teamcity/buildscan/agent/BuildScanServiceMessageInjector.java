@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.isVersionAtLeast;
-import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.parseVersion;
 
 /**
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself registers a callback on the build scan plugin for any
@@ -29,7 +25,7 @@ import static nu.studer.teamcity.buildscan.agent.MavenVersionUtils.parseVersion;
  * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
-@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored", "TryWithIdenticalCatches"})
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final Logger LOG = Logger.getInstance("jetbrains.buildServer.BUILDSCAN");
@@ -207,8 +203,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     protected File getGradleUserHome() {
         String gradleUserHomeOverride = System.getProperty("gradle.user.home", System.getenv("GRADLE_USER_HOME"));
         return gradleUserHomeOverride == null
-            ? new File(System.getProperty("user.home", System.getenv("USER_HOME")), ".gradle")
-            : new File(gradleUserHomeOverride);
+                ? new File(System.getProperty("user.home", System.getenv("USER_HOME")), ".gradle")
+                : new File(gradleUserHomeOverride);
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
@@ -241,26 +237,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
 
         return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
-    }
-
-    @Nullable
-    private String getMavenVersion(BuildRunnerContext runner) {
-        MavenCommandExecutor.Result result = new MavenCommandExecutor(runner).execute("-v", 10, TimeUnit.SECONDS);
-
-        if (result.isSuccessful()) {
-            return parseVersion(result.getOutput());
-        } else {
-            LOG.warn("Unable to determine Maven version: Process exit value = " + result.getExitValue() + ", process output = " + result.getOutput());
-            return null;
-        }
-    }
-
-    private boolean isEmptyMavenVersion(String mavenVersion) {
-        return mavenVersion == null || mavenVersion.trim().isEmpty();
-    }
-
-    private boolean isMavenVersionAtLeast3_3_1(String mavenVersion) {
-        return isVersionAtLeast(mavenVersion, "3.3.1");
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
