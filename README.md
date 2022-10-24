@@ -26,30 +26,26 @@ Find out more about Build Scan for Gradle and Maven at https://scans.gradle.com 
 ## Option 1: Conveniently select plugin
 
 1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and browse the plugins repository.
+
 2. Select, install, and activate the plugin as described [here](https://www.jetbrains.com/help/teamcity/installing-additional-plugins.html#Installing+a+plugin+from+JetBrains+Plugins+repository).
 
 ## Option 2: Manually upload plugin
 
 1. Download the plugin `.zip` file from [https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
 
-2. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the
-previously downloaded plugin `.zip` file.
+2. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the previously downloaded plugin `.zip` file.
 
 3. Restart TeamCity.
 
-4. Trigger your Gradle builds with build scans enabled.
+# Integrations
 
-5. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
-
-# Configuration
-
-## TeamCity build runner requirements
+## Build Scan links surfacing
 
 ### Gradle builds
 
 If you use TeamCity's _Gradle_ runner to launch your Gradle builds, there is nothing special to do.
 
-If you use TeamCity's _Command Line_ runner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
+If you use TeamCity's _Command Line_ runner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter, as explained below.
 
 If the first two mechanisms will not work for your Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs using the `buildScanPlugin.log-parsing.enabled` configuration parameter.
 
@@ -57,13 +53,11 @@ If the first two mechanisms will not work for your Gradle build configurations, 
 
 If you use TeamCity's _Maven_ runner to launch Maven builds, there is nothing special to do.
 
-If you use TeamCity's _Command Line_ runner to launch your Maven builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
+If you use TeamCity's _Command Line_ runner to launch your Maven builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter, as explained below.
 
 If the first two mechanisms will not work for your Maven build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs using the `buildScanPlugin.log-parsing.enabled` configuration parameter.
 
-# Integrations
-
-## Gradle Enterprise
+## Gradle Enterprise connectivity
 
 You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when the builds are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
 
@@ -173,7 +167,7 @@ The following table shows the compatibility of the plugin version with Gradle En
 | 0.23 - 0.24                        | 1.14.1                                             | 1.10.1                                                   | 2022.2                                      |
 | < 0.23                             | *Not supported*                                    | *Not supported*                                          | *Not supported*                             |
 
-## Slack
+## Slack notifications
 
 1. In Slack, create a webhook and keep track of the created URL.
 
