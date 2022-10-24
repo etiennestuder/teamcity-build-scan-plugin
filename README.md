@@ -158,6 +158,31 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 
 </details>
 
+### Auto-injection compatibility
+The following sections list the compatibility of the plugin with the Gradle Enterprise version based on the given build tool in use.
+
+#### For Gradle builds
+For Gradle builds the version used for the Gradle Enterprise Gradle plugin is defined in the `Gradle Enterprise Connection` field in the `Gradle Enterprise Connection` section of the configuration form, or by the `buildScanPlugin.gradle-enterprise.plugin.version` configuration parameter.
+See [Creating a Gradle Enterprise Connection](#creating-a-gradle-enterprise-connection) for details.
+
+The compatibility of the specified version with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin).
+
+For the optional Common Custom User Data Gradle plugin which is defined in the same form, or by the `buildScanPlugin.ccud.plugin.version` configuration parameter, you can see the compatibility of the specified version with the Gradle Enterprise Gradle plugin [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
+
+#### For Maven builds
+For Maven builds the version of the Gradle Enterprise Maven extension is bundled into the plugin, meaning that the user can’t change what version is injected into the Maven build.
+
+The following table shows the compatibility of the plugin version with Gradle Enterprise:
+
+| TeamCity Build Scan plugin version | Injected Gradle Enterprise Maven extension version | Injected Common Custom User Data Maven extension version | Minimum supported Gradle Enterprise version |
+|------------------------------------|----------------------------------------------------|----------------------------------------------------------|---------------------------------------------|
+| 0.31                               | 1.15.3                                             | 1.11.1                                                   | 2022.3                                      |
+| 0.30                               | 1.15.1                                             | 1.11                                                     | 2022.3                                      |
+| 0.27 - 0.29                        | 1.14.3                                             | 1.10.1                                                   | 2022.2                                      |
+| 0.25 - 0.26                        | 1.14.2                                             | 1.10.1                                                   | 2022.2                                      |
+| 0.23 - 0.24                        | 1.14.1                                             | 1.10.1                                                   | 2022.2                                      |
+| < 0.23                             | *Not supported*                                    | *Not supported*                                          | *Not supported*                             |
+
 ## Slack
 
 1. In Slack, create a webhook and keep track of the created URL.
