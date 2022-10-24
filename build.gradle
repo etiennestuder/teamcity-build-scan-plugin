@@ -32,7 +32,7 @@ dependencies {
 
     agent project(path: ':agent', configuration: 'plugin')
 
-    testImplementation 'org.spockframework:spock-core:2.2-groovy-3.0'
+    testImplementation 'org.spockframework:spock-core:2.3-groovy-3.0'
 }
 
 java {
@@ -95,6 +95,10 @@ githubRelease {
     generateReleaseNotes = false
     body = layout.projectDirectory.file('release/changes.md').asFile.text.trim()
     releaseAssets(tasks.named('serverPlugin'))
+}
+
+repositories {
+    mavenCentral()
 }
 
 tasks.register('createReleaseTag', CreateGitTag) {
