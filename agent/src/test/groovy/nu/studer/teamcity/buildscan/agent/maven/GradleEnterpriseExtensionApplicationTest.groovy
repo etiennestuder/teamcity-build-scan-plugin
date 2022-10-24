@@ -1,7 +1,6 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
 import nu.studer.teamcity.buildscan.agent.TcPluginConfig
-import spock.lang.Ignore
 
 import static org.junit.Assume.assumeTrue
 
@@ -615,113 +614,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "does not apply GE / CCUD extensions when in non-virtual context and Maven version < 3.3.1 (#jdkCompatibleMavenVersion)"() {
-        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
-
-        given:
-        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
-
-        and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
-            ccudExtensionVersion: CCUD_EXTENSION_VERSION,
-            enableMavenVersionCheck: true,
-        )
-
-        and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
-            isVirtualContext: false,
-        )
-
-        when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
-
-        then:
-        outputContainsBuildSuccess(output)
-
-        and:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
-        outputMissesTeamCityServiceMessageBuildScanUrl(output)
-
-        where:
-        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS
-    }
-
-    @Ignore("While the GE Maven extension version is hard-coded in the plugin, the behavior with older extension versions cannot be verified.")
-    def "tries to apply GE / CCUD extensions when in virtual context for any Maven version (#jdkCompatibleMavenVersion)"() {
-        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
-
-        given:
-        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
-
-        and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: '1.15.2',
-            ccudExtensionVersion: CCUD_EXTENSION_VERSION,
-            enableMavenVersionCheck: true,
-        )
-
-        and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
-            isVirtualContext: true,
-        )
-
-        when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
-
-        then:
-        outputContainsNoClassDefFoundError(output)
-
-        and:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
-        outputMissesTeamCityServiceMessageBuildScanUrl(output)
-
-        where: // the unsupported versions all fail in different ways, restrict test to 3.1.1 which fails to find the MojoExecutionListener class
-        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS.findAll { it.mavenVersion == "3.1.1" }
-    }
-
-    @Ignore("While the GE Maven extension version is hard-coded in the plugin, the behavior with older extension versions cannot be verified.")
-    def "tries to apply GE / CCUD extensions when maven version check is disabled in a non-virtual context (#jdkCompatibleMavenVersion)"() {
-        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
-
-        given:
-        def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
-
-        and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: '1.15.2',
-            ccudExtensionVersion: CCUD_EXTENSION_VERSION,
-            enableMavenVersionCheck: false,
-        )
-
-        and:
-        def mvnBuildStepConfig = new MavenBuildStepConfig(
-            checkoutDir: checkoutDir,
-            pathToPomFile: getRelativePath(checkoutDir, mvnProject.pom),
-            isVirtualContext: false,
-        )
-
-        when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
-
-        then:
-        outputContainsNoClassDefFoundError(output)
-
-        and:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
-        outputMissesTeamCityServiceMessageBuildScanUrl(output)
-
-        where: // the unsupported versions all fail in different ways, restrict test to 3.1.1 which fails to find the MojoExecutionListener class
-        jdkCompatibleMavenVersion << UNSUPPORTED_MAVEN_VERSIONS.findAll { it.mavenVersion == "3.1.1" }
-    }
-
     void outputContainsTeamCityServiceMessageBuildStarted(String output) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
         assert output.contains(serviceMsg)
@@ -746,10 +638,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
     void outputContainsBuildSuccess(String output) {
         assert output.contains("[INFO] BUILD SUCCESS")
-    }
-
-    void outputContainsNoClassDefFoundError(String output) {
-        assert output.contains("java.lang.NoClassDefFoundError: org/apache/maven/execution/MojoExecutionListener")
     }
 
     static String getRelativePath(File parent, File child) {

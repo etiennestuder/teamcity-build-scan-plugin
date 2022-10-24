@@ -15,7 +15,6 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CCUD_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
     public static final String CUSTOM_GE_EXTENSION_COORDINATES = "customGradleEnterpriseExtensionCoordinates";
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES = "customCommonCustomUserDataExtensionCoordinates";
-    public static final String CHECK_MAVEN_VERSION = "checkMavenVersion";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP = "instrumentCommandLineBuildStep";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY = "gradleEnterpriseAccessKey";
 
@@ -31,7 +30,6 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
     public static final String CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
-    public static final String CHECK_MAVEN_VERSION_CONFIG_PARAM = "buildScanPlugin.maven-version-check.enabled";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR = "env.GRADLE_ENTERPRISE_ACCESS_KEY";
 
@@ -73,10 +71,6 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getCustomCommonCustomUserDataExtensionCoordinates() {
         return CUSTOM_CCUD_EXTENSION_COORDINATES;
-    }
-
-    public String getCheckMavenVersion() {
-        return CHECK_MAVEN_VERSION;
     }
 
     public String getInstrumentCommandLineBuildStep() {

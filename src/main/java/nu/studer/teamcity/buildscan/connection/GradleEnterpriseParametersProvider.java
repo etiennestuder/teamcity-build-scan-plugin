@@ -20,8 +20,6 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION_CONFIG_PARAM;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CHECK_MAVEN_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CHECK_MAVEN_VERSION_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
@@ -66,7 +64,6 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             setParameter(CCUD_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_EXTENSION_VERSION), params);
             setParameter(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_GE_EXTENSION_COORDINATES), params);
             setParameter(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_CCUD_EXTENSION_COORDINATES), params);
-            setParameter(CHECK_MAVEN_VERSION_CONFIG_PARAM, connectionParams.get(CHECK_MAVEN_VERSION), params);
             setParameter(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, connectionParams.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP), params);
             setParameter(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, connectionParams.get(GRADLE_ENTERPRISE_ACCESS_KEY), params);
         }

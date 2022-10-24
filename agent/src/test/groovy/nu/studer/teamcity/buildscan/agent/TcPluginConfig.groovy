@@ -11,7 +11,6 @@ class TcPluginConfig {
     String ccudExtensionVersion
     String geExtensionCustomCoordinates
     String ccudExtensionCustomCoordinates
-    boolean enableMavenVersionCheck
     boolean enableCommandLineRunner
 
     // configuration params as they would be set by the user in the TeamCity configuration
@@ -43,9 +42,6 @@ class TcPluginConfig {
         }
         if (ccudExtensionCustomCoordinates) {
             configProps.put('buildScanPlugin.ccud.extension.custom.coordinates', ccudExtensionCustomCoordinates)
-        }
-        if (enableMavenVersionCheck) {
-            configProps.put 'buildScanPlugin.maven-version-check.enabled', 'true'
         }
         if (enableCommandLineRunner) {
             configProps.put 'buildScanPlugin.command-line-build-step.enabled', 'true'
