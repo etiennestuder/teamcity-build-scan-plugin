@@ -45,7 +45,7 @@ Find out more about Build Scan for Gradle and Maven at https://scans.gradle.com 
 
 If you use TeamCity's _Gradle_ runner to launch your Gradle builds, there is nothing special to do.
 
-If you use TeamCity's _Command Line_ runner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter, as explained below.
+If you use TeamCity's _Command Line_ runner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
 
 If the first two mechanisms will not work for your Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by setting the `buildScanPlugin.log-parsing.enabled` configuration parameter to _true_.
 
@@ -53,7 +53,7 @@ If the first two mechanisms will not work for your Gradle build configurations, 
 
 If you use TeamCity's _Maven_ runner to launch Maven builds, there is nothing special to do.
 
-If you use TeamCity's _Command Line_ runner to launch your Maven builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter, as explained below.
+If you use TeamCity's _Command Line_ runner to launch your Maven builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
 
 If the first two mechanisms will not work for your Maven build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by setting the `buildScanPlugin.log-parsing.enabled` configuration parameter to _true_.
 
@@ -65,7 +65,7 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 
 The higher in TeamCity's project hierarchy the required configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters of their parent projects and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
-For convenience, the configuration parameter values can be defined through a form describing a Gradle Enterprise connection, as explained below. Alternatively, the configuration parameter values can be defined as TeamCity configuration parameters.
+For convenience, the configuration parameter values can be defined through a form describing a Gradle Enterprise connection. Alternatively, the configuration parameter values can be defined as TeamCity configuration parameters.
 
 ### Configuration via TeamCity connection
 
