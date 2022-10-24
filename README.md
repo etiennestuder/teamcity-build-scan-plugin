@@ -67,7 +67,7 @@ The higher in TeamCity's project hierarchy the required configuration parameters
 
 For convenience, the configuration parameter values can be defined through a Gradle Enterprise connection form, as explained below.
 
-### Creating a Gradle Enterprise Connection
+### Configuration via TeamCity Connection
 
 A Gradle Enterprise connection can be created in the Connections section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
 
@@ -79,15 +79,21 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
 
 _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.4 and 1.11.1, respectively._
 
-#### Example Configuration
+<details>
+
+<summary>Click for an example configuration.</summary>
 
 <img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/30589784/197518847-cc3c3e55-d298-4f2c-889d-53d414e87ff2.png">
 
-### Injecting Gradle Enterprise via Configuration Parameters
+</details>
+
+### Configuration via TeamCity configuration parameters
+
+As an alternative to the configuration via TeamCity Connection, you can set TeamCity configuration parameters on a given project.
 
 <details>
 
-<summary>It is possible to inject Gradle Enterprise by manually setting configuration parameters. Click for more details.</summary>
+<summary>Click for an example configuration.</summary>
 
 #### Gradle Builds
 
