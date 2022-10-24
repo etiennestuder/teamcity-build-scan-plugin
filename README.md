@@ -65,19 +65,15 @@ The same auto-injection behavior is available for the [Common Custom User Data G
 
 The higher in TeamCity's project hierarchy the required configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters of their parent projects and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
-For convenience, the configuration parameter values can be defined through a Gradle Enterprise connection form, as explained below.
+For convenience, the configuration parameter values can be defined through a form describing a Gradle Enterprise connection, as explained below. Alternatively, the configuration parameter values can be defined as TeamCity configuration parameters.
 
-### Configuration via TeamCity Connection
+### Configuration via TeamCity connection
 
 A Gradle Enterprise connection can be created in the Connections section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
 
 Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, the plugin and extension versions to be applied, and any other fields as needed. Some values, such as the plugin and extension versions, will be pre-populated.
 
 A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects.
-
-_Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
-
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.4 and 1.11.1, respectively._
 
 <details>
 
@@ -89,7 +85,9 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 
 ### Configuration via TeamCity configuration parameters
 
-As an alternative to the configuration via TeamCity Connection, you can set TeamCity configuration parameters on a given project.
+As an alternative to the configuration via a TeamCity connection, you can describe the configuration via TeamCity configuration parameters on a given project.
+
+The TeamCity configuration parameters can be set on any project and are automatically inherited by all its child projects.
 
 <details>
 
@@ -109,12 +107,6 @@ As an alternative to the configuration via TeamCity Connection, you can set Team
     - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
 
-3. Trigger your Gradle build.
-
-4. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
-
-_Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
-
 ##### Example Gradle Configuration
 
 <img width="1302" alt="image" src="https://user-images.githubusercontent.com/231070/171748029-590c9f99-9382-41f3-8597-8c049ce328ed.png">
@@ -133,12 +125,6 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
     - `buildScanPlugin.gradle-enterprise.extension.custom.coordinates` - the coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension
     - `buildScanPlugin.ccud.extension.custom.coordinates` - the coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled
-
-3. Trigger your Maven build.
-
-4. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
-
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.4 and 1.11.1, respectively._
 
 ##### Example Maven Configuration
 
