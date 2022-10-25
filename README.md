@@ -132,7 +132,16 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 </details>
 
-### Auto-injection compatibility
+## Compatibility
+
+### Build Scan links surfacing
+
+| TeamCity Build Scan plugin version | Minimum supported Gradle Enterprise Maven extension | Minimum supported Gradle Enterprise Gradle plugin   |
+|------------------------------------|-----------------------------------------------------|-----------------------------------------------------|
+| 0.23+                              | 1.11                                                | 3.0  (or Gradle Build Scan plugin 1.8)              |
+| 0.22                               | 1.0                                                 | 3.0  (or Gradle Build Scan plugin 1.8)              |
+
+### Gradle Enterprise connectivity
 The following sections list the compatibility of the plugin with the Gradle Enterprise version based on the given build tool in use.
 
 #### For Gradle builds
@@ -157,6 +166,10 @@ The following table shows the compatibility of the plugin version with Gradle En
 | 0.23 - 0.24                        | 1.14.1                                             | 1.10.1                                                   | 2022.2                                      |
 | < 0.23                             | *Not supported*                                    | *Not supported*                                          | *Not supported*                             |
 
+It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
+[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the
+[latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
+
 ## Slack notifications
 
 1. In Slack, create a webhook and keep track of the created URL.
@@ -166,18 +179,6 @@ The following table shows the compatibility of the plugin version with Gradle En
 3. Trigger your Gradle builds with build scans enabled.
 
 4. Find a notification about the published build scans in the Slack channel configured in the webhook.
-
-## Version compatibility
-
-### <=0.22
-These plugin versions require that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds.
-
-### >=0.23
-These plugin versions require that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.11 in your Maven builds.
-
-It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
-[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the
-[latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
 
 # Feedback and Contributions
 
