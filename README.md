@@ -146,7 +146,8 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 ## Build Scan links surfacing
 
-The configured version of the Gradle Enterprise Gradle plugin
+The version of the Gradle Enterprise Gradle plugin and the Gradle Enterprise Maven extension that are applied to a build must meet a minimum version requirement for the link surfacing to work.
+
 | TC Build Scan plugin version | Minimum supported GE Maven extension version | Minimum supported GE Gradle plugin version |
 |------------------------------|----------------------------------------------|--------------------------------------------|
 | 0.23+                        | 1.11                                         | 3.0  (or Gradle Build Scan plugin 1.8)     |
