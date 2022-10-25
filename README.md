@@ -9,9 +9,9 @@ teamcity-build-scan-plugin
 
 # Overview
 
-[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with Build Scan for Gradle and Maven. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Gradle Enterprise](https://gradle.com/enterprise).
+[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with the Build Scan service and more generally with Gradle Enterprise for Gradle and Maven builds run via TeamCity. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Gradle Enterprise](https://gradle.com/enterprise).
 
-For each Gradle and Maven build that is run from TeamCity, this plugin exposes the links to the created build scans in the TeamCity UI. The plugin can also be configured to instrument Gradle and Maven with Gradle Enterprise.
+For each Gradle and Maven build that is run from TeamCity, this plugin exposes the links to the created build scans in the TeamCity UI. The plugin can also be configured to ad-hoc connect Gradle and Maven builds to an existing Gradle Enterprise instance such that a Build Scan is published each time a build is run from TeamCity.
 
 The plugin is available from the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
 
@@ -21,19 +21,25 @@ Recent Build Scan: https://gradle.com/s/yevfzaz2bvvh4
 
 Find out more about Build Scan for Gradle and Maven at https://scans.gradle.com and https://gradle.com.
 
-## Version compatibility
+# Installation
 
-### <=0.22
-These plugin versions require that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.0 in your Maven builds.
+## Option 1: Conveniently select plugin
 
-### >=0.23
-These plugin versions require that you use at least Gradle Enterprise Gradle plugin 3.0 or Gradle Build Scan plugin 1.8 in your Gradle builds, or Gradle Enterprise Maven extension 1.11 in your Maven builds.
+1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and browse the plugins repository.
 
-It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
-[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the
-[latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
+2. Select, install, and activate the plugin as described [here](https://www.jetbrains.com/help/teamcity/installing-additional-plugins.html#Installing+a+plugin+from+JetBrains+Plugins+repository).
 
-## TeamCity build runner requirements
+## Option 2: Manually upload plugin
+
+1. Download the plugin `.zip` file from [https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
+
+2. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the previously downloaded plugin `.zip` file.
+
+3. Restart TeamCity.
+
+# Integrations
+
+## Build Scan links surfacing
 
 ### Gradle builds
 
@@ -41,7 +47,7 @@ If you use TeamCity's _Gradle_ runner to launch your Gradle builds, there is not
 
 If you use TeamCity's _Command Line_ runner to launch your Gradle builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
 
-If the first two mechanisms will not work for your Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs using the `buildScanPlugin.log-parsing.enabled` configuration paramter.
+If the first two mechanisms will not work for your Gradle build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by setting the `buildScanPlugin.log-parsing.enabled` configuration parameter to _true_.
 
 ### Maven builds
 
@@ -49,61 +55,43 @@ If you use TeamCity's _Maven_ runner to launch Maven builds, there is nothing sp
 
 If you use TeamCity's _Command Line_ runner to launch your Maven builds, you can opt in to enable build scan detection using the `buildScanPlugin.command-line-build-step.enabled` configuration parameter.
 
-If the first two mechanisms will not work for your Maven build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs using the `buildScanPlugin.log-parsing.enabled` configuration parameter.
+If the first two mechanisms will not work for your Maven build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by setting the `buildScanPlugin.log-parsing.enabled` configuration parameter to _true_.
 
-# Installation
+## Gradle Enterprise connectivity
 
-## Option 1: Conveniently select plugin
-
-1. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and browse the plugins repository.
-2. Select, install, and activate the plugin as described [here](https://www.jetbrains.com/help/teamcity/installing-additional-plugins.html#Installing+a+plugin+from+JetBrains+Plugins+repository).
-
-## Option 2: Manually upload plugin
-
-1. Download the plugin `.zip` file from [https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
-
-2. Go to the plugin list of your TeamCity installation at `<TeamCityInstanceRootUrl>/admin/admin.html?item=plugins` and click on the link _Upload plugin zip_ to install the
-previously downloaded plugin `.zip` file.
-
-3. Restart TeamCity.
-
-4. Trigger your Gradle builds with build scans enabled.
-
-5. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
-
-# Integrations
-
-## Gradle Enterprise
-
-You can have the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) automatically injected into your Gradle and Maven builds when the builds are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
+You can ad-hoc connect Gradle and Maven builds to an existing Gradle Enterprise instance by automatically injecting the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) when these builds are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to, too. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
 
 The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
 
-The higher in TeamCity's project hierarchy the required configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
+The higher in TeamCity's project hierarchy the required configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters of their parent projects and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
-For convenience, the configuration parameter values can be defined through a Gradle Enterprise connection, as explained below.
+For convenience, the configuration parameter values can be defined through a form describing a Gradle Enterprise connection. Alternatively, the configuration parameter values can be defined as TeamCity configuration parameters.
 
-### Creating a Gradle Enterprise Connection
+### Configuration via TeamCity connection
 
-A Gradle Enterprise connection is created in the _Connections_ section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
+A Gradle Enterprise connection can be created in the Connections section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
 
-Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, any plugin or extension versions to be applied, and any other fields in the dialog as needed. Some values, such as the plugin and extension versions, will be pre-populated.
+Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, the plugin and extension versions to be applied, and any other fields as needed. Some values, such as the plugin and extension versions, will be pre-populated.
 
 A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects.
 
-_Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
+<details>
 
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.4 and 1.11.1, respectively._
-
-#### Example Configuration
+<summary>Click for an example configuration.</summary>
 
 <img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/30589784/197518847-cc3c3e55-d298-4f2c-889d-53d414e87ff2.png">
 
-### Injecting Gradle Enterprise via Configuration Parameters
+</details>
+
+### Configuration via TeamCity configuration parameters
+
+As an alternative to the configuration via a TeamCity connection, you can describe the configuration via TeamCity configuration parameters on a given project.
+
+The TeamCity configuration parameters can be set on any project and are automatically inherited by all its child projects.
 
 <details>
 
-<summary>It is possible to inject Gradle Enterprise by manually setting configuration parameters. Click for more details.</summary>
+<summary>Click for an example configuration.</summary>
 
 #### Gradle Builds
 
@@ -118,13 +106,6 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
     - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
-    - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
-
-3. Trigger your Gradle build.
-
-4. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
-
-_Note: For Gradle, the Common Custom User Data Gradle plugin must be at least version 1.7 or newer._
 
 ##### Example Gradle Configuration
 
@@ -144,13 +125,6 @@ _Note: For Gradle, the Common Custom User Data Gradle plugin must be at least ve
     - `buildScanPlugin.gradle-enterprise.extension.custom.coordinates` - the coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension
     - `buildScanPlugin.ccud.extension.custom.coordinates` - the coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled
-    - `buildScanPlugin.log-parsing.enabled` - use log parsing to extract Build Scan urls (if the default mechanism for capturing Build Scan links is not working)
-
-3. Trigger your Maven build.
-
-4. Find the links of the published build scans in the _Overview_ section of each TeamCity build.
-
-_Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom User Data Maven extension are currently hard-coded to versions 1.15.4 and 1.11.1, respectively._
 
 ##### Example Maven Configuration
 
@@ -158,32 +132,7 @@ _Note: For Maven, the Gradle Enterprise Maven extension and the Common Custom Us
 
 </details>
 
-### Auto-injection compatibility
-The following sections list the compatibility of the plugin with the Gradle Enterprise version based on the given build tool in use.
-
-#### For Gradle builds
-For Gradle builds the version used for the Gradle Enterprise Gradle plugin is defined in the `Gradle Enterprise Connection` field in the `Gradle Enterprise Connection` section of the configuration form, or by the `buildScanPlugin.gradle-enterprise.plugin.version` configuration parameter.
-See [Creating a Gradle Enterprise Connection](#creating-a-gradle-enterprise-connection) for details.
-
-The compatibility of the specified version with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin).
-
-For the optional Common Custom User Data Gradle plugin which is defined in the same form, or by the `buildScanPlugin.ccud.plugin.version` configuration parameter, you can see the compatibility of the specified version with the Gradle Enterprise Gradle plugin [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
-
-#### For Maven builds
-For Maven builds the version of the Gradle Enterprise Maven extension is bundled into the plugin, meaning that the user can’t change what version is injected into the Maven build.
-
-The following table shows the compatibility of the plugin version with Gradle Enterprise:
-
-| TeamCity Build Scan plugin version | Injected Gradle Enterprise Maven extension version | Injected Common Custom User Data Maven extension version | Minimum supported Gradle Enterprise version |
-|------------------------------------|----------------------------------------------------|----------------------------------------------------------|---------------------------------------------|
-| 0.31                               | 1.15.3                                             | 1.11.1                                                   | 2022.3                                      |
-| 0.30                               | 1.15.1                                             | 1.11                                                     | 2022.3                                      |
-| 0.27 - 0.29                        | 1.14.3                                             | 1.10.1                                                   | 2022.2                                      |
-| 0.25 - 0.26                        | 1.14.2                                             | 1.10.1                                                   | 2022.2                                      |
-| 0.23 - 0.24                        | 1.14.1                                             | 1.10.1                                                   | 2022.2                                      |
-| < 0.23                             | *Not supported*                                    | *Not supported*                                          | *Not supported*                             |
-
-## Slack
+## Slack notifications (experimental)
 
 1. In Slack, create a webhook and keep track of the created URL.
 
@@ -192,6 +141,44 @@ The following table shows the compatibility of the plugin version with Gradle En
 3. Trigger your Gradle builds with build scans enabled.
 
 4. Find a notification about the published build scans in the Slack channel configured in the webhook.
+
+# Compatibility
+
+## Build Scan links surfacing
+
+The configured version of the Gradle Enterprise Gradle plugin
+| TC Build Scan plugin version | Minimum supported GE Maven extension version | Minimum supported GE Gradle plugin version |
+|------------------------------|----------------------------------------------|--------------------------------------------|
+| 0.23+                        | 1.11                                         | 3.0  (or Gradle Build Scan plugin 1.8)     |
+| 0.22                         | 1.0                                          | 3.0  (or Gradle Build Scan plugin 1.8)     |
+
+## Gradle Enterprise connectivity
+
+The configured version of the Gradle Enterprise Gradle plugin and the Gradle Enterprise Maven extension that get automatically applied by the TeamCity Build Scan plugin must be compatbile with the version of the Gradle Enterprise server that the build is connecting to.
+
+### Gradle builds
+
+The compatibility of the specified version of the Gradle Enterprise Gradle plugin with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin). The compatibility of the optionally specified version of the Common Custom User Data Gradle plugin with the Gradle Enterprise Gradle plugin can be found [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
+
+### Maven builds
+
+The compatibility of the specified version of the Gradle Enterprise Maven extension with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_compatibility_2). The compatibility of the optionally specified version of the Common Custom User Data Maven extension with the Gradle Enterprise Maven extension can be found [here](https://github.com/gradle/common-custom-user-data-maven-extension#version-compatibility).
+
+For Maven builds, the version of the Gradle Enterprise Maven extension automatically applied by the TeamCity Build Scan plugin is currently bundled by the plugin and cannot be configured. This will change in a future version of this plugin.
+
+<details>
+
+<summary>Click for an overview of what Maven extension versions are bundled and injected.</summary>
+
+| TC Build Scan plugin version | Injected GE Maven extension version | Injected Common CCUD Maven extension version |
+|------------------------------|-------------------------------------|----------------------------------------------|
+| 0.31                         | 1.15.3                              | 1.11.1                                       | 
+| 0.30                         | 1.15.1                              | 1.11                                         | 
+| 0.27 - 0.29                  | 1.14.3                              | 1.10.1                                       | 
+| 0.25 - 0.26                  | 1.14.2                              | 1.10.1                                       | 
+| 0.23 - 0.24                  | 1.14.1                              | 1.10.1                                       | 
+
+</details>
 
 # Feedback and Contributions
 
