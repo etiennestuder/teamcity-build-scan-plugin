@@ -132,7 +132,7 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 </details>
 
-## Slack notifications
+## Slack notifications (experimental)
 
 1. In Slack, create a webhook and keep track of the created URL.
 
