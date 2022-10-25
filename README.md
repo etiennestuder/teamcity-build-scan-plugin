@@ -132,9 +132,19 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 </details>
 
-## Compatibility
+## Slack notifications
 
-### Build Scan links surfacing
+1. In Slack, create a webhook and keep track of the created URL.
+
+2. In TeamCity, on the build configuration for which you want to be notified about published build scans, create a configuration parameter with name `buildScanPlugin.slack-webhook.url` and the value being the URL of the webhook created in step #1.
+
+3. Trigger your Gradle builds with build scans enabled.
+
+4. Find a notification about the published build scans in the Slack channel configured in the webhook.
+
+# Compatibility
+
+## Build Scan links surfacing
 
 The configured version of the Gradle Enterprise Gradle plugin
 | TC Build Scan plugin version | Minimum supported GE Maven extension version | Minimum supported GE Gradle plugin version |
@@ -142,15 +152,15 @@ The configured version of the Gradle Enterprise Gradle plugin
 | 0.23+                        | 1.11                                         | 3.0  (or Gradle Build Scan plugin 1.8)     |
 | 0.22                         | 1.0                                          | 3.0  (or Gradle Build Scan plugin 1.8)     |
 
-### Gradle Enterprise connectivity
+## Gradle Enterprise connectivity
 
 The configured version of the Gradle Enterprise Gradle plugin and the Gradle Enterprise Maven extension that get automatically applied by the TeamCity Build Scan plugin must be compatbile with the version of the Gradle Enterprise server that the build is connecting to.
 
-#### Gradle builds
+### Gradle builds
 
 The compatibility of the specified version of the Gradle Enterprise Gradle plugin with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin). The compatibility of the optionally specified version of the Common Custom User Data Gradle plugin with the Gradle Enterprise Gradle plugin can be found [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
 
-#### Maven builds
+### Maven builds
 
 The compatibility of the specified version of the Gradle Enterprise Maven extension with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_compatibility_2). The compatibility of the optionally specified version of the Common Custom User Data Maven extension with the Gradle Enterprise Maven extension can be found [here](https://github.com/gradle/common-custom-user-data-maven-extension#version-compatibility).
 
@@ -158,7 +168,7 @@ For Maven builds, the version of the Gradle Enterprise Maven extension automatic
 
 <details>
 
-<summary>Click for an overview of what extension versions are bundled and injected.</summary>
+<summary>Click for an overview of what Maven extension versions are bundled and injected.</summary>
 
 | TC Build Scan plugin version | Injected GE Maven extension version | Injected Common CCUD Maven extension version |
 |------------------------------|-------------------------------------|----------------------------------------------|
@@ -169,16 +179,6 @@ For Maven builds, the version of the Gradle Enterprise Maven extension automatic
 | 0.23 - 0.24                  | 1.14.1                              | 1.10.1                                       | 
 
 </details>
-
-## Slack notifications
-
-1. In Slack, create a webhook and keep track of the created URL.
-
-2. In TeamCity, on the build configuration for which you want to be notified about published build scans, create a configuration parameter with name `buildScanPlugin.slack-webhook.url` and the value being the URL of the webhook created in step #1.
-
-3. Trigger your Gradle builds with build scans enabled.
-
-4. Find a notification about the published build scans in the Slack channel configured in the webhook.
 
 # Feedback and Contributions
 
