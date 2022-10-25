@@ -136,39 +136,39 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 ### Build Scan links surfacing
 
-| TeamCity Build Scan plugin version | Minimum supported Gradle Enterprise Maven extension | Minimum supported Gradle Enterprise Gradle plugin   |
-|------------------------------------|-----------------------------------------------------|-----------------------------------------------------|
-| 0.23+                              | 1.11                                                | 3.0  (or Gradle Build Scan plugin 1.8)              |
-| 0.22                               | 1.0                                                 | 3.0  (or Gradle Build Scan plugin 1.8)              |
+The configured version of the Gradle Enterprise Gradle plugin
+| TC Build Scan plugin version | Minimum supported GE Maven extension version | Minimum supported GE Gradle plugin version |
+|------------------------------|----------------------------------------------|--------------------------------------------|
+| 0.23+                        | 1.11                                         | 3.0  (or Gradle Build Scan plugin 1.8)     |
+| 0.22                         | 1.0                                          | 3.0  (or Gradle Build Scan plugin 1.8)     |
 
 ### Gradle Enterprise connectivity
-The following sections list the compatibility of the plugin with the Gradle Enterprise version based on the given build tool in use.
 
-#### For Gradle builds
-For Gradle builds the version used for the Gradle Enterprise Gradle plugin is defined in the `Gradle Enterprise Connection` field in the `Gradle Enterprise Connection` section of the configuration form, or by the `buildScanPlugin.gradle-enterprise.plugin.version` configuration parameter.
-See [Creating a Gradle Enterprise Connection](#creating-a-gradle-enterprise-connection) for details.
+The configured version of the Gradle Enterprise Gradle plugin and the Gradle Enterprise Maven extension that get automatically applied by the TeamCity Build Scan plugin must be compatbile with the version of the Gradle Enterprise server that the build is connecting to.
 
-The compatibility of the specified version with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin).
+#### Gradle builds
 
-For the optional Common Custom User Data Gradle plugin which is defined in the same form, or by the `buildScanPlugin.ccud.plugin.version` configuration parameter, you can see the compatibility of the specified version with the Gradle Enterprise Gradle plugin [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
+The compatibility of the specified version of the Gradle Enterprise Gradle plugin with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin). The compatibility of the optionally specified version of the Common Custom User Data Gradle plugin with the Gradle Enterprise Gradle plugin can be found [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
 
-#### For Maven builds
-For Maven builds the version of the Gradle Enterprise Maven extension is bundled into the plugin, meaning that the user can’t change what version is injected into the Maven build.
+#### Maven builds
 
-The following table shows the compatibility of the plugin version with Gradle Enterprise:
+The compatibility of the specified version of the Gradle Enterprise Maven extension with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_compatibility_2). The compatibility of the optionally specified version of the Common Custom User Data Maven extension with the Gradle Enterprise Maven extension can be found [here](https://github.com/gradle/common-custom-user-data-maven-extension#version-compatibility).
 
-| TeamCity Build Scan plugin version | Injected Gradle Enterprise Maven extension version | Injected Common Custom User Data Maven extension version | Minimum supported Gradle Enterprise version |
-|------------------------------------|----------------------------------------------------|----------------------------------------------------------|---------------------------------------------|
-| 0.31                               | 1.15.3                                             | 1.11.1                                                   | 2022.3                                      |
-| 0.30                               | 1.15.1                                             | 1.11                                                     | 2022.3                                      |
-| 0.27 - 0.29                        | 1.14.3                                             | 1.10.1                                                   | 2022.2                                      |
-| 0.25 - 0.26                        | 1.14.2                                             | 1.10.1                                                   | 2022.2                                      |
-| 0.23 - 0.24                        | 1.14.1                                             | 1.10.1                                                   | 2022.2                                      |
-| < 0.23                             | *Not supported*                                    | *Not supported*                                          | *Not supported*                             |
+For Maven builds, the version of the Gradle Enterprise Maven extension automatically applied by the TeamCity Build Scan plugin is currently bundled by the plugin and cannot be configured. This will change in a future version of this plugin.
 
-It is recommended that you use the [latest Gradle Enterprise Gradle plugin version](https://plugins.gradle.org/plugin/com.gradle.enterprise) or
-[latest Gradle Build Scan plugin version](https://plugins.gradle.org/plugin/com.gradle.build-scan) and the
-[latest Gradle Enterprise Maven extension version](https://search.maven.org/search?q=a:gradle-enterprise-maven-extension) at all times to get the most insights from your builds.
+<details>
+
+<summary>Click for an overview of what extension versions are bundled and injected.</summary>
+
+| TC Build Scan plugin version | Injected GE Maven extension version | Injected Common CCUD Maven extension version |
+|------------------------------|-------------------------------------|----------------------------------------------|
+| 0.31                         | 1.15.3                              | 1.11.1                                       | 
+| 0.30                         | 1.15.1                              | 1.11                                         | 
+| 0.27 - 0.29                  | 1.14.3                              | 1.10.1                                       | 
+| 0.25 - 0.26                  | 1.14.2                              | 1.10.1                                       | 
+| 0.23 - 0.24                  | 1.14.1                              | 1.10.1                                       | 
+
+</details>
 
 ## Slack notifications
 
