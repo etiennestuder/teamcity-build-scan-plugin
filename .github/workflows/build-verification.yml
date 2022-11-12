@@ -3,7 +3,7 @@ name: Verify Build
 on:
     push:
         branches-ignore:
-            - master
+            - main
     pull_request:
     workflow_dispatch:
 
