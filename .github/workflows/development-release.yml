@@ -26,10 +26,10 @@ jobs:
             -   name: Setup Gradle
                 uses: gradle/gradle-build-action@v2
             -   name: Build and bundle plugin artifact
-                run: ./gradlew clean build githubRelease -Porg.gradle.java.installations.fromEnv=JAVA_HOME_6_0_119_X64 -PjavaCompilerVersion=6 -Pteamcity-build-scan-plugin.acceptGradleTOS=true
+                run: ./gradlew clean build githubRelease -Porg.gradle.java.installations.fromEnv=JAVA_HOME_6_0_119_X64 -PjavaCompilerVersion=6
                 env:
-                    GRADLE_ENTERPRISE_TEST_INSTANCE: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN != null && 'https://ge.solutions-team.gradle.com' || '' }} # Use GE Solutions server only if access token is available
-                    GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_SOLUTIONS_ACCESS_TOKEN != null && secrets.GE_SOLUTIONS_ACCESS_TOKEN || 'dummy.server=dummy_value' }} # GE Gradle Plugin barfs on empty value
+                    GRADLE_ENTERPRISE_TEST_INSTANCE: https://etiennestuder.gradle-enterprise.cloud
+                    GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
                     TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             -   name: Upload plugin artifact
                 uses: actions/upload-artifact@v3
