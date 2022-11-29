@@ -10,6 +10,7 @@ jobs:
     development_release:
         name: Release
         runs-on: ubuntu-latest
+        continue-on-error: true
         steps:
             -   name: Check out project
                 uses: actions/checkout@v2

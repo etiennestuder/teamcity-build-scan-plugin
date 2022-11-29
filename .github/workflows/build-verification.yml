@@ -11,6 +11,7 @@ jobs:
     verification:
         name: Verification
         runs-on: ubuntu-latest
+        continue-on-error: true
         steps:
             -   name: Check out project
                 uses: actions/checkout@v2
