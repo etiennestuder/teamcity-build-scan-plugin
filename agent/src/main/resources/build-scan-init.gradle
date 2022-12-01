@@ -90,13 +90,14 @@ if (ccudPluginVersion && isNotAtLeast(ccudPluginVersion, '1.7')) {
 }
 
 // send a message to the server that the build has started
-logger.quiet(generateBuildScanLifeCycleMessage('BUILD_STARTED'))
+logger.quiet(BuildScanLifeCycleLogger.generateBuildScanLifeCycleMessage('BUILD_STARTED'))
 
 // define a buildScanPublished listener that captures the build scan URL and sends it in a message to the server
+def buildScanLifeCycleLogger = new BuildScanLifeCycleLogger(logger)
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
         buildScan.buildScanPublished { scan ->
-            logger.quiet(generateBuildScanLifeCycleMessage("BUILD_SCAN_URL:${scan.buildScanUri.toString()}"))
+            buildScanLifeCycleLogger.log("BUILD_SCAN_URL:${scan.buildScanUri.toString()}")
         }
     }
 }
@@ -170,28 +171,39 @@ static def extensionsWithPublicType(def container, String publicType) {
     container.extensions.extensionsSchema.elements.findAll { it.publicType.concreteClass.name == publicType }
 }
 
-static String generateBuildScanLifeCycleMessage(def attribute) {
-    return "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle '${escape(attribute as String)}']" as String
-}
-
-static String escape(String value) {
-    return value?.toCharArray()?.collect { ch -> escapeChar(ch) }?.join()
-}
-
-static String escapeChar(char ch) {
-    String escapeCharacter = "|"
-    switch (ch) {
-        case '\n': return escapeCharacter + "n"
-        case '\r': return escapeCharacter + "r"
-        case '|': return escapeCharacter + "|"
-        case '\'': return escapeCharacter + "\'"
-        case '[': return escapeCharacter + "["
-        case ']': return escapeCharacter + "]"
-        default: return ch < 128 ? ch as String : escapeCharacter + String.format("0x%04x", (int) ch)
-    }
-}
-
 static boolean isNotAtLeast(String versionUnderTest, String referenceVersion) {
     GradleVersion.version(versionUnderTest) < GradleVersion.version(referenceVersion)
 }
 
+class BuildScanLifeCycleLogger {
+    def logger
+
+    BuildScanLifeCycleLogger(logger) {
+        this.logger = logger
+    }
+
+    void log(String message) {
+        logger.log(generateBuildScanLifeCycleMessage(message))
+    }
+
+    static String generateBuildScanLifeCycleMessage(def attribute) {
+        return "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle '${escape(attribute as String)}']" as String
+    }
+
+    static String escape(String value) {
+        return value?.toCharArray()?.collect { ch -> escapeChar(ch) }?.join()
+    }
+
+    static String escapeChar(char ch) {
+        String escapeCharacter = "|"
+        switch (ch) {
+            case '\n': return escapeCharacter + "n"
+            case '\r': return escapeCharacter + "r"
+            case '|': return escapeCharacter + "|"
+            case '\'': return escapeCharacter + "\'"
+            case '[': return escapeCharacter + "["
+            case ']': return escapeCharacter + "]"
+            default: return ch < 128 ? ch as String : escapeCharacter + String.format("0x%04x", (int) ch)
+        }
+    }
+}
