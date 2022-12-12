@@ -33,6 +33,8 @@ public final class BuildScanServiceMessageMavenExtension implements GradleEnterp
             BuildScanServiceMessageSender.register(api.getBuildScan());
             logger.debug("Finished registering listener capturing build scan link");
         }
+
+        api.getBuildScan().setUploadInBackground(false);
     }
 
     private static boolean invokesJetBrainsInfoGoal(MavenSession session) {
