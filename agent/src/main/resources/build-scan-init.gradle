@@ -118,6 +118,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     buildScan.server = geUrl
                     buildScan.allowUntrustedServer = geAllowUntrustedServer
                     buildScan.publishAlways()
+                    buildScan.uploadInBackground = false
                     buildScan.value 'CI auto injection', 'TeamCity'
                 }
             }
@@ -148,6 +149,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     ext.server = geUrl
                     ext.allowUntrustedServer = geAllowUntrustedServer
                     ext.buildScan.publishAlways()
+                    ext.buildScan.uploadInBackground = false
                     ext.buildScan.value 'CI auto injection', 'TeamCity'
                 }
             }
