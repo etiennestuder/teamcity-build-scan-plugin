@@ -24,9 +24,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesGePluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
-        and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
-
         where:
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
@@ -43,7 +40,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -65,7 +61,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -84,7 +79,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -106,7 +100,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -128,7 +121,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -150,7 +142,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -171,7 +162,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsPluginRepositoryInfo(result, 'https://plugins.gradle.org/m2')
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -226,7 +216,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -266,7 +255,6 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
@@ -285,14 +273,12 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         def result = run(config)
 
         then:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         when:
         result = run(config)
 
         then:
-        outputContainsTeamCityServiceMessageBuildStarted(result)
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:

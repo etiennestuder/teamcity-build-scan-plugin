@@ -89,9 +89,6 @@ if (ccudPluginVersion && isNotAtLeast(ccudPluginVersion, '1.7')) {
     return
 }
 
-// send a message to the server that the build has started
-logger.quiet(BuildScanLifeCycleLogger.generateBuildScanLifeCycleMessage('BUILD_STARTED'))
-
 // define a buildScanPublished listener that captures the build scan URL and sends it in a message to the server
 def buildScanLifeCycleLogger = new BuildScanLifeCycleLogger(logger)
 def buildScanPublishedAction = { def buildScan ->

@@ -251,12 +251,6 @@ class BaseInitScriptTest extends Specification {
         }
     }
 
-    void outputContainsTeamCityServiceMessageBuildStarted(BuildResult result) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert result.output.contains(serviceMsg)
-        assert 1 == result.output.count(serviceMsg)
-    }
-
     void outputContainsTeamCityServiceMessageBuildScanUrl(BuildResult result) {
         def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${mockScansServer.address}s/$PUBLIC_BUILD_SCAN_ID']"
         assert result.output.contains(serviceMsg)
