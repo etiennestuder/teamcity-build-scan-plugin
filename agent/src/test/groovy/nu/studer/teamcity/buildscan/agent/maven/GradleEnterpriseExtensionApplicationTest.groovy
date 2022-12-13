@@ -29,7 +29,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
         outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -57,7 +56,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -88,7 +86,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -121,7 +118,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -158,7 +154,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -191,7 +186,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -224,7 +218,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
         outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -252,7 +245,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
         outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -281,7 +273,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -313,7 +304,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -346,7 +336,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -380,7 +369,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -412,7 +400,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -444,7 +431,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -474,7 +460,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
-        outputMissesTeamCityServiceMessageBuildStarted(output)
         outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -498,7 +483,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
         then:
         outputContainsBuildSuccess(output)
-        outputMissesTeamCityServiceMessageBuildStarted(output)
         outputMissesTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -534,7 +518,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         outputContainsBuildSuccess(output)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -570,7 +553,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         outputContainsBuildSuccess(output)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
@@ -607,22 +589,10 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
         outputContainsBuildSuccess(output)
 
         and:
-        outputContainsTeamCityServiceMessageBuildStarted(output)
         outputContainsTeamCityServiceMessageBuildScanUrl(output)
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
-    }
-
-    void outputContainsTeamCityServiceMessageBuildStarted(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert output.contains(serviceMsg)
-        assert 1 == output.count(serviceMsg)
-    }
-
-    void outputMissesTeamCityServiceMessageBuildStarted(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert !output.contains(serviceMsg)
     }
 
     void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
