@@ -19,7 +19,6 @@ public final class BuildScanServiceMessageListener implements ServiceMessageTran
 
     // values need to be kept in sync with build-scan-init.gradle
     private static final String BUILD_SCAN_SERVICE_MESSAGE_NAME = "nu.studer.teamcity.buildscan.buildScanLifeCycle";
-    private static final String BUILD_SCAN_SERVICE_STARTED_MESSAGE_ARGUMENT = "BUILD_STARTED";
     private static final String BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX = "BUILD_SCAN_URL:";
 
     private final BuildScanDataStore buildScanDataStore;
@@ -32,9 +31,7 @@ public final class BuildScanServiceMessageListener implements ServiceMessageTran
     @Override
     public List<BuildMessage1> translate(@NotNull SRunningBuild runningBuild, @NotNull BuildMessage1 originalMessage, @NotNull ServiceMessage serviceMessage) {
         String argument = requireNonNull(serviceMessage.getArgument());
-        if (argument.equals(BUILD_SCAN_SERVICE_STARTED_MESSAGE_ARGUMENT)) {
-            buildScanDataStore.mark(runningBuild);
-        } else if (argument.startsWith(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX)) {
+        if (argument.startsWith(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX)) {
             buildScanDataStore.store(runningBuild, argument.substring(BUILD_SCAN_SERVICE_URL_MESSAGE_ARGUMENT_PREFIX.length()));
         } else {
             LOGGER.error(String.format("Unknown argument format: '%s' for message service: %s", argument, BUILD_SCAN_SERVICE_MESSAGE_NAME));
