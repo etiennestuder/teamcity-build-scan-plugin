@@ -337,11 +337,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
     }
 
-    private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
-        String gradleCmdParam = getOptionalRunnerParam(GRADLE_CMD_PARAMS, runner);
-        runner.addRunnerParameter(GRADLE_CMD_PARAMS, gradleCmdParam != null ? param + " " + gradleCmdParam : param);
-    }
-
     private static void addSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull List<String> sysProps, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(configParameter, runner);
         if (value != null) {
@@ -352,6 +347,11 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static void addSysProp(@NotNull String property, @NotNull String value, @NotNull List<String> sysProps) {
         String sysProp = String.format("-D%s=%s", property, value);
         sysProps.add(sysProp);
+    }
+
+    private static void addGradleCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
+        String gradleCmdParam = getOptionalRunnerParam(GRADLE_CMD_PARAMS, runner);
+        runner.addRunnerParameter(GRADLE_CMD_PARAMS, gradleCmdParam != null ? param + " " + gradleCmdParam : param);
     }
 
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
