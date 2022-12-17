@@ -79,6 +79,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
     private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allowUntrustedServer";
+    private static final String GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY = "gradle.scan.uploadInBackground";
     private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
     private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
 
@@ -224,6 +225,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+                sysProps.add(String.format("-D%s=%s", GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, false));
             }
         }
 
@@ -340,12 +342,16 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         runner.addRunnerParameter(GRADLE_CMD_PARAMS, gradleCmdParam != null ? param + " " + gradleCmdParam : param);
     }
 
-    private static void addSysPropIfSet(@NotNull String configParameter, @NotNull String property, List<String> sysProps, @NotNull BuildRunnerContext runner) {
+    private static void addSysPropIfSet(@NotNull String configParameter, @NotNull String property, @NotNull List<String> sysProps, @NotNull BuildRunnerContext runner) {
         String value = getOptionalConfigParam(configParameter, runner);
         if (value != null) {
-            String sysProp = String.format("-D%s=%s", property, value);
-            sysProps.add(sysProp);
+            addSysProp(property, value, sysProps);
         }
+    }
+
+    private static void addSysProp(@NotNull String property, @NotNull String value, @NotNull List<String> sysProps) {
+        String sysProp = String.format("-D%s=%s", property, value);
+        sysProps.add(sysProp);
     }
 
     private static void addMavenCmdParam(@NotNull String param, @NotNull BuildRunnerContext runner) {
