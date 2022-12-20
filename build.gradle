@@ -101,9 +101,10 @@ repositories {
     mavenCentral()
 }
 
-tasks.register('createReleaseTag', CreateGitTag) {
+tasks.register('createReleaseTag', CreateGitTag) { createGitTag ->
     tagName = gitReleaseTag()
     overwriteExisting = !RELEASE
+    allprojects { createGitTag.mustRunAfter(it.tasks.named("check")) }
 }
 
 tasks.named('githubRelease') {
