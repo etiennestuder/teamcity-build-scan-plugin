@@ -31,12 +31,13 @@ jobs:
                 env:
                     GRADLE_ENTERPRISE_TEST_INSTANCE: https://etiennestuder.gradle-enterprise.cloud
                     GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
+            -   name: Create GitHub release
+                run: ./gradlew githubRelease
+                env:
+                    TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                    GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
             -   name: Upload plugin artifact
                 uses: actions/upload-artifact@v3
                 with:
                     name: teamcity-build-scan-plugin
                     path: build/distributions/teamcity-build-scan-plugin-*.zip
-            -   name: Create GitHub release
-                run: ./gradlew githubRelease
-                env:
-                    TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
