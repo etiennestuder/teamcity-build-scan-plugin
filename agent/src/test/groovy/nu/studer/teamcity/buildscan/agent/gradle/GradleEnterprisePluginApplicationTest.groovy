@@ -273,6 +273,33 @@ class GradleEnterprisePluginApplicationTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
+    def "init script is configuration cache compatible (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, gePluginVersion: GE_PLUGIN_VERSION)
+        def config = new BuildConfig(
+                gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
+                tcPluginConfig: gePluginConfig,
+                additionalJvmArgs: ["-Dorg.gradle.unsafe.configuration-cache=true"])
+        def result = run(config)
+
+        then:
+        outputContainsTeamCityServiceMessageBuildStarted(result)
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        when:
+        result = run(config)
+
+        then:
+        // does not send build started message when build is loaded from configuration cache
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        // scoped to 7.2+ due to https://github.com/gradle/gradle/issues/17340
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_CONFIGURATION_CACHE_COMPATIBLE.findAll { it.gradleVersion >= GradleVersion.version('7.2') }
+    }
+
     void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
         def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
         def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"

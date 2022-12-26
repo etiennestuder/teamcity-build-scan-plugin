@@ -61,6 +61,9 @@ class BaseInitScriptTest extends Specification {
     static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_4_AND_HIGHER =
         GRADLE_VERSIONS_3_5_AND_HIGHER - [GRADLE_3_5]
 
+    static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_CONFIGURATION_CACHE_COMPATIBLE =
+        GRADLE_VERSIONS_4_AND_HIGHER.findAll { it.gradleVersion >= GradleVersion.version('6.9') }
+
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'
 
