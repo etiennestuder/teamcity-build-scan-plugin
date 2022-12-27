@@ -1,4 +1,1 @@
-- Makes Gradle init script Configuration Cache compatible
-- Disables build scan background upload when instrumenting build with Gradle Enterprise 
-- Bundles Gradle Enterprise Gradle plugin 3.12.1
-- Bundles Gradle Enterprise Maven extension 1.16.1
+- TBD
