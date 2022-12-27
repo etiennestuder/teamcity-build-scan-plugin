@@ -89,15 +89,17 @@ if (ccudPluginVersion && isNotAtLeast(ccudPluginVersion, '1.7')) {
     return
 }
 
+// log via helper class to be Configuration Cache compatible when logging is required from callback function
+def buildScanLifeCycleLogger = new BuildScanLifeCycleLogger(logger)
+
 // send a message to the server that the build has started
-logger.quiet(BuildScanLifeCycleLogger.generateBuildScanLifeCycleMessage('BUILD_STARTED'))
+buildScanLifeCycleLogger.log('BUILD_STARTED')
 
 // define a buildScanPublished listener that captures the build scan URL and sends it in a message to the server
-def l = logger // required for configuration cache compatibility
 def buildScanPublishedAction = { def buildScan ->
     if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
         buildScan.buildScanPublished { scan ->
-            l.quiet(BuildScanLifeCycleLogger.generateBuildScanLifeCycleMessage("BUILD_SCAN_URL:${scan.buildScanUri.toString()}"))
+            buildScanLifeCycleLogger.log("BUILD_SCAN_URL:${scan.buildScanUri.toString()}")
         }
     }
 }
@@ -179,15 +181,25 @@ static boolean isNotAtLeast(String versionUnderTest, String referenceVersion) {
 
 class BuildScanLifeCycleLogger {
 
-    static String generateBuildScanLifeCycleMessage(def attribute) {
+    def logger
+
+    BuildScanLifeCycleLogger(logger) {
+        this.logger = logger
+    }
+
+    void log(String message) {
+        logger.log(generateBuildScanLifeCycleMessage(message))
+    }
+
+    private static String generateBuildScanLifeCycleMessage(def attribute) {
         return "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle '${escape(attribute as String)}']" as String
     }
 
-    static String escape(String value) {
+    private static String escape(String value) {
         return value?.toCharArray()?.collect { ch -> escapeChar(ch) }?.join()
     }
 
-    static String escapeChar(char ch) {
+    private static String escapeChar(char ch) {
         String escapeCharacter = "|"
         switch (ch) {
             case '\n': return escapeCharacter + "n"
