@@ -188,7 +188,7 @@ class BuildScanLifeCycleLogger {
     }
 
     void log(String message) {
-        logger.log(generateBuildScanLifeCycleMessage(message))
+        logger.quiet(generateBuildScanLifeCycleMessage(message))
     }
 
     private static String generateBuildScanLifeCycleMessage(def attribute) {
