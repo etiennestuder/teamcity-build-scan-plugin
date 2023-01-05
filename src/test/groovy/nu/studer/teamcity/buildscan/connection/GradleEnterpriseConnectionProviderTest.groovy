@@ -59,7 +59,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         GRADLE_PLUGIN_REPOSITORY_URL       | 'https://plugins.example.com'   | 'Gradle Plugin Repository URL'
         GRADLE_ENTERPRISE_URL              | 'https://ge.example.com'        | 'Gradle Enterprise Server URL'
         ALLOW_UNTRUSTED_SERVER             | 'true'                          | 'Allow Untrusted Server'
-        GE_PLUGIN_VERSION                  | '3.12.1'                        | 'Gradle Enterprise Gradle Plugin Version'
+        GE_PLUGIN_VERSION                  | '3.12.2'                        | 'Gradle Enterprise Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                | '1.8.2'                         | 'Common Custom User Data Gradle Plugin Version'
         GE_EXTENSION_VERSION               | '1.16.2'                        | 'Gradle Enterprise Maven Extension Version'
         CCUD_EXTENSION_VERSION             | '1.11.1'                        | 'Common Custom User Data Maven Extension Version'
