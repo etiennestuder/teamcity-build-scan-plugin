@@ -8,9 +8,11 @@ repositories {
 }
 
 configurations {
-    mvnExtensions {
-        canBeConsumed = false
-        canBeResolved = true
+    ["mvnExtensions", "geMvnExtensionOnePrevious", "geMvnExtensionTwoPrevious"].each {
+        create(it) {
+            canBeConsumed = false
+            canBeResolved = true
+        }
     }
 }
 
@@ -18,6 +20,8 @@ dependencies {
     mvnExtensions project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
     mvnExtensions 'com.gradle:gradle-enterprise-maven-extension:1.17.2'
     mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:1.12'
+    geMvnExtensionOnePrevious 'com.gradle:gradle-enterprise-maven-extension:1.16.6'
+    geMvnExtensionTwoPrevious 'com.gradle:gradle-enterprise-maven-extension:1.15.5'
 
     testImplementation gradleTestKit()
     testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-10') {
@@ -30,6 +34,8 @@ dependencies {
 
 processResources {
     from configurations.mvnExtensions
+    from configurations.geMvnExtensionOnePrevious
+    from configurations.geMvnExtensionTwoPrevious
 }
 
 java {
