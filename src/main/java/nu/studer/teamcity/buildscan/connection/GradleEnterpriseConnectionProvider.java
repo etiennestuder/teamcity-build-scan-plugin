@@ -5,15 +5,16 @@ import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.oauth.OAuthConnectionDescriptor;
 import jetbrains.buildServer.serverSide.oauth.OAuthProvider;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
+import nu.studer.teamcity.buildscan.internal.GradleEnterpriseAccessKeyValidator;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -35,8 +36,6 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
     private static final String DEFAULT_PLUGIN_VERSIONS_RESOURCE = "default-plugin-versions.properties";
-
-    private static final PropertiesProcessor EMPTY_PROPERTIES_PROCESSOR = new EmptyPropertiesProcessor();
 
     private final PluginDescriptor descriptor;
 
@@ -166,18 +165,13 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Nullable
     @Override
     public PropertiesProcessor getPropertiesProcessor() {
-        // this can be used to invalidate properties set by the user
-        // by returning an empty list, no validation is done
-        return EMPTY_PROPERTIES_PROCESSOR;
+        return params -> {
+            List<InvalidProperty> errors = new ArrayList<>();
+            String accessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
+            if (accessKey != null && !GradleEnterpriseAccessKeyValidator.isValid(accessKey)) {
+                errors.add(new InvalidProperty(GRADLE_ENTERPRISE_ACCESS_KEY, "Invalid access key"));
+            }
+            return errors;
+        };
     }
-
-    private static final class EmptyPropertiesProcessor implements PropertiesProcessor {
-
-        @Override
-        public Collection<InvalidProperty> process(Map<String, String> properties) {
-            return Collections.emptyList();
-        }
-
-    }
-
 }
