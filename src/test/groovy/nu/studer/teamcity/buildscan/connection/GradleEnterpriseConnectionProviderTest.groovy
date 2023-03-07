@@ -71,7 +71,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
     def "description includes includes placeholder value for access key"() {
         given:
         OAuthConnectionDescriptor connection = Stub()
-        connection.getParameters() >> [(GRADLE_ENTERPRISE_ACCESS_KEY): 'secret']
+        connection.getParameters() >> [(GRADLE_ENTERPRISE_ACCESS_KEY): 'server=secret']
 
         when:
         def description = connectionProvider.describeConnection(connection)
@@ -80,4 +80,30 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         description.contains('Gradle Enterprise Access Key: ******')
     }
 
+    def "returns validation error if access key is invalid"() {
+        when:
+        def errors = connectionProvider.propertiesProcessor.process([(GRADLE_ENTERPRISE_ACCESS_KEY): accessKey])
+
+        then:
+        errors.size() == 1
+
+        and:
+        def error = errors.find { it.propertyName == GRADLE_ENTERPRISE_ACCESS_KEY }
+        error != null
+        error.invalidReason == 'Invalid access key'
+
+        where:
+        accessKey << ['', 'secret', '=secret', 'server=']
+    }
+
+    def "does not return validation error if access key is valid or absent"() {
+        when:
+        def errors = connectionProvider.propertiesProcessor.process(accessKey != null ? [(GRADLE_ENTERPRISE_ACCESS_KEY): accessKey] : [:])
+
+        then:
+        errors.isEmpty()
+
+        where:
+        accessKey << [null, 'server=secret', 'server1,server2=secret1;server3=secret2']
+    }
 }
