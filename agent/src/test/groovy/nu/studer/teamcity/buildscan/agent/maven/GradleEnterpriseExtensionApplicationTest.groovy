@@ -6,11 +6,6 @@ import static org.junit.Assume.assumeTrue
 
 class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationTest {
 
-    static final String GE_URL_STR = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
-    static final URI GE_URL = GE_URL_STR ? new URI(GE_URL_STR) : null
-    static final String GE_EXTENSION_VERSION = '1.16.5'
-    static final String CCUD_EXTENSION_VERSION = '1.11.1'
-
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
@@ -612,36 +607,6 @@ class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationT
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
-    }
-
-    void outputContainsTeamCityServiceMessageBuildStarted(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert output.contains(serviceMsg)
-        assert 1 == output.count(serviceMsg)
-    }
-
-    void outputMissesTeamCityServiceMessageBuildStarted(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_STARTED']"
-        assert !output.contains(serviceMsg)
-    }
-
-    void outputContainsTeamCityServiceMessageBuildScanUrl(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
-        assert output.contains(serviceMsg)
-        assert 1 == output.count(serviceMsg)
-    }
-
-    void outputMissesTeamCityServiceMessageBuildScanUrl(String output) {
-        def serviceMsg = "##teamcity[nu.studer.teamcity.buildscan.buildScanLifeCycle 'BUILD_SCAN_URL:${GE_URL}/s/"
-        assert !output.contains(serviceMsg)
-    }
-
-    void outputContainsBuildSuccess(String output) {
-        assert output.contains("[INFO] BUILD SUCCESS")
-    }
-
-    static String getRelativePath(File parent, File child) {
-        parent.toPath().relativize(child.toPath()).toString()
     }
 
 }
