@@ -6,6 +6,10 @@ import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
 import nu.studer.teamcity.buildscan.agent.TcPluginConfig
 import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
+import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenBuildStepConfig
+import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenInstaller
+import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
+import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenRunner
 import spock.lang.Specification
 import spock.lang.TempDir
 

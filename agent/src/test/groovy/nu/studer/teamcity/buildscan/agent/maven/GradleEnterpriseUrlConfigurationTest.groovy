@@ -1,6 +1,7 @@
 package nu.studer.teamcity.buildscan.agent.maven
 
 import nu.studer.teamcity.buildscan.agent.TcPluginConfig
+import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
 
 import static org.junit.Assume.assumeTrue
 
