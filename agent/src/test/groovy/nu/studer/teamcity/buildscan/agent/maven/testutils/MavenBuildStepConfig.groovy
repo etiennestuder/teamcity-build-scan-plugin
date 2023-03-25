@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.agent.maven
+package nu.studer.teamcity.buildscan.agent.maven.testutils
 
 final class MavenBuildStepConfig {
 
