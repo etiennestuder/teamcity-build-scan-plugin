@@ -6,7 +6,7 @@ import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
 
 import static org.junit.Assume.assumeTrue
 
-class UnusualProjectStructureTest extends BaseExtensionApplicationTest {
+class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionApplicationTest {
 
     def "publishes build scan when pom is in a subdirectory and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()

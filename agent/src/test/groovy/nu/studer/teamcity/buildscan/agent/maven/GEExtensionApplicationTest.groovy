@@ -6,7 +6,7 @@ import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
 
 import static org.junit.Assume.assumeTrue
 
-class GradleEnterpriseExtensionApplicationTest extends BaseExtensionApplicationTest {
+class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
 
     def "does not apply GE / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()

@@ -6,7 +6,7 @@ import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
 
 import static org.junit.Assume.assumeTrue
 
-class TeamCityGoalFilteringTest extends BaseExtensionApplicationTest {
+class TeamCityGoalFilteringExtensionApplicationTest extends BaseExtensionApplicationTest {
 
     def "does not publish build scan for TeamCity specific info goal invocation (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
