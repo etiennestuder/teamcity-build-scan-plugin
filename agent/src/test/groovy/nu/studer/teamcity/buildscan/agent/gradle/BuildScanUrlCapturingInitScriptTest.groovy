@@ -2,7 +2,7 @@ package nu.studer.teamcity.buildscan.agent.gradle
 
 import static org.junit.Assume.assumeTrue
 
-class BuildScanUrlCapturingTest extends BaseInitScriptTest {
+class BuildScanUrlCapturingInitScriptTest extends BaseInitScriptTest {
 
     def "sends build started service message even without declaring Gradle Enterprise / Build Scan plugin (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
