@@ -1,7 +1,9 @@
-package nu.studer.teamcity.buildscan.agent
+package nu.studer.teamcity.buildscan.agent.gradle.testutils
 
 import jetbrains.buildServer.agent.AgentLifeCycleListener
 import jetbrains.buildServer.util.EventDispatcher
+import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
+import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
 import org.jetbrains.annotations.NotNull
 
 class TestBuildScanServiceMessageInjector extends BuildScanServiceMessageInjector {

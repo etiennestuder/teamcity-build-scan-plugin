@@ -11,7 +11,7 @@ import nu.studer.teamcity.buildscan.agent.BuildScanServiceMessageInjector
 import nu.studer.teamcity.buildscan.agent.ExtensionApplicationListener
 import nu.studer.teamcity.buildscan.agent.TcPluginConfig
 import nu.studer.teamcity.buildscan.agent.TestBuildRunnerContext
-import nu.studer.teamcity.buildscan.agent.TestBuildScanServiceMessageInjector
+import nu.studer.teamcity.buildscan.agent.gradle.testutils.TestBuildScanServiceMessageInjector
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.internal.DefaultGradleRunner
 import org.gradle.util.GradleVersion
