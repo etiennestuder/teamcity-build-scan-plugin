@@ -165,9 +165,9 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Nullable
     @Override
     public PropertiesProcessor getPropertiesProcessor() {
-        return params -> {
+        return properties -> {
             List<InvalidProperty> errors = new ArrayList<>();
-            String accessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
+            String accessKey = properties.get(GRADLE_ENTERPRISE_ACCESS_KEY);
             if (accessKey != null && !GradleEnterpriseAccessKeyValidator.isValid(accessKey)) {
                 errors.add(new InvalidProperty(GRADLE_ENTERPRISE_ACCESS_KEY, "Invalid access key"));
             }
