@@ -1,14 +1,11 @@
 package nu.studer.teamcity.buildscan.connection;
 
-import com.google.common.base.Strings;
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public final class GradleEnterpriseAccessKeyValidator {
 
-    private GradleEnterpriseAccessKeyValidator() {
-    }
-
     public static boolean isValid(String value) {
-        if (Strings.isNullOrEmpty(value)) {
+        if (isNullOrEmpty(value)) {
             return false;
         }
 
@@ -23,12 +20,12 @@ public final class GradleEnterpriseAccessKeyValidator {
             String servers = parts[0];
             String accessKey = parts[1];
 
-            if (Strings.isNullOrEmpty(servers) || Strings.isNullOrEmpty(accessKey)) {
+            if (isNullOrEmpty(servers) || isNullOrEmpty(accessKey)) {
                 return false;
             }
 
             for (String server : servers.split(",")) {
-                if (Strings.isNullOrEmpty(server)) {
+                if (isNullOrEmpty(server)) {
                     return false;
                 }
             }
@@ -36,4 +33,8 @@ public final class GradleEnterpriseAccessKeyValidator {
 
         return true;
     }
+
+    private GradleEnterpriseAccessKeyValidator() {
+    }
+
 }

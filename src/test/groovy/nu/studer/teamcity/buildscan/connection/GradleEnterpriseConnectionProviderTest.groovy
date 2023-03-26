@@ -106,4 +106,5 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         where:
         accessKey << [null, 'server=secret', 'server1,server2=secret1;server3=secret2']
     }
+
 }

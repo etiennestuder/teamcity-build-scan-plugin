@@ -1,11 +1,9 @@
 package nu.studer.teamcity.buildscan.connection
 
 import spock.lang.Specification
-import spock.lang.Subject
 import spock.lang.Unroll
 
 @Unroll
-@Subject(GradleEnterpriseAccessKeyValidator)
 class GradleEnterpriseAccessKeyValidatorTest extends Specification {
 
     def "valid access key: #accessKey"() {
@@ -44,4 +42,5 @@ class GradleEnterpriseAccessKeyValidatorTest extends Specification {
             'server1, server2,, server3 = secret '
         ]
     }
+
 }
