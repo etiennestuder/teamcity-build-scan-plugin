@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.internal;
+package nu.studer.teamcity.buildscan.connection;
 
 import com.google.common.base.Strings;
 

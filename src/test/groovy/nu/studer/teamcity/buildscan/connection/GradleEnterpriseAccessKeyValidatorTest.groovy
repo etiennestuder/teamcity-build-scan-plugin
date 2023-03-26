@@ -1,4 +1,4 @@
-package nu.studer.teamcity.buildscan.internal
+package nu.studer.teamcity.buildscan.connection
 
 import spock.lang.Specification
 import spock.lang.Subject

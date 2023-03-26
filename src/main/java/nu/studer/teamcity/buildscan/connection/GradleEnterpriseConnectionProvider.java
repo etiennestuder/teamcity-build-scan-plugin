@@ -5,7 +5,6 @@ import jetbrains.buildServer.serverSide.PropertiesProcessor;
 import jetbrains.buildServer.serverSide.oauth.OAuthConnectionDescriptor;
 import jetbrains.buildServer.serverSide.oauth.OAuthProvider;
 import jetbrains.buildServer.web.openapi.PluginDescriptor;
-import nu.studer.teamcity.buildscan.internal.GradleEnterpriseAccessKeyValidator;
 import org.apache.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
