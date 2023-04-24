@@ -23,7 +23,8 @@ class BaseExtensionApplicationTest extends Specification {
         new JdkCompatibleMavenVersion('3.6.3', 7, 11),
         new JdkCompatibleMavenVersion('3.8.1', 7, 11),
         new JdkCompatibleMavenVersion('3.8.6', 7, 11),
-        new JdkCompatibleMavenVersion('3.9.0', 7, 11)
+        new JdkCompatibleMavenVersion('3.9.0', 7, 11),
+        new JdkCompatibleMavenVersion('3.9.1', 7, 11)
     ]
 
     static final List<JdkCompatibleMavenVersion> UNSUPPORTED_MAVEN_VERSIONS = [
