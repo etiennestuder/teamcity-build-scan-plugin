@@ -5,6 +5,7 @@ class TcPluginConfig {
     URI gradlePluginRepositoryUrl
     URI geUrl
     boolean geAllowUntrustedServer
+    boolean geOverrideServerUrl
     String gePluginVersion
     String ccudPluginVersion
     String geExtensionVersion
@@ -24,6 +25,9 @@ class TcPluginConfig {
         }
         if (geAllowUntrustedServer) {
             configProps.put 'buildScanPlugin.gradle-enterprise.allow-untrusted-server', 'true'
+        }
+        if (geOverrideServerUrl) {
+            configProps.put 'buildScanPlugin.gradle-enterprise.override-existing-server', 'true'
         }
         if (gePluginVersion) {
             configProps.put 'buildScanPlugin.gradle-enterprise.plugin.version', gePluginVersion

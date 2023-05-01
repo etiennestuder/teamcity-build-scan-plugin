@@ -178,6 +178,31 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
     }
 
+    def "overrides GE URL and allowUntrustedServer in project if override parameter is enabled (#jdkCompatibleGradleVersion)"() {
+        assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
+
+        given:
+        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion, URI.create('https://ge-server.invalid'))
+
+        when:
+        def gePluginConfig = new TcPluginConfig(geUrl: mockScansServer.address, geAllowUntrustedServer: true, gePluginVersion: GE_PLUGIN_VERSION, geOverrideServerUrl: true)
+        def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
+
+        then:
+        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesCcudPluginApplicationViaInitScript(result)
+
+        and:
+        outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), true)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(result)
+        outputContainsTeamCityServiceMessageBuildScanUrl(result)
+
+        where:
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+    }
+
     def "can configure alternative repository for plugins when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
