@@ -78,6 +78,7 @@ if (requestedInitScriptName != initScriptName) {
 
 def geUrl = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.url')
 def geAllowUntrustedServer = Boolean.parseBoolean(getInputParam('teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server'))
+def geOverrideServerUrl = Boolean.parseBoolean(getInputParam('teamCityBuildScanPlugin.gradle-enterprise.override-existing-server'))
 def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
 def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
 
@@ -124,6 +125,16 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     if (buildScan.metaClass.respondsTo(buildScan, 'setUploadInBackground', Boolean)) buildScan.uploadInBackground = false  // uploadInBackground not available for build-scan-plugin 1.16
                     buildScan.value 'CI auto injection', 'TeamCity'
                 }
+
+                if (geUrl && geOverrideServerUrl) {
+                    pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+                        afterEvaluate {
+                            logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer, overrideServerUrl: $geOverrideServerUrl")
+                            buildScan.server = geUrl
+                            buildScan.allowUntrustedServer = geAllowUntrustedServer
+                        }
+                    }
+                }
             }
 
             if (ccudPluginVersion && atLeastGradle4) {
@@ -154,6 +165,14 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     ext.buildScan.publishAlways()
                     ext.buildScan.uploadInBackground = false
                     ext.buildScan.value 'CI auto injection', 'TeamCity'
+                }
+            }
+
+            if (geUrl && geOverrideServerUrl) {
+                extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
+                    logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer, overrideServerUrl: $geOverrideServerUrl")
+                    ext.server = geUrl
+                    ext.allowUntrustedServer = geAllowUntrustedServer
                 }
             }
         }
