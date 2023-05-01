@@ -71,4 +71,36 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
+    def "overrides GE URL and allowUntrustedServer in project if override parameter is enabled (#jdkCompatibleMavenVersion)"() {
+        assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
+        assumeTrue GE_URL != null
+
+        given:
+        def mvnProject = new MavenProject.Configuration(
+                geUrl: new URI('https://ge-server.invalid'),
+                geExtensionVersion: GE_EXTENSION_VERSION,
+        ).buildIn(checkoutDir)
+
+        and:
+        def gePluginConfig = new TcPluginConfig(
+                geUrl: GE_URL,
+                geAllowUntrustedServer: true,
+                geOverrideServerUrl: true,
+                geExtensionVersion: GE_EXTENSION_VERSION,
+        )
+
+        when:
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+
+        then:
+        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.ccudExtensionApplied(_)
+
+        and:
+        outputContainsTeamCityServiceMessageBuildStarted(output)
+        outputContainsTeamCityServiceMessageBuildScanUrl(output)
+
+        where:
+        jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
+    }
 }
