@@ -37,6 +37,8 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.OVERRIDE_EXISTING_SERVER;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.OVERRIDE_EXISTING_SERVER_URL_CONFIG_PARAM;
 
 /**
  * This implementation of {@link BuildParametersProvider} injects configuration parameters and environment variables
@@ -57,6 +59,7 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             Map<String, String> connectionParams = connections.get(i);
             setParameter(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, connectionParams.get(GRADLE_PLUGIN_REPOSITORY_URL), params);
             setParameter(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParams.get(GRADLE_ENTERPRISE_URL), params);
+            setParameter(OVERRIDE_EXISTING_SERVER_URL_CONFIG_PARAM, connectionParams.get(OVERRIDE_EXISTING_SERVER), params);
             setParameter(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, connectionParams.get(ALLOW_UNTRUSTED_SERVER), params);
             setParameter(GE_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(GE_PLUGIN_VERSION), params);
             setParameter(CCUD_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_PLUGIN_VERSION), params);

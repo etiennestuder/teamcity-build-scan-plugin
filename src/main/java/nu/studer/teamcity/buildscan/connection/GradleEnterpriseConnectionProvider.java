@@ -29,6 +29,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.OVERRIDE_EXISTING_SERVER;
 
 public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
@@ -70,6 +71,11 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         String geUrl = params.get(GRADLE_ENTERPRISE_URL);
         if (geUrl != null) {
             description += String.format("* Gradle Enterprise Server URL: %s\n", geUrl);
+        }
+
+        String overrideUrl = params.get(OVERRIDE_EXISTING_SERVER);
+        if (overrideUrl != null) {
+            description += String.format("* Override Pre-Existing Gradle Enterprise Server: %s\n", overrideUrl);
         }
 
         String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);

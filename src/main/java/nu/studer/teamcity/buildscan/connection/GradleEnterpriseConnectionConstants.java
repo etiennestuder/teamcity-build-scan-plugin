@@ -8,6 +8,7 @@ public final class GradleEnterpriseConnectionConstants {
 
     public static final String GRADLE_PLUGIN_REPOSITORY_URL = "gradlePluginRepositoryUrl";
     public static final String GRADLE_ENTERPRISE_URL = "gradleEnterpriseUrl";
+    public static final String OVERRIDE_EXISTING_SERVER = "overrideExistingServer";
     public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
     public static final String GE_PLUGIN_VERSION = "gradleEnterprisePluginVersion";
     public static final String CCUD_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
@@ -24,6 +25,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
     public static final String GRADLE_ENTERPRISE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";
     public static final String ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
+    public static final String OVERRIDE_EXISTING_SERVER_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.override-existing-server";
     public static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.plugin.version";
     public static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     public static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
@@ -43,6 +45,10 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getGradleEnterpriseUrl() {
         return GRADLE_ENTERPRISE_URL;
+    }
+
+    public String getOverrideExistingServer() {
+        return OVERRIDE_EXISTING_SERVER;
     }
 
     public String getAllowUntrustedServer() {

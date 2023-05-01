@@ -34,6 +34,14 @@
 </tr>
 
 <tr>
+    <td><label for="${keys.allowUntrustedServer}">Override Configured Server:</label></td>
+    <td>
+        <props:checkboxProperty name="${keys.overrideExistingServer}"/>
+        <span class="smallNote">Whether a Gradle Enterprise Server configured by the project should be overridden by the url configured by this connection.</span>
+    </td>
+</tr>
+
+<tr>
     <td><label for="${keys.gradleEnterpriseAccessKey}">Gradle Enterprise Access Key:</label></td>
     <td>
         <props:passwordProperty name="${keys.gradleEnterpriseAccessKey}" className="longField"/>

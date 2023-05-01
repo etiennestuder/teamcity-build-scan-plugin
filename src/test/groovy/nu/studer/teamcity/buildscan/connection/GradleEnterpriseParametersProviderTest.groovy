@@ -32,6 +32,8 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.OVERRIDE_EXISTING_SERVER
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.OVERRIDE_EXISTING_SERVER_URL_CONFIG_PARAM
 
 @Unroll
 class GradleEnterpriseParametersProviderTest extends Specification {
@@ -114,6 +116,7 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         GRADLE_PLUGIN_REPOSITORY_URL       | GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM       | 'https://plugins.example.com'
         GRADLE_ENTERPRISE_URL              | GRADLE_ENTERPRISE_URL_CONFIG_PARAM              | 'https://ge.example.com'
         ALLOW_UNTRUSTED_SERVER             | ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM             | 'true'
+        OVERRIDE_EXISTING_SERVER           | OVERRIDE_EXISTING_SERVER_URL_CONFIG_PARAM       | 'true'
         GE_PLUGIN_VERSION                  | GE_PLUGIN_VERSION_CONFIG_PARAM                  | '1.0.0'
         CCUD_PLUGIN_VERSION                | CCUD_PLUGIN_VERSION_CONFIG_PARAM                | '1.0.0'
         GE_EXTENSION_VERSION               | GE_EXTENSION_VERSION_CONFIG_PARAM               | '1.0.0'
