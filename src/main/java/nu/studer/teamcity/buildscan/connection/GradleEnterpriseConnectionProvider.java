@@ -80,7 +80,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         String overrideUrl = params.get(ENFORCE_URL);
         if (overrideUrl != null) {
-            description += String.format("* Override Pre-Existing Gradle Enterprise Server: %s\n", overrideUrl);
+            description += String.format("* Enforce Server URL: %s\n", overrideUrl);
         }
 
         String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
