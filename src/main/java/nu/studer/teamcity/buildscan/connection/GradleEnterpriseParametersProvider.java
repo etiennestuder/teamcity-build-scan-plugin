@@ -37,6 +37,8 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_GRADLE_ENTERPRISE_URL;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM;
 
 /**
  * This implementation of {@link BuildParametersProvider} injects configuration parameters and environment variables
@@ -66,6 +68,7 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             setParameter(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_CCUD_EXTENSION_COORDINATES), params);
             setParameter(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, connectionParams.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP), params);
             setParameter(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, connectionParams.get(GRADLE_ENTERPRISE_ACCESS_KEY), params);
+            setParameter(ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParams.get(ENFORCE_GRADLE_ENTERPRISE_URL), params);
         }
         return params;
     }

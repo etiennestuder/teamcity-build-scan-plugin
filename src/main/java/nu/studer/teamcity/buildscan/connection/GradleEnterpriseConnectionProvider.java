@@ -22,6 +22,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
@@ -80,6 +81,11 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
         if (geAccessKey != null) {
             description += String.format("* Gradle Enterprise Access Key: %s\n", "******");
+        }
+
+        String enforceGeUrl = params.get(ENFORCE_GRADLE_ENTERPRISE_URL);
+        if (enforceGeUrl != null) {
+            description += String.format("* Enforce Gradle Enterprise Server URL: %s\n", enforceGeUrl);
         }
 
         description += "\nGradle Settings:\n";
@@ -161,7 +167,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         return defaultProperties;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public PropertiesProcessor getPropertiesProcessor() {
         return properties -> {
@@ -173,4 +179,5 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             return errors;
         };
     }
+
 }

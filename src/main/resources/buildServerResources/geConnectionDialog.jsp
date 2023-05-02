@@ -43,6 +43,14 @@
 </tr>
 
 <tr>
+    <td><label for="${keys.enforceGradleEnterpriseUrl}">Enforce Gradle Enterprise Server URL:</label></td>
+    <td>
+        <props:checkboxProperty name="${keys.enforceGradleEnterpriseUrl}"/>
+        <span class="smallNote">Whether to enforce the Gradle Enterprise Server URL configured in this connection over a URL configured in the project's build.</span>
+    </td>
+</tr>
+
+<tr>
     <td colspan="2">
         <div class="smallNoteAttention">The access key must be in the <b>&lt;server host name&gt;=&lt;access key&gt;</b> format. For more details please refer to the <a href="https://docs.gradle.com/enterprise/gradle-plugin/#manual_access_key_configuration" target="_blank">documentation</a>.</div>
     </td>

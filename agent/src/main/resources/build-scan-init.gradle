@@ -78,6 +78,7 @@ if (requestedInitScriptName != initScriptName) {
 
 def geUrl = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.url')
 def geAllowUntrustedServer = Boolean.parseBoolean(getInputParam('teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server'))
+def geEnforceUrl = Boolean.parseBoolean(getInputParam('teamCityBuildScanPlugin.gradle-enterprise.enforce-url'))
 def gePluginVersion = getInputParam('teamCityBuildScanPlugin.gradle-enterprise.plugin.version')
 def ccudPluginVersion = getInputParam('teamCityBuildScanPlugin.ccud.plugin.version')
 
@@ -106,6 +107,7 @@ def buildScanPublishedAction = { def buildScan ->
 
 // register buildScanPublished listener and optionally apply the GE / Build Scan plugin
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
+    //noinspection GroovyAssignabilityCheck
     rootProject {
         buildscript.configurations.getByName("classpath").incoming.afterResolve { ResolvableDependencies incoming ->
             def resolutionResult = incoming.resolutionResult
@@ -114,6 +116,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 def scanPluginComponent = resolutionResult.allComponents.find {
                     it.moduleVersion.with { group == "com.gradle" && (name == "build-scan-plugin" || name == "gradle-enterprise-gradle-plugin") }
                 }
+
                 if (!scanPluginComponent) {
                     logger.quiet("Applying $BUILD_SCAN_PLUGIN_CLASS via init script")
                     logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
@@ -124,12 +127,23 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     if (buildScan.metaClass.respondsTo(buildScan, 'setUploadInBackground', Boolean)) buildScan.uploadInBackground = false  // uploadInBackground not available for build-scan-plugin 1.16
                     buildScan.value 'CI auto injection', 'TeamCity'
                 }
+
+                if (geUrl && geEnforceUrl) {
+                    pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
+                        afterEvaluate {
+                            logger.quiet("Enforcing Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
+                            buildScan.server = geUrl
+                            buildScan.allowUntrustedServer = geAllowUntrustedServer
+                        }
+                    }
+                }
             }
 
             if (ccudPluginVersion && atLeastGradle4) {
                 def ccudPluginComponent = resolutionResult.allComponents.find {
                     it.moduleVersion.with { group == "com.gradle" && name == "common-custom-user-data-gradle-plugin" }
                 }
+
                 if (!ccudPluginComponent) {
                     logger.quiet("Applying $CCUD_PLUGIN_CLASS via init script")
                     pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
@@ -154,6 +168,14 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     ext.buildScan.publishAlways()
                     ext.buildScan.uploadInBackground = false
                     ext.buildScan.value 'CI auto injection', 'TeamCity'
+                }
+            }
+
+            if (geUrl && geEnforceUrl) {
+                extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
+                    logger.quiet("Enforcing Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
+                    ext.server = geUrl
+                    ext.allowUntrustedServer = geAllowUntrustedServer
                 }
             }
         }

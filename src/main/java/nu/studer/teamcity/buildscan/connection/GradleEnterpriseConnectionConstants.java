@@ -17,6 +17,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES = "customCommonCustomUserDataExtensionCoordinates";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP = "instrumentCommandLineBuildStep";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY = "gradleEnterpriseAccessKey";
+    public static final String ENFORCE_GRADLE_ENTERPRISE_URL = "enforceGradleEnterpriseUrl";
 
     // Constants defined by the BuildScanServiceMessageInjector
     // This connection sets these values as build parameters so that they can be picked up by the BuildScanServiceMessageInjector
@@ -32,6 +33,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR = "env.GRADLE_ENTERPRISE_ACCESS_KEY";
+    public static final String ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.enforce-url";
 
     public static final String GRADLE_ENTERPRISE_CONNECTION_PROVIDER = "gradle-enterprise-connection-provider";
 
@@ -79,6 +81,10 @@ public final class GradleEnterpriseConnectionConstants {
 
     public String getGradleEnterpriseAccessKey() {
         return GRADLE_ENTERPRISE_ACCESS_KEY;
+    }
+
+    public String getEnforceGradleEnterpriseUrl() {
+        return ENFORCE_GRADLE_ENTERPRISE_URL;
     }
 
 }
