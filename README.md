@@ -97,14 +97,14 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create three configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish build scans
    - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
    - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply (optional)
 
 2. If required, provide additional configuration parameters for your environment (optional):
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured by the project; set to _true_ to force build scans to publish to the url specified in TeamCity
+    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Gradle Enterprise URL
     - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
 
@@ -116,14 +116,14 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create three configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish the Build Scan
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish build scans
    - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
    - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply (optional)
 
 2. If required, provide additional configuration parameters for your environment (optional):
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured by the project; set to _true_ to force build scans to publish to the url specified in TeamCity
+    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Gradle Enterprise URL
     - `buildScanPlugin.gradle-enterprise.extension.custom.coordinates` - the coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension
     - `buildScanPlugin.ccud.extension.custom.coordinates` - the coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled
