@@ -193,7 +193,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), true)
+        outputEnforcesGeUrl(result, mockScansServer.address.toString(), true)
 
         and:
         outputContainsTeamCityServiceMessageBuildStarted(result)
@@ -367,6 +367,12 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         def repositoryInfo = "Gradle Enterprise plugins resolution: ${gradlePluginRepositoryUrl}"
         assert result.output.contains(repositoryInfo)
         assert 1 == result.output.count(repositoryInfo)
+    }
+
+    void outputEnforcesGeUrl(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
+        def enforceUrl = "Enforcing Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
+        assert result.output.contains(enforceUrl)
+        assert 1 == result.output.count(enforceUrl)
     }
 
 }
