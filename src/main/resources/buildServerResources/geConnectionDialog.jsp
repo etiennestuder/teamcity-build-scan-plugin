@@ -43,9 +43,9 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.enforceUrl}">Enforce Gradle Enterprise Server URL:</label></td>
+    <td><label for="${keys.enforceGradleEnterpriseUrl}">Enforce Gradle Enterprise Server URL:</label></td>
     <td>
-        <props:checkboxProperty name="${keys.enforceUrl}"/>
+        <props:checkboxProperty name="${keys.enforceGradleEnterpriseUrl}"/>
         <span class="smallNote">Whether to enforce the Gradle Enterprise Server URL configured in this connection over a URL configured in the project's build.</span>
     </td>
 </tr>

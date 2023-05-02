@@ -83,7 +83,7 @@ public final class GradleEnterpriseConnectionConstants {
         return GRADLE_ENTERPRISE_ACCESS_KEY;
     }
 
-    public String getEnforceUrl() {
+    public String getEnforceGradleEnterpriseUrl() {
         return ENFORCE_GRADLE_ENTERPRISE_URL;
     }
 
