@@ -107,6 +107,7 @@ def buildScanPublishedAction = { def buildScan ->
 
 // register buildScanPublished listener and optionally apply the GE / Build Scan plugin
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
+    //noinspection GroovyAssignabilityCheck
     rootProject {
         buildscript.configurations.getByName("classpath").incoming.afterResolve { ResolvableDependencies incoming ->
             def resolutionResult = incoming.resolutionResult
@@ -115,6 +116,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 def scanPluginComponent = resolutionResult.allComponents.find {
                     it.moduleVersion.with { group == "com.gradle" && (name == "build-scan-plugin" || name == "gradle-enterprise-gradle-plugin") }
                 }
+
                 if (!scanPluginComponent) {
                     logger.quiet("Applying $BUILD_SCAN_PLUGIN_CLASS via init script")
                     logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
@@ -129,7 +131,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 if (geUrl && geOverrideServerUrl) {
                     pluginManager.withPlugin(BUILD_SCAN_PLUGIN_ID) {
                         afterEvaluate {
-                            logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer, overrideServerUrl: $geOverrideServerUrl")
+                            logger.quiet("Enforcing Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
                             buildScan.server = geUrl
                             buildScan.allowUntrustedServer = geAllowUntrustedServer
                         }
@@ -141,6 +143,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                 def ccudPluginComponent = resolutionResult.allComponents.find {
                     it.moduleVersion.with { group == "com.gradle" && name == "common-custom-user-data-gradle-plugin" }
                 }
+
                 if (!ccudPluginComponent) {
                     logger.quiet("Applying $CCUD_PLUGIN_CLASS via init script")
                     pluginManager.apply(initscript.classLoader.loadClass(CCUD_PLUGIN_CLASS))
@@ -170,7 +173,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 
             if (geUrl && geOverrideServerUrl) {
                 extensionsWithPublicType(settings, GRADLE_ENTERPRISE_EXTENSION_CLASS).collect { settings[it.name] }.each { ext ->
-                    logger.quiet("Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer, overrideServerUrl: $geOverrideServerUrl")
+                    logger.quiet("Enforcing Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer")
                     ext.server = geUrl
                     ext.allowUntrustedServer = geAllowUntrustedServer
                 }
