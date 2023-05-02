@@ -71,7 +71,7 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "overrides GE URL and allowUntrustedServer in project if override parameter is enabled (#jdkCompatibleMavenVersion)"() {
+    def "enforces GE URL and allowUntrustedServer in project if enforce url parameter is enabled (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue GE_URL != null
 
@@ -85,7 +85,7 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         def gePluginConfig = new TcPluginConfig(
                 geUrl: GE_URL,
                 geAllowUntrustedServer: true,
-                geOverrideServerUrl: true,
+                geEnforceUrl: true,
                 geExtensionVersion: GE_EXTENSION_VERSION,
         )
 

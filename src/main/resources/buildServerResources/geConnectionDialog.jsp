@@ -34,10 +34,10 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.allowUntrustedServer}">Override Configured Server:</label></td>
+    <td><label for="${keys.enforceUrl}">Enforce URL:</label></td>
     <td>
-        <props:checkboxProperty name="${keys.overrideExistingServer}"/>
-        <span class="smallNote">Whether a Gradle Enterprise Server configured by the project should be overridden by the url configured by this connection.</span>
+        <props:checkboxProperty name="${keys.enforceUrl}"/>
+        <span class="smallNote">Whether to enforce the Gradle Enterprise URL configured in this connection over a URL configured by the project.</span>
     </td>
 </tr>
 

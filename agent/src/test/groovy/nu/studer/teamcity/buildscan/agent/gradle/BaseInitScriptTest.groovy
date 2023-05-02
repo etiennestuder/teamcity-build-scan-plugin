@@ -272,7 +272,7 @@ class BaseInitScriptTest extends Specification {
         def mapping = [
             TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL                     : "teamCityBuildScanPlugin.gradle-enterprise.url",
             TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER  : "teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_OVERRIDE_EXISTING_SERVER: "teamCityBuildScanPlugin.gradle-enterprise.override-existing-server",
+            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ENFORCE_URL             : "teamCityBuildScanPlugin.gradle-enterprise.enforce-url",
             TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION          : "teamCityBuildScanPlugin.gradle-enterprise.plugin.version",
             TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION                       : "teamCityBuildScanPlugin.ccud.plugin.version",
             TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL              : "teamCityBuildScanPlugin.gradle.plugin-repository.url",

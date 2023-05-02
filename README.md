@@ -104,7 +104,7 @@ The TeamCity configuration parameters can be set on any project and are automati
 2. If required, provide additional configuration parameters for your environment (optional):
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.gradle-enterprise.override-existing-server` - override the existing server defined in the project; set to _true_ to force build scans to publish to the url specified in TeamCity
+    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured by the project; set to _true_ to force build scans to publish to the url specified in TeamCity
     - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
 
@@ -123,7 +123,7 @@ The TeamCity configuration parameters can be set on any project and are automati
 2. If required, provide additional configuration parameters for your environment (optional):
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.gradle-enterprise.override-existing-server` - override the existing server defined in the project; set to _true_ to force build scans to publish to the url specified in TeamCity
+    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured by the project; set to _true_ to force build scans to publish to the url specified in TeamCity
     - `buildScanPlugin.gradle-enterprise.extension.custom.coordinates` - the coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension
     - `buildScanPlugin.ccud.extension.custom.coordinates` - the coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it
     - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled

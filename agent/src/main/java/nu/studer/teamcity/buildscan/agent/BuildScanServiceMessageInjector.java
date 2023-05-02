@@ -58,7 +58,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
     private static final String GE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";
     private static final String GE_ALLOW_UNTRUSTED_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
-    private static final String GE_OVERRIDE_EXISTING_SERVER_PARAM = "buildScanPlugin.gradle-enterprise.override-existing-server";
+    private static final String GE_ENFORCE_URL_PARAM = "buildScanPlugin.gradle-enterprise.enforce-url";
     private static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.plugin.version";
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
     private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
@@ -72,7 +72,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String GRADLE_PLUGIN_REPOSITORY_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL";
     private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
     private static final String GE_ALLOW_UNTRUSTED_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
-    private static final String GE_OVERRIDE_EXISTING_SERVER_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_OVERRIDE_EXISTING_SERVER";
+    private static final String GE_ENFORCE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ENFORCE_URL";
     private static final String GE_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
     private static final String CCUD_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION";
     private static final String INIT_SCRIPT_NAME_VAR = "TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME";
@@ -155,7 +155,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         addEnvVarIfSet(GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM, GRADLE_PLUGIN_REPOSITORY_VAR, runner);
         addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
         addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
-        addEnvVarIfSet(GE_OVERRIDE_EXISTING_SERVER_PARAM, GE_OVERRIDE_EXISTING_SERVER_VAR, runner);
+        addEnvVarIfSet(GE_ENFORCE_URL_PARAM, GE_ENFORCE_URL_VAR, runner);
         addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
@@ -229,7 +229,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
                 addSysProp(GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
-            } else if (Boolean.parseBoolean(getOptionalConfigParam(GE_OVERRIDE_EXISTING_SERVER_PARAM, runner))) {
+            } else if (Boolean.parseBoolean(getOptionalConfigParam(GE_ENFORCE_URL_PARAM, runner))) {
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
             }
