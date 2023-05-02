@@ -78,9 +78,9 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Allow Untrusted Server: %s\n", allowUntrustedServer);
         }
 
-        String overrideUrl = params.get(ENFORCE_URL);
-        if (overrideUrl != null) {
-            description += String.format("* Enforce Server URL: %s\n", overrideUrl);
+        String enforceUrl = params.get(ENFORCE_URL);
+        if (enforceUrl != null) {
+            description += String.format("* Enforce Server URL: %s\n", enforceUrl);
         }
 
         String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
