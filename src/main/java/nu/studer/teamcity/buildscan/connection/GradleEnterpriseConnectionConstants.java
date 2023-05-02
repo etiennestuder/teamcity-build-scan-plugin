@@ -8,8 +8,8 @@ public final class GradleEnterpriseConnectionConstants {
 
     public static final String GRADLE_PLUGIN_REPOSITORY_URL = "gradlePluginRepositoryUrl";
     public static final String GRADLE_ENTERPRISE_URL = "gradleEnterpriseUrl";
-    public static final String OVERRIDE_EXISTING_SERVER = "overrideExistingServer";
     public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
+    public static final String OVERRIDE_EXISTING_SERVER = "overrideExistingServer";
     public static final String GE_PLUGIN_VERSION = "gradleEnterprisePluginVersion";
     public static final String CCUD_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
     public static final String GE_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";
@@ -47,12 +47,12 @@ public final class GradleEnterpriseConnectionConstants {
         return GRADLE_ENTERPRISE_URL;
     }
 
-    public String getOverrideExistingServer() {
-        return OVERRIDE_EXISTING_SERVER;
-    }
-
     public String getAllowUntrustedServer() {
         return ALLOW_UNTRUSTED_SERVER;
+    }
+
+    public String getOverrideExistingServer() {
+        return OVERRIDE_EXISTING_SERVER;
     }
 
     public String getGradleEnterprisePluginVersion() {

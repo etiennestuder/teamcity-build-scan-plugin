@@ -11,11 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION;
@@ -73,14 +69,14 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Gradle Enterprise Server URL: %s\n", geUrl);
         }
 
-        String overrideUrl = params.get(OVERRIDE_EXISTING_SERVER);
-        if (overrideUrl != null) {
-            description += String.format("* Override Pre-Existing Gradle Enterprise Server: %s\n", overrideUrl);
-        }
-
         String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);
         if (allowUntrustedServer != null) {
             description += String.format("* Allow Untrusted Server: %s\n", allowUntrustedServer);
+        }
+
+        String overrideUrl = params.get(OVERRIDE_EXISTING_SERVER);
+        if (overrideUrl != null) {
+            description += String.format("* Override Pre-Existing Gradle Enterprise Server: %s\n", overrideUrl);
         }
 
         String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
