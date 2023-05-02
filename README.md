@@ -79,7 +79,7 @@ A Gradle Enterprise connection can be created on any project and is automaticall
 
 <summary>Click for an example configuration.</summary>
 
-<img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/625514/235496130-06c0934b-936f-4a43-aad0-605f19c12219.png">
+<img width="591" alt="gradle-enterprise-connection-dialog" src="https://user-images.githubusercontent.com/625514/235716524-ef39e577-07d2-4ceb-9dfd-de515aff3d3d.png">
 
 </details>
 
