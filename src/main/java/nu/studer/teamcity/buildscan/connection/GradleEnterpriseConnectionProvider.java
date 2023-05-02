@@ -78,14 +78,14 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Allow Untrusted Server: %s\n", allowUntrustedServer);
         }
 
-        String enforceGeUrl = params.get(ENFORCE_GRADLE_ENTERPRISE_URL);
-        if (enforceGeUrl != null) {
-            description += String.format("* Enforce Gradle Enterprise Server URL: %s\n", enforceGeUrl);
-        }
-
         String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
         if (geAccessKey != null) {
             description += String.format("* Gradle Enterprise Access Key: %s\n", "******");
+        }
+
+        String enforceGeUrl = params.get(ENFORCE_GRADLE_ENTERPRISE_URL);
+        if (enforceGeUrl != null) {
+            description += String.format("* Enforce Gradle Enterprise Server URL: %s\n", enforceGeUrl);
         }
 
         description += "\nGradle Settings:\n";
@@ -167,7 +167,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         return defaultProperties;
     }
 
-    @Nullable
+    @NotNull
     @Override
     public PropertiesProcessor getPropertiesProcessor() {
         return properties -> {
@@ -179,4 +179,5 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             return errors;
         };
     }
+
 }

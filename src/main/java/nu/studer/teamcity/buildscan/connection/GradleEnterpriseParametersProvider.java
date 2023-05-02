@@ -60,7 +60,6 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             setParameter(GRADLE_PLUGIN_REPOSITORY_URL_CONFIG_PARAM, connectionParams.get(GRADLE_PLUGIN_REPOSITORY_URL), params);
             setParameter(GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParams.get(GRADLE_ENTERPRISE_URL), params);
             setParameter(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, connectionParams.get(ALLOW_UNTRUSTED_SERVER), params);
-            setParameter(ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParams.get(ENFORCE_GRADLE_ENTERPRISE_URL), params);
             setParameter(GE_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(GE_PLUGIN_VERSION), params);
             setParameter(CCUD_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_PLUGIN_VERSION), params);
             setParameter(GE_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(GE_EXTENSION_VERSION), params);
@@ -69,6 +68,7 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             setParameter(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_CCUD_EXTENSION_COORDINATES), params);
             setParameter(INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM, connectionParams.get(INSTRUMENT_COMMAND_LINE_BUILD_STEP), params);
             setParameter(GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR, connectionParams.get(GRADLE_ENTERPRISE_ACCESS_KEY), params);
+            setParameter(ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM, connectionParams.get(ENFORCE_GRADLE_ENTERPRISE_URL), params);
         }
         return params;
     }

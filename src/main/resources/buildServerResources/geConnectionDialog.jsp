@@ -34,19 +34,19 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.enforceUrl}">Enforce Gradle Enterprise Server URL:</label></td>
-    <td>
-        <props:checkboxProperty name="${keys.enforceUrl}"/>
-        <span class="smallNote">Whether to enforce the Gradle Enterprise Server URL configured in this connection over a URL configured in the project's build.</span>
-    </td>
-</tr>
-
-<tr>
     <td><label for="${keys.gradleEnterpriseAccessKey}">Gradle Enterprise Access Key:</label></td>
     <td>
         <props:passwordProperty name="${keys.gradleEnterpriseAccessKey}" className="longField"/>
         <span class="error" id="error_${keys.gradleEnterpriseAccessKey}"></span>
         <span class="smallNote">The access key for authenticating with the Gradle Enterprise server.</span>
+    </td>
+</tr>
+
+<tr>
+    <td><label for="${keys.enforceUrl}">Enforce Gradle Enterprise Server URL:</label></td>
+    <td>
+        <props:checkboxProperty name="${keys.enforceUrl}"/>
+        <span class="smallNote">Whether to enforce the Gradle Enterprise Server URL configured in this connection over a URL configured in the project's build.</span>
     </td>
 </tr>
 
