@@ -223,15 +223,16 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         String geExtensionVersion = getOptionalConfigParam(GE_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (geExtensionVersion != null) {
             MavenCoordinates customGeExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
+            String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
             if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES) && !extensions.hasExtension(customGeExtensionCoords)) {
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
                 addSysProp(GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
-            } else if (Boolean.parseBoolean(getOptionalConfigParam(GE_ENFORCE_URL_PARAM, runner))) {
-                addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+            } else if (geUrl != null && Boolean.parseBoolean(getOptionalConfigParam(GE_ENFORCE_URL_PARAM, runner))) {
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
+                addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
             }
         }
 
