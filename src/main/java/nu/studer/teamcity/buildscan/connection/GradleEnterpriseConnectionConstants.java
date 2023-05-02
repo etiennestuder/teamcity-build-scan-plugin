@@ -17,7 +17,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES = "customCommonCustomUserDataExtensionCoordinates";
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP = "instrumentCommandLineBuildStep";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY = "gradleEnterpriseAccessKey";
-    public static final String ENFORCE_GRADLE_ENTERPRISE_URL = "enforceUrl";
+    public static final String ENFORCE_GRADLE_ENTERPRISE_URL = "enforceGradleEnterpriseUrl";
 
     // Constants defined by the BuildScanServiceMessageInjector
     // This connection sets these values as build parameters so that they can be picked up by the BuildScanServiceMessageInjector
