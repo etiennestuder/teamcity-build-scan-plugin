@@ -22,7 +22,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_URL;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_GRADLE_ENTERPRISE_URL;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
@@ -78,7 +78,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Allow Untrusted Server: %s\n", allowUntrustedServer);
         }
 
-        String enforceUrl = params.get(ENFORCE_URL);
+        String enforceUrl = params.get(ENFORCE_GRADLE_ENTERPRISE_URL);
         if (enforceUrl != null) {
             description += String.format("* Enforce Server URL: %s\n", enforceUrl);
         }
