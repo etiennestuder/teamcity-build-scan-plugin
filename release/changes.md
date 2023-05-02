@@ -1,1 +1,1 @@
-- TBD
+- Allows to enforce the Gradle Enterprise URL over what might be configured in the project's build
