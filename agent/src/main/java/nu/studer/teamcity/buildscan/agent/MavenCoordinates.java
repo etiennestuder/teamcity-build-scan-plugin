@@ -21,6 +21,10 @@ final class MavenCoordinates {
         this.version = version;
     }
 
+    MavenCoordinates(MavenCoordinates mavenCoordinates, String version) {
+        this(mavenCoordinates.groupId, mavenCoordinates.artifactId, version);
+    }
+
     String getGroupId() {
         return groupId;
     }

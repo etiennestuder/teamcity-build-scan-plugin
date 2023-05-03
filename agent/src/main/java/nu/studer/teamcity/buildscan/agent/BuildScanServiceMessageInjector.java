@@ -42,7 +42,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final MavenCoordinates BUILD_SCAN_EXT_MAVEN = new MavenCoordinates("nu.studer", "service-message-maven-extension", "1.0");
-    private static final MavenCoordinates GRADLE_ENTERPRISE_EXT_MAVEN = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension", "1.17.2");
+    private static final MavenCoordinates GRADLE_ENTERPRISE_EXT_MAVEN = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
     private static final MavenCoordinates COMMON_CUSTOM_USER_DATA_EXT_MAVEN = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension", "1.12");
 
     // TeamCity Command-line runner
@@ -224,7 +224,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
             if (!extensions.hasExtension(GRADLE_ENTERPRISE_EXT_MAVEN) && !extensions.hasExtension(customGeExtensionCoords)) {
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
-                extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
+                extensionJars.add(getExtensionJar(new MavenCoordinates(GRADLE_ENTERPRISE_EXT_MAVEN, geExtensionVersion), runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
                 addSysProp(GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
