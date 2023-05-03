@@ -1,1 +1,2 @@
 - Allows to enforce the Gradle Enterprise URL over what might be configured in the project's build
+- Allows to apply the latest patch version of the previous two Gradle Enterprise Maven Extension releases
