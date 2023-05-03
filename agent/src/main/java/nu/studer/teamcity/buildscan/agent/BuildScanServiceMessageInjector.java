@@ -43,7 +43,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final MavenCoordinates BUILD_SCAN_EXT_MAVEN = new MavenCoordinates("nu.studer", "service-message-maven-extension", "1.0");
     private static final MavenCoordinates GRADLE_ENTERPRISE_EXT_MAVEN = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
-    private static final MavenCoordinates COMMON_CUSTOM_USER_DATA_EXT_MAVEN = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension", "1.12");
+    private static final MavenCoordinates COMMON_CUSTOM_USER_DATA_EXT_MAVEN = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
 
     // TeamCity Command-line runner
 
@@ -239,7 +239,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             MavenCoordinates customCcudExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
             if (!extensions.hasExtension(COMMON_CUSTOM_USER_DATA_EXT_MAVEN) && !extensions.hasExtension(customCcudExtensionCoords)) {
                 extensionApplicationListener.ccudExtensionApplied(ccudExtensionVersion);
-                extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
+                extensionJars.add(getExtensionJar(new MavenCoordinates(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, ccudExtensionVersion), runner));
             }
         }
 
