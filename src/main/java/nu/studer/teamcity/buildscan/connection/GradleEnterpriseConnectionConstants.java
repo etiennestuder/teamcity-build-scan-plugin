@@ -1,5 +1,9 @@
 package nu.studer.teamcity.buildscan.connection;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public final class GradleEnterpriseConnectionConstants {
 
@@ -34,6 +38,12 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String INSTRUMENT_COMMAND_LINE_BUILD_STEP_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
     public static final String GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR = "env.GRADLE_ENTERPRISE_ACCESS_KEY";
     public static final String ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.enforce-url";
+
+    // Bundled version constants
+    // These are used to define the versions of the Gradle Enterprise and Common Custom User Data Extensions that are bundle with this plugin
+
+    public static final List<String> BUNDLED_GE_EXTENSION_VERSIONS = Arrays.asList("1.17.2", "1.16.6", "1.15.5");
+    public static final List<String> BUNDLED_CCUD_EXTENSION_VERSIONS = Collections.singletonList("1.11.1");
 
     public static final String GRADLE_ENTERPRISE_CONNECTION_PROVIDER = "gradle-enterprise-connection-provider";
 
@@ -87,4 +97,11 @@ public final class GradleEnterpriseConnectionConstants {
         return ENFORCE_GRADLE_ENTERPRISE_URL;
     }
 
+    public List<String> getGeExtensionVersions() {
+        return BUNDLED_GE_EXTENSION_VERSIONS;
+    }
+
+    public List<String> getCcudExtensionVersions() {
+        return BUNDLED_CCUD_EXTENSION_VERSIONS;
+    }
 }
