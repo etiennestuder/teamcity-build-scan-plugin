@@ -41,9 +41,9 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
-    private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
-    private static final String GRADLE_ENTERPRISE_EXT_MAVEN = "gradle-enterprise-maven-extension-1.17.2.jar";
-    private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-1.12.jar";
+    private static final MavenCoordinates BUILD_SCAN_EXT_MAVEN = new MavenCoordinates("nu.studer", "service-message-maven-extension", "1.0");
+    private static final MavenCoordinates GRADLE_ENTERPRISE_EXT_MAVEN = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension", "1.17.2");
+    private static final MavenCoordinates COMMON_CUSTOM_USER_DATA_EXT_MAVEN = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension", "1.12");
 
     // TeamCity Command-line runner
 
@@ -82,8 +82,6 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
     private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allowUntrustedServer";
     private static final String GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY = "gradle.scan.uploadInBackground";
-    private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
-    private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
 
     @NotNull
     private final ExtensionApplicationListener extensionApplicationListener;
@@ -224,7 +222,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         if (geExtensionVersion != null) {
             MavenCoordinates customGeExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
             String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
-            if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES) && !extensions.hasExtension(customGeExtensionCoords)) {
+            if (!extensions.hasExtension(GRADLE_ENTERPRISE_EXT_MAVEN) && !extensions.hasExtension(customGeExtensionCoords)) {
                 extensionApplicationListener.geExtensionApplied(geExtensionVersion);
                 extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
                 addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
@@ -239,7 +237,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         String ccudExtensionVersion = getOptionalConfigParam(CCUD_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (ccudExtensionVersion != null) {
             MavenCoordinates customCcudExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
-            if (!extensions.hasExtension(CCUD_EXTENSION_MAVEN_COORDINATES) && !extensions.hasExtension(customCcudExtensionCoords)) {
+            if (!extensions.hasExtension(COMMON_CUSTOM_USER_DATA_EXT_MAVEN) && !extensions.hasExtension(customCcudExtensionCoords)) {
                 extensionApplicationListener.ccudExtensionApplied(ccudExtensionVersion);
                 extensionJars.add(getExtensionJar(COMMON_CUSTOM_USER_DATA_EXT_MAVEN, runner));
             }
@@ -248,9 +246,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
     }
 
-    private File getExtensionJar(String name, BuildRunnerContext runner) {
-        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), name);
-        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + name, extensionJar);
+    private File getExtensionJar(MavenCoordinates extension, BuildRunnerContext runner) {
+        String extensionFileName = extension.toFileName();
+        File extensionJar = new File(runner.getBuild().getAgentTempDirectory(), extensionFileName);
+        FileUtil.copyResourceIfNotExists(BuildScanServiceMessageInjector.class, "/" + extensionFileName, extensionJar);
         return extensionJar;
     }
 

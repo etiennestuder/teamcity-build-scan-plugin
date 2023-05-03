@@ -33,6 +33,10 @@ final class MavenCoordinates {
         return version;
     }
 
+    public String toFileName() {
+        return String.format("%s-%s.jar", artifactId, version);
+    }
+
     @Override
     public String toString() {
         return String.format("%s:%s:%s", groupId, artifactId, version);
