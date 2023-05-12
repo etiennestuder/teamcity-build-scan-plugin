@@ -38,7 +38,7 @@ class BaseExtensionApplicationTest extends Specification {
 
     static final String GE_URL_STR = System.getenv('GRADLE_ENTERPRISE_TEST_INSTANCE')
     static final URI GE_URL = GE_URL_STR ? new URI(GE_URL_STR) : null
-    static final String GE_EXTENSION_VERSION = '1.17.1'
+    static final String GE_EXTENSION_VERSION = '1.17.2'
     static final String CCUD_EXTENSION_VERSION = '1.11.1'
 
     @TempDir
