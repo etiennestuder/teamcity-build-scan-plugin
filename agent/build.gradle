@@ -17,7 +17,7 @@ configurations {
 dependencies {
     mvnExtensions project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
     mvnExtensions 'com.gradle:gradle-enterprise-maven-extension:1.17.2'
-    mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:1.11.1'
+    mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:1.12'
 
     testImplementation gradleTestKit()
     testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-10') {
