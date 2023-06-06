@@ -92,7 +92,12 @@
 <tr>
     <td><label for="${keys.gradleEnterpriseExtensionVersion}">Gradle Enterprise Maven Extension Version:</label></td>
     <td>
-        <props:textProperty name="${keys.gradleEnterpriseExtensionVersion}" className="longField"/>
+        <props:selectProperty name="${keys.gradleEnterpriseExtensionVersion}" className="mediumField">
+            <props:option value="" id="default" />
+            <c:forEach items="${keys.geExtensionVersions}" var="version">
+                <props:option value="${version}" id="gradle-enterprise-maven-extension-${version}">${version}</props:option>
+            </c:forEach>
+        </props:selectProperty>
         <span class="smallNote">The version of the Gradle Enterprise Maven Extension to apply to Maven builds.</span>
     </td>
 </tr>
@@ -100,7 +105,12 @@
 <tr>
     <td><label for="${keys.commonCustomUserDataExtensionVersion}">Common Custom User Data Maven Extension Version:</label></td>
     <td>
-        <props:textProperty name="${keys.commonCustomUserDataExtensionVersion}" className="longField"/>
+        <props:selectProperty name="${keys.commonCustomUserDataExtensionVersion}" className="mediumField">
+            <props:option value="" id="default" />
+            <c:forEach items="${keys.ccudExtensionVersions}" var="version">
+                <props:option value="${version}" id="common-custom-user-data-maven-extension-${version}">${version}</props:option>
+            </c:forEach>
+        </props:selectProperty>
         <span class="smallNote">The version of the Common Custom User Data Maven Extension to apply to Maven builds.</span>
     </td>
 </tr>

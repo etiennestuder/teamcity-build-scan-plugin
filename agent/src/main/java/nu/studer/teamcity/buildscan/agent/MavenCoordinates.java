@@ -21,6 +21,10 @@ final class MavenCoordinates {
         this.version = version;
     }
 
+    MavenCoordinates(MavenCoordinates mavenCoordinates, String version) {
+        this(mavenCoordinates.groupId, mavenCoordinates.artifactId, version);
+    }
+
     String getGroupId() {
         return groupId;
     }
@@ -31,6 +35,10 @@ final class MavenCoordinates {
 
     String getVersion() {
         return version;
+    }
+
+    public String toFileName() {
+        return String.format("%s-%s.jar", artifactId, version);
     }
 
     @Override
