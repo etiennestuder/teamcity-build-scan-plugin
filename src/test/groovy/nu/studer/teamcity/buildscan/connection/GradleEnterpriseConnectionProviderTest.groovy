@@ -61,7 +61,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         ALLOW_UNTRUSTED_SERVER             | 'true'                          | 'Allow Untrusted Server'
         GE_PLUGIN_VERSION                  | '3.13.4'                        | 'Gradle Enterprise Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                | '1.11'                          | 'Common Custom User Data Gradle Plugin Version'
-        GE_EXTENSION_VERSION               | '1.17.3'                        | 'Gradle Enterprise Maven Extension Version'
+        GE_EXTENSION_VERSION               | '1.17.4'                        | 'Gradle Enterprise Maven Extension Version'
         CCUD_EXTENSION_VERSION             | '1.12'                          | 'Common Custom User Data Maven Extension Version'
         CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Gradle Enterprise Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
