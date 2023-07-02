@@ -28,7 +28,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildStarted(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "applies GE plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
@@ -47,7 +47,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "applies GE plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
@@ -69,7 +69,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "applies CCUD plugin via init script when not defined in project where GE plugin not defined in project (#jdkCompatibleGradleVersion)"() {
@@ -154,7 +154,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "configures GE URL and allowUntrustedServer requested via TC config when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
@@ -175,7 +175,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "enforces GE URL and allowUntrustedServer in project if enforce url parameter is enabled (#jdkCompatibleGradleVersion)"() {
@@ -200,7 +200,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "can configure alternative repository for plugins when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
@@ -217,7 +217,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsPluginRepositoryInfo(result, 'https://plugins.grdev.net/m2')
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "stops gracefully when CCUD plugin version injected via init script is <1.7 (#jdkCompatibleGradleVersion)"() {
@@ -233,7 +233,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         result.output.contains('Common Custom User Data Gradle plugin must be at least 1.7. Configured version is 1.6.6.')
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "can configure GE via CCUD system property overrides when CCUD plugin is inject via init script"() {
@@ -273,7 +273,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "applies GE plugin via init script for command-line runner (#jdkCompatibleGradleVersion)"() {
@@ -295,7 +295,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "init script is configuration cache compatible (#jdkCompatibleGradleVersion)"() {

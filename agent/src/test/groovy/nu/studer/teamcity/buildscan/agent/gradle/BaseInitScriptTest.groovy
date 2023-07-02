@@ -59,8 +59,11 @@ class BaseInitScriptTest extends Specification {
         GRADLE_8_2,
     ]
 
+    static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_3_0_AND_HIGHER =
+        GRADLE_VERSIONS_2_AND_HIGHER - [GRADLE_2_6, GRADLE_2_14]
+
     static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_3_5_AND_HIGHER =
-        GRADLE_VERSIONS_2_AND_HIGHER - [GRADLE_2_6, GRADLE_2_14, GRADLE_3_0]
+            GRADLE_VERSIONS_3_0_AND_HIGHER - [GRADLE_3_0]
 
     static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_4_AND_HIGHER =
         GRADLE_VERSIONS_3_5_AND_HIGHER - [GRADLE_3_5]

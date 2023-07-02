@@ -14,7 +14,7 @@ class BuildScanUrlCapturingInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildStarted(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
     def "send build scan url service message when declaring Gradle Enterprise / Build Scan plugin (#jdkCompatibleGradleVersion)"() {
@@ -31,7 +31,7 @@ class BuildScanUrlCapturingInitScriptTest extends BaseInitScriptTest {
         outputContainsTeamCityServiceMessageBuildScanUrl(result)
 
         where:
-        jdkCompatibleGradleVersion << GRADLE_VERSIONS_2_AND_HIGHER
+        jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
 }
