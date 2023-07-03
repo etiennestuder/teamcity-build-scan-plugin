@@ -175,7 +175,7 @@ For Maven builds, the version of the Gradle Enterprise Maven extension automatic
 
 | TC Build Scan plugin version | Injected GE Maven extension version | Injected Common CCUD Maven extension version |
 |------------------------------|-------------------------------------|----------------------------------------------|
-| Next                         | 1.17.4                              | 1.12                                         |
+| Next                         | 1.17.4                              | 1.12.1                                       |
 | 0.33                         | 1.16.1                              | 1.11.1                                       |
 | 0.32                         | 1.15.4                              | 1.11.1                                       |
 | 0.31                         | 1.15.3                              | 1.11.1                                       |
