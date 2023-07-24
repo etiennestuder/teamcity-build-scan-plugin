@@ -1,2 +1,1 @@
-- Allows to enforce the Gradle Enterprise URL over what might be configured in the project's build.
-- Bundles Gradle Enterprise Maven extension 1.18 and CCUD Maven extension 1.12.2.
+- TBD
