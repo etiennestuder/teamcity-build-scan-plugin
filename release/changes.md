@@ -1,1 +1,1 @@
-- TBD
+- Informs the Gradle Enterprise Gradle plugin that it is being applied externally.
