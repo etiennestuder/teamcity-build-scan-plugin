@@ -1,1 +1,1 @@
-- Informs the GE plugin that it is being applied externally
+- Informs the GE plugin that it is being applied externally.
