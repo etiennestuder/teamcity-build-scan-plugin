@@ -1,1 +1,1 @@
-- TBD
+- Informs the GE plugin that it is being applied externally
