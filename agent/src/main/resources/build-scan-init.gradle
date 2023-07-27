@@ -194,15 +194,16 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
 }
 
 void applyPluginExternally(PluginManager pluginManager, String pluginClassName) {
-    def oldValue = System.getProperty('gradle.enterprise.externally-applied')
-    System.setProperty('gradle.enterprise.externally-applied', 'true')
+    def propertyName = 'gradle.enterprise.externally-applied'
+    def oldValue = System.getProperty(propertyName)
+    System.setProperty(propertyName, 'true')
     try {
         pluginManager.apply(initscript.classLoader.loadClass(pluginClassName))
     } finally {
         if (oldValue == null) {
-            System.clearProperty('gradle.enterprise.externally-applied')
+            System.clearProperty(propertyName)
         } else {
-            System.setProperty('gradle.enterprise.externally-applied', oldValue)
+            System.setProperty(propertyName, oldValue)
         }
     }
 }
