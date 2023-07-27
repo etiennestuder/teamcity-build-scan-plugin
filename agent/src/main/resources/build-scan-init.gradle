@@ -193,14 +193,6 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
     }
 }
 
-static def extensionsWithPublicType(def container, String publicType) {
-    container.extensions.extensionsSchema.elements.findAll { it.publicType.concreteClass.name == publicType }
-}
-
-static boolean isNotAtLeast(String versionUnderTest, String referenceVersion) {
-    GradleVersion.version(versionUnderTest) < GradleVersion.version(referenceVersion)
-}
-
 void applyPluginExternally(PluginManager pluginManager, String pluginClassName) {
     def oldValue = System.getProperty('gradle.enterprise.externally-applied')
     System.setProperty('gradle.enterprise.externally-applied', 'true')
@@ -213,6 +205,14 @@ void applyPluginExternally(PluginManager pluginManager, String pluginClassName) 
             System.setProperty('gradle.enterprise.externally-applied', oldValue)
         }
     }
+}
+
+static def extensionsWithPublicType(def container, String publicType) {
+    container.extensions.extensionsSchema.elements.findAll { it.publicType.concreteClass.name == publicType }
+}
+
+static boolean isNotAtLeast(String versionUnderTest, String referenceVersion) {
+    GradleVersion.version(versionUnderTest) < GradleVersion.version(referenceVersion)
 }
 
 class BuildScanLifeCycleLogger {
