@@ -145,8 +145,8 @@ class BaseInitScriptTest extends Specification {
     }
 
     def declareGePluginAndCcudPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
-        settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl, '1.11.1')
-        buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl, '1.11.1')
+        settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl, '1.11.3')
+        buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl, '1.11.3')
     }
 
     String maybeAddPluginsToSettings(GradleVersion gradleVersion, URI geUrl, String ccudPluginVersion = null) {
