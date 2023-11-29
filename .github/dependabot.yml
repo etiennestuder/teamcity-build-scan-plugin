@@ -15,5 +15,4 @@ updates:
   - package-ecosystem: "maven"
     directory: "agent/service-message-maven-extension"
     schedule:
-      interval: "daily"
-
+      interval: "monthly"
