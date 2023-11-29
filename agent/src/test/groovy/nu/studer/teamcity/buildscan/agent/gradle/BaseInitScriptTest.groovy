@@ -145,8 +145,8 @@ class BaseInitScriptTest extends Specification {
     }
 
     def declareGePluginAndCcudPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
-        settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl, '1.11.1')
-        buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl, '1.11.1')
+        settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl, '1.12')
+        buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl, '1.12')
     }
 
     String maybeAddPluginsToSettings(GradleVersion gradleVersion, URI geUrl, String ccudPluginVersion = null) {
@@ -157,7 +157,7 @@ class BaseInitScriptTest extends Specification {
         } else {
             """
               plugins {
-                id 'com.gradle.enterprise' version '3.14.1'
+                id 'com.gradle.enterprise' version '3.15.1'
                 ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
               gradleEnterprise {
@@ -185,7 +185,7 @@ class BaseInitScriptTest extends Specification {
         } else if (gradleVersion < GradleVersion.version('6.0')) {
             """
               plugins {
-                id 'com.gradle.build-scan' version '3.14.1'
+                id 'com.gradle.build-scan' version '3.15.1'
                 ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
               gradleEnterprise {
