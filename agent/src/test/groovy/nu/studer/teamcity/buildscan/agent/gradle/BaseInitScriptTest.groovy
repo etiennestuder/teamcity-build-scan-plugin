@@ -41,6 +41,7 @@ class BaseInitScriptTest extends Specification {
     static final JdkCompatibleGradleVersion GRADLE_7_6 = new JdkCompatibleGradleVersion(GradleVersion.version('7.6.1'), 8, 19)
     static final JdkCompatibleGradleVersion GRADLE_8_0 = new JdkCompatibleGradleVersion(GradleVersion.version('8.0.2'), 8, 19)
     static final JdkCompatibleGradleVersion GRADLE_8_3 = new JdkCompatibleGradleVersion(GradleVersion.version('8.3'), 8, 20)
+    static final JdkCompatibleGradleVersion GRADLE_8_4 = new JdkCompatibleGradleVersion(GradleVersion.version('8.4'), 8, 21)
 
     static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_2_AND_HIGHER = [
         GRADLE_2_6, // first version supported byTestKit
@@ -57,6 +58,7 @@ class BaseInitScriptTest extends Specification {
         GRADLE_7_6,
         GRADLE_8_0,
         GRADLE_8_3,
+        GRADLE_8_4,
     ]
 
     static final List<JdkCompatibleGradleVersion> GRADLE_VERSIONS_3_0_AND_HIGHER =
