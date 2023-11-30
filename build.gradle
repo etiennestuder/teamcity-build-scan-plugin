@@ -5,7 +5,7 @@ plugins {
     id 'groovy'
     id 'io.github.rodm.teamcity-server' version '1.5.2' // see https://github.com/rodm/gradle-teamcity-plugin
     id 'io.github.rodm.teamcity-environments' version '1.5'
-    id 'com.github.breadmoirai.github-release' version '2.4.1'
+    id 'com.github.breadmoirai.github-release' version '2.5.2'
     id 'org.nosphere.gradle.github.actions' version '1.4.0'
 }
 
