@@ -6,6 +6,9 @@ on:
             - main
     workflow_dispatch:
 
+permissions:
+    contents: write
+
 jobs:
     development_release:
         name: Release
@@ -26,6 +29,8 @@ jobs:
                     distribution: 'liberica'
             -   name: Setup Gradle
                 uses: gradle/gradle-build-action@v2
+                with:
+                    dependency-graph: generate-and-submit
             -   name: Build and bundle plugin artifact
                 run: ./gradlew clean build -Porg.gradle.java.installations.fromEnv=JAVA_HOME_6_0_119_X64 -PjavaCompilerVersion=6
                 env:
@@ -36,6 +41,7 @@ jobs:
                 env:
                     TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
+                    GITHUB_DEPENDENCY_GRAPH_ENABLED: false
             -   name: Upload plugin artifact
                 uses: actions/upload-artifact@v3
                 with:
