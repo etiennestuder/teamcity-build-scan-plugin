@@ -62,7 +62,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         GE_PLUGIN_VERSION                  | '3.15.1'                        | 'Gradle Enterprise Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                | '1.12'                          | 'Common Custom User Data Gradle Plugin Version'
         GE_EXTENSION_VERSION               | '1.20'                          | 'Gradle Enterprise Maven Extension Version'
-        CCUD_EXTENSION_VERSION             | '1.12.4'                        | 'Common Custom User Data Maven Extension Version'
+        CCUD_EXTENSION_VERSION             | '1.12.5'                        | 'Common Custom User Data Maven Extension Version'
         CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Gradle Enterprise Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP | 'true'                          | 'Instrument Command Line Build Steps'
