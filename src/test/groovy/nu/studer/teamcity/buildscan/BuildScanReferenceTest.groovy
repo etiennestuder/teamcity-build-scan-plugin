@@ -34,4 +34,19 @@ class BuildScanReferenceTest extends Specification {
         url << ["http://scans.gradle.com/s/htyg3re5", "https://scans.gradle.com/s/htyg3re5"]
     }
 
+    def "can render badge"() {
+        given:
+        def buildScanReference = new BuildScanReference("myId", "https://scans.gradle.com/s/htyg3re5")
+        def reference = BuildScanReference.getResource("Badge.html").text
+
+        when:
+        def badge = buildScanReference.buildScanBadge
+        then:
+        reference == """\
+            <html><body>
+            <img src="${badge}">
+            </body></html>
+            """.stripIndent(true)
+    }
+
 }
