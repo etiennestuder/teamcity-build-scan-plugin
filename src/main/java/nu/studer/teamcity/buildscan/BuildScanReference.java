@@ -41,6 +41,10 @@ public final class BuildScanReference implements Serializable {
         }
     }
 
+    public String getBuildScanBadge() {
+        return BuildScanBadge.createEncoded(this);
+    }
+
     @Override
     public String toString() {
         return "BuildScanReference{" +
