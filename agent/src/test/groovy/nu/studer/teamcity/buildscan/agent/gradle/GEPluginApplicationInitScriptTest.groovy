@@ -9,7 +9,7 @@ import static org.junit.Assume.assumeTrue
 class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
 
     private static final String GE_PLUGIN_VERSION = '3.16.1'
-    private static final String CCUD_PLUGIN_VERSION = '1.12.1'
+    private static final String CCUD_PLUGIN_VERSION = '1.12.2'
 
     private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
 
