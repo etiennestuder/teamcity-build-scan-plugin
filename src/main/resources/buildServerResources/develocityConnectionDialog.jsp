@@ -80,7 +80,7 @@
     <td><label for="${keys.gradlePluginRepositoryUrl}">Gradle Plugin Repository URL:</label></td>
     <td>
         <props:textProperty name="${keys.gradlePluginRepositoryUrl}" className="longField"/>
-        <span class="smallNote">The URL of the repository to use when resolving the GE and CCUD plugins. Defaults to the Gradle Plugin Portal.</span>
+        <span class="smallNote">The URL of the repository to use when resolving the Develocity and CCUD plugins. Defaults to the Gradle Plugin Portal.</span>
 
     </td>
 </tr>

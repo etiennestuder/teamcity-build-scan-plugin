@@ -53,7 +53,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
-    // TeamCity GE configuration parameters
+    // TeamCity Develocity configuration parameters
 
     private static final String GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
     private static final String GE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";

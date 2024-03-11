@@ -105,7 +105,7 @@ The TeamCity configuration parameters can be set on any project and are automati
 
     - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Develocity instance is using a self-signed certificate
     - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Develocity URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Develocity URL
-    - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
+    - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the Develocity and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
     - `buildScanPlugin.command-line-build-step.enabled` - enable Develocity integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
 
 ##### Example Gradle Configuration
@@ -150,10 +150,10 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 The version of the Develocity Gradle plugin and the Develocity Maven extension that are applied to a build must meet a minimum version requirement for the link surfacing to work.
 
-| TC Build Scan plugin version | Minimum supported GE Maven extension version | Minimum supported GE Gradle plugin version |
-|------------------------------|----------------------------------------------|--------------------------------------------|
-| 0.23+                        | 1.11                                         | 3.0  (or Gradle Build Scan plugin 1.8)     |
-| 0.22                         | 1.0                                          | 3.0  (or Gradle Build Scan plugin 1.8)     |
+| TC Build Scan plugin version | Minimum supported Develocity Maven extension version | Minimum supported Develocity Gradle plugin version |
+|------------------------------|------------------------------------------------------|----------------------------------------------------|
+| 0.23+                        | 1.11                                                 | 3.0  (or Gradle Build Scan plugin 1.8)             |
+| 0.22                         | 1.0                                                  | 3.0  (or Gradle Build Scan plugin 1.8)             |
 
 ## Develocity connectivity
 
@@ -173,18 +173,18 @@ For Maven builds, the version of the Develocity Maven extension automatically ap
 
 <summary>Click for an overview of what Maven extension versions are bundled and injected.</summary>
 
-| TC Build Scan plugin version | Injected GE Maven extension version | Injected Common CCUD Maven extension version |
-|------------------------------|-------------------------------------|----------------------------------------------|
-| Next                         | 1.20                                | 1.12.5                                       |
-| 0.35                         | 1.18.1                              | 1.12.2                                       |
-| 0.34                         | 1.18                                | 1.12.2                                       |
-| 0.33                         | 1.16.1                              | 1.11.1                                       |
-| 0.32                         | 1.15.4                              | 1.11.1                                       |
-| 0.31                         | 1.15.3                              | 1.11.1                                       |
-| 0.30                         | 1.15.1                              | 1.11                                         |
-| 0.27 - 0.29                  | 1.14.3                              | 1.10.1                                       |
-| 0.25 - 0.26                  | 1.14.2                              | 1.10.1                                       |
-| 0.23 - 0.24                  | 1.14.1                              | 1.10.1                                       |
+| TC Build Scan plugin version | Injected Develocity Maven extension version | Injected Common CCUD Maven extension version |
+|------------------------------|---------------------------------------------|----------------------------------------------|
+| Next                         | 1.20                                        | 1.12.5                                       |
+| 0.35                         | 1.18.1                                      | 1.12.2                                       |
+| 0.34                         | 1.18                                        | 1.12.2                                       |
+| 0.33                         | 1.16.1                                      | 1.11.1                                       |
+| 0.32                         | 1.15.4                                      | 1.11.1                                       |
+| 0.31                         | 1.15.3                                      | 1.11.1                                       |
+| 0.30                         | 1.15.1                                      | 1.11                                         |
+| 0.27 - 0.29                  | 1.14.3                                      | 1.10.1                                       |
+| 0.25 - 0.26                  | 1.14.2                                      | 1.10.1                                       |
+| 0.23 - 0.24                  | 1.14.1                                      | 1.10.1                                       |
 
 </details>
 
