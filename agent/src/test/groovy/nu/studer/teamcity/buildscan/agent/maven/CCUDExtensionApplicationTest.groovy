@@ -7,21 +7,21 @@ import static org.junit.Assume.assumeTrue
 
 class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
 
-    def "applies CCUD extension via classpath when not defined in project where GE extension not defined in project and not applied via classpath (#jdkCompatibleMavenVersion)"() {
+    def "applies CCUD extension via classpath when not defined in project where Develocity extension not defined in project and not applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
         0 * extensionApplicationListener.develocityExtensionApplied(_)
@@ -35,25 +35,25 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies CCUD extension via classpath when not defined in project where GE extension applied via classpath (#jdkCompatibleMavenVersion)"() {
+    def "applies CCUD extension via classpath when not defined in project where Develocity extension applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration().buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
-        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(DEVELOCITY_EXTENSION_VERSION)
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
@@ -64,25 +64,25 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies CCUD extension via classpath when not defined in project where GE extension defined in project (#jdkCompatibleMavenVersion)"() {
+    def "applies CCUD extension via classpath when not defined in project where Develocity extension defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
         0 * extensionApplicationListener.develocityExtensionApplied(_)
@@ -98,24 +98,24 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
 
     def "applies CCUD extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
         0 * extensionApplicationListener.develocityExtensionApplied(_)

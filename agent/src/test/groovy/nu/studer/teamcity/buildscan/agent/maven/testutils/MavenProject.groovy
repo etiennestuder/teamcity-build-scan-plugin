@@ -7,10 +7,10 @@ final class MavenProject {
 
     static final class Configuration {
 
-        String geExtensionVersion
+        String develocityExtensionVersion
         String ccudExtensionVersion
         GroupArtifactVersion customExtension
-        String geUrl
+        String develocityUrl
         String pomDirName
         String dotMvnParentDirName
 
@@ -21,8 +21,8 @@ final class MavenProject {
 
             [pomDir, dotMvn].each { it.mkdirs() }
 
-            setProjectDefinedExtensions(dotMvn, geExtensionVersion, ccudExtensionVersion, customExtension)
-            setProjectDefinedGeConfiguration(dotMvn, geUrl)
+            setProjectDefinedExtensions(dotMvn, develocityExtensionVersion, ccudExtensionVersion, customExtension)
+            setProjectDefinedDevelocityConfiguration(dotMvn, develocityUrl)
 
             return new MavenProject(
                 pom: setPomFile(pomDir, 'pom.xml'),
@@ -70,7 +70,7 @@ final class MavenProject {
             extensionsXml << """</extensions>"""
         }
 
-        private static void setProjectDefinedGeConfiguration(File directory, String geUrl) {
+        private static void setProjectDefinedDevelocityConfiguration(File directory, String geUrl) {
             if (geUrl) {
                 def geConfig = new File(directory, 'gradle-enterprise.xml')
                 geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>

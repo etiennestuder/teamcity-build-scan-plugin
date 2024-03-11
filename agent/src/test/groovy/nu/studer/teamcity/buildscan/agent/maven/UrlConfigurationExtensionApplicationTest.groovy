@@ -7,25 +7,25 @@ import static org.junit.Assume.assumeTrue
 
 class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationTest {
 
-    def "ignores GE URL requested via TC config when GE extension is not applied via the classpath (#jdkCompatibleMavenVersion)"() {
+    def "ignores Develocity URL requested via TC config when Develocity extension is not applied via the classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: new URI('https://ge-server.invalid'),
-            geAllowUntrustedServer: true,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: new URI('https://dv-server.invalid'),
+            develocityAllowUntrustedServer: true,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
         0 * extensionApplicationListener.develocityExtensionApplied(_)
@@ -39,28 +39,28 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "configures GE URL requested via TC config when GE extension is applied via classpath (#jdkCompatibleMavenVersion)"() {
+    def "configures Develocity URL requested via TC config when GE extension is applied via classpath (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: 'https://ge-server.invalid',
-            geExtensionVersion: null,
+            develocityUrl: 'https://dv-server.invalid',
+            develocityExtensionVersion: null,
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
-            geAllowUntrustedServer: true,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
+            develocityAllowUntrustedServer: true,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
-        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(DEVELOCITY_EXTENSION_VERSION)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -73,24 +73,24 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
 
     def "enforces GE URL and allowUntrustedServer in project if enforce url parameter is enabled (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-                geUrl: new URI('https://ge-server.invalid'),
-                geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: new URI('https://dv-server.invalid'),
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-                geUrl: GE_URL,
-                geAllowUntrustedServer: true,
-                geEnforceUrl: true,
-                geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
+            develocityAllowUntrustedServer: true,
+            develocityEnforceUrl: true,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
         0 * extensionApplicationListener.develocityExtensionApplied(_)
