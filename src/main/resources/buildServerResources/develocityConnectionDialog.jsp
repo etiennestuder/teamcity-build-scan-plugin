@@ -14,14 +14,14 @@
 </tr>
 
 <tr class="groupingTitle">
-    <td colspan="2">Gradle Enterprise Connection Settings</td>
+    <td colspan="2">Develocity Connection Settings</td>
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterpriseUrl}">Gradle Enterprise Server URL:</label></td>
+    <td><label for="${keys.gradleEnterpriseUrl}">Develocity Server URL:</label></td>
     <td>
         <props:textProperty name="${keys.gradleEnterpriseUrl}" className="longField"/>
-        <span class="smallNote">The URL of the Gradle Enterprise server.</span>
+        <span class="smallNote">The URL of the Develocity server.</span>
     </td>
 </tr>
 
@@ -34,19 +34,19 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterpriseAccessKey}">Gradle Enterprise Access Key:</label></td>
+    <td><label for="${keys.gradleEnterpriseAccessKey}">Develocity Access Key:</label></td>
     <td>
         <props:passwordProperty name="${keys.gradleEnterpriseAccessKey}" className="longField"/>
         <span class="error" id="error_${keys.gradleEnterpriseAccessKey}"></span>
-        <span class="smallNote">The access key for authenticating with the Gradle Enterprise server.</span>
+        <span class="smallNote">The access key for authenticating with the Develocity server.</span>
     </td>
 </tr>
 
 <tr>
-    <td><label for="${keys.enforceGradleEnterpriseUrl}">Enforce Gradle Enterprise Server URL:</label></td>
+    <td><label for="${keys.enforceGradleEnterpriseUrl}">Enforce Develocity Server URL:</label></td>
     <td>
         <props:checkboxProperty name="${keys.enforceGradleEnterpriseUrl}"/>
-        <span class="smallNote">Whether to enforce the Gradle Enterprise Server URL configured in this connection over a URL configured in the project's build.</span>
+        <span class="smallNote">Whether to enforce the Develocity Server URL configured in this connection over a URL configured in the project's build.</span>
     </td>
 </tr>
 
@@ -61,10 +61,10 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterprisePluginVersion}">Gradle Enterprise Gradle Plugin Version:</label></td>
+    <td><label for="${keys.gradleEnterprisePluginVersion}">Develocity Gradle Plugin Version:</label></td>
     <td>
         <props:textProperty name="${keys.gradleEnterprisePluginVersion}" className="longField"/>
-        <span class="smallNote">The version of the Gradle Enterprise Gradle Plugin to apply to Gradle builds.</span>
+        <span class="smallNote">The version of the Develocity Gradle Plugin to apply to Gradle builds.</span>
     </td>
 </tr>
 
@@ -90,10 +90,10 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterpriseExtensionVersion}">Gradle Enterprise Maven Extension Version:</label></td>
+    <td><label for="${keys.gradleEnterpriseExtensionVersion}">Develocity Maven Extension Version:</label></td>
     <td>
         <props:textProperty name="${keys.gradleEnterpriseExtensionVersion}" className="longField"/>
-        <span class="smallNote">The version of the Gradle Enterprise Maven Extension to apply to Maven builds.</span>
+        <span class="smallNote">The version of the Develocity Maven Extension to apply to Maven builds.</span>
     </td>
 </tr>
 
@@ -106,10 +106,10 @@
 </tr>
 
 <tr class="advancedSetting">
-    <td><label for="${keys.customGradleEnterpriseExtensionCoordinates}">Gradle Enterprise Maven Extension Custom Coordinates:</label></td>
+    <td><label for="${keys.customGradleEnterpriseExtensionCoordinates}">Develocity Maven Extension Custom Coordinates:</label></td>
     <td>
         <props:textProperty name="${keys.customGradleEnterpriseExtensionCoordinates}" className="longField"/>
-        <span class="smallNote">The coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension.</span>
+        <span class="smallNote">The coordinates of a custom extension that has a transitive dependency on the Develocity Maven Extension.</span>
     </td>
 </tr>
 

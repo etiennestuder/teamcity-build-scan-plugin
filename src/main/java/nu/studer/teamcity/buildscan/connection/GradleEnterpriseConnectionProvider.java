@@ -58,7 +58,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @Nullable
     @Override
     public String getEditParametersUrl() {
-        return descriptor.getPluginResourcesPath("geConnectionDialog.jsp");
+        return descriptor.getPluginResourcesPath("develocityConnectionDialog.jsp");
     }
 
     @NotNull
