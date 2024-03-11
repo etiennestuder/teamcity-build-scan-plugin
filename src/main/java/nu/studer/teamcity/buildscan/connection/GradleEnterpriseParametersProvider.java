@@ -42,7 +42,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 
 /**
  * This implementation of {@link BuildParametersProvider} injects configuration parameters and environment variables
- * needed in order to automatically apply Gradle Enterprise to Gradle and Maven builds, based on the configuration of
+ * needed in order to automatically apply Develocity to Gradle and Maven builds, based on the configuration of
  * the connection.
  */
 @SuppressWarnings({"DuplicatedCode", "Convert2Diamond"})

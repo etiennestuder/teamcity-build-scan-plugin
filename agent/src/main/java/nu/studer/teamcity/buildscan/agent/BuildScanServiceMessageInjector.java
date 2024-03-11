@@ -22,7 +22,7 @@ import java.util.Map;
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself registers a callback on the build scan plugin for any
  * published build scans and emits a TeamCity {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
  * <p>
- * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
+ * In the presence of certain configuration parameters, this class will also inject Develocity and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
 @SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
@@ -102,14 +102,14 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            LOG.info("Attempt to instrument Gradle build with Gradle Enterprise");
+            LOG.info("Attempt to instrument Gradle build with Develocity");
             instrumentGradleRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            LOG.info("Attempt to instrument Maven build with Gradle Enterprise");
+            LOG.info("Attempt to instrument Maven build with Develocity");
             instrumentMavenRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(COMMAND_LINE_RUNNER)) {
             if (getBooleanConfigParam(INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM, runner)) {
-                LOG.info("Attempt to instrument command line build with Gradle Enterprise");
+                LOG.info("Attempt to instrument command line build with Develocity");
                 instrumentCommandLineRunner(runner);
             }
         }
@@ -218,7 +218,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         // add extension to capture build scan URL
         extensionJars.add(getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner));
 
-        // optionally add extensions that connect the Maven build with Gradle Enterprise
+        // optionally add extensions that connect the Maven build with Develocity
         MavenExtensions extensions = getMavenExtensions(runner);
         String geExtensionVersion = getOptionalConfigParam(GE_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (geExtensionVersion != null) {

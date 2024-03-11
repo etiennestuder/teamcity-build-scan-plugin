@@ -3,7 +3,7 @@ package nu.studer.teamcity.buildscan.connection;
 @SuppressWarnings("unused")
 public final class GradleEnterpriseConnectionConstants {
 
-    // Constants defined by the Gradle Enterprise Connection
+    // Constants defined by the Develocity Connection
     // These are used to correlate data set by the user in the connection dialog to the descriptor parameters available in the Project Feature Descriptor Parameters
 
     public static final String GRADLE_PLUGIN_REPOSITORY_URL = "gradlePluginRepositoryUrl";

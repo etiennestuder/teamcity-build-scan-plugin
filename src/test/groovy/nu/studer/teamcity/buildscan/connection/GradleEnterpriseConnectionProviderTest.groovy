@@ -57,13 +57,13 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         where:
         parameter                          | value                           | text
         GRADLE_PLUGIN_REPOSITORY_URL       | 'https://plugins.example.com'   | 'Gradle Plugin Repository URL'
-        GRADLE_ENTERPRISE_URL              | 'https://ge.example.com'        | 'Gradle Enterprise Server URL'
+        GRADLE_ENTERPRISE_URL              | 'https://ge.example.com'        | 'Develocity Server URL'
         ALLOW_UNTRUSTED_SERVER             | 'true'                          | 'Allow Untrusted Server'
-        GE_PLUGIN_VERSION                  | '3.16.1'                        | 'Gradle Enterprise Gradle Plugin Version'
+        GE_PLUGIN_VERSION                  | '3.16.1'                        | 'Develocity Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                | '1.12.1'                        | 'Common Custom User Data Gradle Plugin Version'
-        GE_EXTENSION_VERSION               | '1.20'                          | 'Gradle Enterprise Maven Extension Version'
+        GE_EXTENSION_VERSION               | '1.20'                          | 'Develocity Maven Extension Version'
         CCUD_EXTENSION_VERSION             | '1.12.5'                        | 'Common Custom User Data Maven Extension Version'
-        CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Gradle Enterprise Maven Extension Custom Coordinates'
+        CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Develocity Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP | 'true'                          | 'Instrument Command Line Build Steps'
     }
@@ -77,7 +77,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         def description = connectionProvider.describeConnection(connection)
 
         then:
-        description.contains('Gradle Enterprise Access Key: ******')
+        description.contains('Develocity Access Key: ******')
     }
 
     def "returns validation error if access key is invalid"() {

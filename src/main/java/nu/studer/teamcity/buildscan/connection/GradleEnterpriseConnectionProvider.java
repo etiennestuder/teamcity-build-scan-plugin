@@ -52,7 +52,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     @NotNull
     @Override
     public String getDisplayName() {
-        return "Gradle Enterprise";
+        return "Develocity";
     }
 
     @Nullable
@@ -66,11 +66,11 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
     public String describeConnection(@NotNull OAuthConnectionDescriptor connection) {
         Map<String, String> params = connection.getParameters();
 
-        String description = "Gradle Enterprise Connection Settings:\n";
+        String description = "Develocity Connection Settings:\n";
 
         String geUrl = params.get(GRADLE_ENTERPRISE_URL);
         if (geUrl != null) {
-            description += String.format("* Gradle Enterprise Server URL: %s\n", geUrl);
+            description += String.format("* Develocity Server URL: %s\n", geUrl);
         }
 
         String allowUntrustedServer = params.get(ALLOW_UNTRUSTED_SERVER);
@@ -80,19 +80,19 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         String geAccessKey = params.get(GRADLE_ENTERPRISE_ACCESS_KEY);
         if (geAccessKey != null) {
-            description += String.format("* Gradle Enterprise Access Key: %s\n", "******");
+            description += String.format("* Develocity Access Key: %s\n", "******");
         }
 
         String enforceGeUrl = params.get(ENFORCE_GRADLE_ENTERPRISE_URL);
         if (enforceGeUrl != null) {
-            description += String.format("* Enforce Gradle Enterprise Server URL: %s\n", enforceGeUrl);
+            description += String.format("* Enforce Develocity Server URL: %s\n", enforceGeUrl);
         }
 
         description += "\nGradle Settings:\n";
 
         String gePluginVersion = params.get(GE_PLUGIN_VERSION);
         if (gePluginVersion != null) {
-            description += String.format("* Gradle Enterprise Gradle Plugin Version: %s\n", gePluginVersion);
+            description += String.format("* Develocity Gradle Plugin Version: %s\n", gePluginVersion);
         }
 
         String ccudPluginVersion = params.get(CCUD_PLUGIN_VERSION);
@@ -109,7 +109,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         String geExtensionVersion = params.get(GE_EXTENSION_VERSION);
         if (geExtensionVersion != null) {
-            description += String.format("* Gradle Enterprise Maven Extension Version: %s\n", geExtensionVersion);
+            description += String.format("* Develocity Maven Extension Version: %s\n", geExtensionVersion);
         }
 
         String ccudExtensionVersion = params.get(CCUD_EXTENSION_VERSION);
@@ -119,7 +119,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         String customGeExtensionCoordinates = params.get(CUSTOM_GE_EXTENSION_COORDINATES);
         if (customGeExtensionCoordinates != null) {
-            description += String.format("* Gradle Enterprise Maven Extension Custom Coordinates: %s\n", customGeExtensionCoordinates);
+            description += String.format("* Develocity Maven Extension Custom Coordinates: %s\n", customGeExtensionCoordinates);
         }
 
         String customCcudExtensionCoordinates = params.get(CUSTOM_CCUD_EXTENSION_COORDINATES);

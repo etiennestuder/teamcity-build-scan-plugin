@@ -358,19 +358,19 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
     }
 
     void outputContainsGeConnectionInfo(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
-        def geConnectionInfo = "Connection to Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
+        def geConnectionInfo = "Connection to Develocity: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
         assert result.output.contains(geConnectionInfo)
         assert 1 == result.output.count(geConnectionInfo)
     }
 
     void outputContainsPluginRepositoryInfo(BuildResult result, String gradlePluginRepositoryUrl) {
-        def repositoryInfo = "Gradle Enterprise plugins resolution: ${gradlePluginRepositoryUrl}"
+        def repositoryInfo = "Develocity plugins resolution: ${gradlePluginRepositoryUrl}"
         assert result.output.contains(repositoryInfo)
         assert 1 == result.output.count(repositoryInfo)
     }
 
     void outputEnforcesGeUrl(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
-        def enforceUrl = "Enforcing Gradle Enterprise: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
+        def enforceUrl = "Enforcing Develocity: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
         assert result.output.contains(enforceUrl)
         assert 1 == result.output.count(enforceUrl)
     }
