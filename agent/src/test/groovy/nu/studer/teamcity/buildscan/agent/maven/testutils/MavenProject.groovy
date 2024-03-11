@@ -36,16 +36,16 @@ final class MavenProject {
             pom
         }
 
-        private static void setProjectDefinedExtensions(File directory, String geExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension) {
+        private static void setProjectDefinedExtensions(File directory, String develocityExtensionVersion, String ccudExtensionVersion, GroupArtifactVersion customExtension) {
             def extensionsXml = new File(directory, "extensions.xml")
             extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
 
-            if (geExtensionVersion) {
+            if (develocityExtensionVersion) {
                 extensionsXml << """
             <extension>
                 <groupId>com.gradle</groupId>
-                <artifactId>gradle-enterprise-maven-extension</artifactId>
-                <version>$geExtensionVersion</version>
+                <artifactId>develocity-maven-extension</artifactId>
+                <version>$develocityExtensionVersion</version>
             </extension>"""
             }
 
@@ -74,13 +74,11 @@ final class MavenProject {
             if (geUrl) {
                 def geConfig = new File(directory, 'gradle-enterprise.xml')
                 geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-            <gradleEnterprise
-                xmlns="https://www.gradle.com/gradle-enterprise-maven" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                xsi:schemaLocation="https://www.gradle.com/gradle-enterprise-maven https://www.gradle.com/schema/gradle-enterprise-maven.xsd">
+            <develocity>
               <server>
                 <url>$geUrl</url>
               </server>
-            </gradleEnterprise>"""
+            </develocity>"""
             }
         }
 

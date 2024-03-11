@@ -6,7 +6,7 @@ import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
 
 import static org.junit.Assume.assumeTrue
 
-class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
+class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
 
     def "does not apply Develocity / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
@@ -33,7 +33,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies GE extension via classpath when not defined in project (#jdkCompatibleMavenVersion)"() {
+    def "applies Develocity extension via classpath when not defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue DEVELOCITY_URL != null
 
@@ -61,7 +61,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies GE extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
+    def "applies Develocity extension via project when defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue DEVELOCITY_URL != null
 
@@ -92,7 +92,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies GE extension via classpath when not defined in project where pom location set (#jdkCompatibleMavenVersion)"() {
+    def "applies Develocity extension via classpath when not defined in project where pom location set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue DEVELOCITY_URL != null
 
@@ -125,7 +125,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies GE extension via project when defined in project where pom location set (#jdkCompatibleMavenVersion)"() {
+    def "applies Develocity extension via project when defined in project where pom location set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue DEVELOCITY_URL != null
 
@@ -162,7 +162,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
     }
 
-    def "applies GE extension via classpath when not defined in project where checkout dir and working dir not set (#jdkCompatibleMavenVersion)"() {
+    def "applies Develocity extension via classpath when not defined in project where checkout dir and working dir not set (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
         assumeTrue DEVELOCITY_URL != null
 
