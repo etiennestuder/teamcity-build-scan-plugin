@@ -19,7 +19,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.DEVELOCITY_EXTENSION_VERSION
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION_CONFIG_PARAM
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION_CONFIG_PARAM
@@ -119,7 +119,7 @@ class GradleEnterpriseParametersProviderTest extends Specification {
         ENFORCE_GRADLE_ENTERPRISE_URL      | ENFORCE_GRADLE_ENTERPRISE_URL_CONFIG_PARAM      | 'true'
         GE_PLUGIN_VERSION                  | GE_PLUGIN_VERSION_CONFIG_PARAM                  | '1.0.0'
         CCUD_PLUGIN_VERSION                | CCUD_PLUGIN_VERSION_CONFIG_PARAM                | '1.0.0'
-        GE_EXTENSION_VERSION               | GE_EXTENSION_VERSION_CONFIG_PARAM               | '1.0.0'
+        DEVELOCITY_EXTENSION_VERSION       | GE_EXTENSION_VERSION_CONFIG_PARAM               | '1.0.0'
         CCUD_EXTENSION_VERSION             | CCUD_EXTENSION_VERSION_CONFIG_PARAM             | '1.0.0'
         CUSTOM_GE_EXTENSION_COORDINATES    | CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM    | '1.0.0'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM  | '1.0.0'

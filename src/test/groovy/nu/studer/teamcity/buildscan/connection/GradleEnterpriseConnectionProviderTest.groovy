@@ -6,17 +6,7 @@ import jetbrains.buildServer.web.openapi.PluginDescriptor
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.*
 
 @Unroll
 class GradleEnterpriseConnectionProviderTest extends Specification {
@@ -36,10 +26,10 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
 
         where:
         key << [
-            GE_PLUGIN_VERSION,
-            CCUD_PLUGIN_VERSION,
-            GE_EXTENSION_VERSION,
-            CCUD_EXTENSION_VERSION
+                GE_PLUGIN_VERSION,
+                CCUD_PLUGIN_VERSION,
+                DEVELOCITY_EXTENSION_VERSION,
+                CCUD_EXTENSION_VERSION
         ]
     }
 
@@ -61,7 +51,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         ALLOW_UNTRUSTED_SERVER             | 'true'                          | 'Allow Untrusted Server'
         GE_PLUGIN_VERSION                  | '3.16.1'                        | 'Develocity Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                | '1.12.1'                        | 'Common Custom User Data Gradle Plugin Version'
-        GE_EXTENSION_VERSION               | '1.20'                          | 'Develocity Maven Extension Version'
+        DEVELOCITY_EXTENSION_VERSION       | '1.20.1'                        | 'Develocity Maven Extension Version'
         CCUD_EXTENSION_VERSION             | '1.12.5'                        | 'Common Custom User Data Maven Extension Version'
         CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Develocity Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'

@@ -23,7 +23,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_GRADLE_ENTERPRISE_URL;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.DEVELOCITY_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
@@ -107,7 +107,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         description += "\nMaven Settings:\n";
 
-        String geExtensionVersion = params.get(GE_EXTENSION_VERSION);
+        String geExtensionVersion = params.get(DEVELOCITY_EXTENSION_VERSION);
         if (geExtensionVersion != null) {
             description += String.format("* Develocity Maven Extension Version: %s\n", geExtensionVersion);
         }

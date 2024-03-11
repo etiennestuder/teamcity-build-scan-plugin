@@ -11,7 +11,7 @@ public final class GradleEnterpriseConnectionConstants {
     public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
     public static final String GE_PLUGIN_VERSION = "gradleEnterprisePluginVersion";
     public static final String CCUD_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
-    public static final String GE_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";
+    public static final String DEVELOCITY_EXTENSION_VERSION = "develocityExtensionVersion";
     public static final String CCUD_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
     public static final String CUSTOM_GE_EXTENSION_COORDINATES = "customGradleEnterpriseExtensionCoordinates";
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES = "customCommonCustomUserDataExtensionCoordinates";
@@ -60,7 +60,7 @@ public final class GradleEnterpriseConnectionConstants {
     }
 
     public String getGradleEnterpriseExtensionVersion() {
-        return GE_EXTENSION_VERSION;
+        return DEVELOCITY_EXTENSION_VERSION;
     }
 
     public String getCommonCustomUserDataExtensionVersion() {

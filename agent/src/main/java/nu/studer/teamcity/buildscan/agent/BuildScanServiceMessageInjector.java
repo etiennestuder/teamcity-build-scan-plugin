@@ -42,7 +42,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
-    private static final String GRADLE_ENTERPRISE_EXT_MAVEN = "gradle-enterprise-maven-extension-1.20.jar";
+    private static final String DEVELOCITY_EXT_MAVEN = "develocity-maven-extension-1.21-rc-2.jar";
     private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-1.12.5.jar";
 
     // TeamCity Command-line runner
@@ -80,10 +80,10 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     // Maven system properties passed on the CLI to a Maven build
 
     private static final String DEVELOCITY_URL_MAVEN_PROPERTY = "develocity.url";
-    private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
     private static final String DEVELOCITY_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "develocity.allowUntrustedServer";
+    private static final String DEVELOCITY_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY = "develocity.uploadInBackground";
+    private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
     private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allowUntrustedServer";
-    private static final String GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY = "gradle.scan.uploadInBackground";
     private static final MavenCoordinates DEVELOCITY_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "develocity-maven-extension");
     private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
     private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
@@ -228,15 +228,15 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             String develocityUrl = getOptionalConfigParam(DEVELOCITY_URL_CONFIG_PARAM, runner);
             if (hasNoDevelocityExtensionApplied(runner, extensions)) {
                 extensionApplicationListener.develocityExtensionApplied(develocityExtensionVersion);
-                extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
-                addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
-                addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
-                addSysProp(GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
+                extensionJars.add(getExtensionJar(DEVELOCITY_EXT_MAVEN, runner));
+                addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, DEVELOCITY_URL_MAVEN_PROPERTY, sysProps, runner);
+                addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, DEVELOCITY_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+                addSysProp(DEVELOCITY_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
             } else if (develocityUrl != null && Boolean.parseBoolean(getOptionalConfigParam(DEVELOCITY_ENFORCE_URL_CONFIG_PARAM, runner))) {
                 // set Develocity properties for extensions 1.21+
                 addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, DEVELOCITY_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, DEVELOCITY_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
-                // set GE properties for extensions 1.20 and below
+                // set GE properties for extensions 1.20.1 and below
                 addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
                 addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
             }

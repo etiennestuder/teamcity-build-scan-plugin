@@ -24,7 +24,7 @@ import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnection
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.DEVELOCITY_EXTENSION_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_EXTENSION_VERSION_CONFIG_PARAM;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
 import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION_CONFIG_PARAM;
@@ -62,7 +62,7 @@ public final class GradleEnterpriseParametersProvider implements BuildParameters
             setParameter(ALLOW_UNTRUSTED_SERVER_CONFIG_PARAM, connectionParams.get(ALLOW_UNTRUSTED_SERVER), params);
             setParameter(GE_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(GE_PLUGIN_VERSION), params);
             setParameter(CCUD_PLUGIN_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_PLUGIN_VERSION), params);
-            setParameter(GE_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(GE_EXTENSION_VERSION), params);
+            setParameter(GE_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(DEVELOCITY_EXTENSION_VERSION), params);
             setParameter(CCUD_EXTENSION_VERSION_CONFIG_PARAM, connectionParams.get(CCUD_EXTENSION_VERSION), params);
             setParameter(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_GE_EXTENSION_COORDINATES), params);
             setParameter(CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM, connectionParams.get(CUSTOM_CCUD_EXTENSION_COORDINATES), params);
