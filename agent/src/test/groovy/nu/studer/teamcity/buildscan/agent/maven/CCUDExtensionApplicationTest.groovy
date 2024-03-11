@@ -24,7 +24,7 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
@@ -53,7 +53,7 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
@@ -85,7 +85,7 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         1 * extensionApplicationListener.ccudExtensionApplied(CCUD_EXTENSION_VERSION)
 
         and:
@@ -118,7 +118,7 @@ class CCUDExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:

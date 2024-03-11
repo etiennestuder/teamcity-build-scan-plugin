@@ -22,7 +22,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -50,7 +50,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -81,7 +81,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -114,7 +114,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
-        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -151,7 +151,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -184,7 +184,7 @@ class GEExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
 
         then:
-        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:

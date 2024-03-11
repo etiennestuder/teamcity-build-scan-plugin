@@ -28,7 +28,7 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -60,7 +60,7 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        1 * extensionApplicationListener.geExtensionApplied(GE_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(GE_EXTENSION_VERSION)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -93,7 +93,7 @@ class UrlConfigurationExtensionApplicationTest extends BaseExtensionApplicationT
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:

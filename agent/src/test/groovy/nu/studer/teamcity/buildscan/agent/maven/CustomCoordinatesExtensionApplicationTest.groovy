@@ -30,7 +30,7 @@ class CustomCoordinatesExtensionApplicationTest extends BaseExtensionApplication
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -64,7 +64,7 @@ class CustomCoordinatesExtensionApplicationTest extends BaseExtensionApplication
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
