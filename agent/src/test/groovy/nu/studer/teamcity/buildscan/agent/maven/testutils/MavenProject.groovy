@@ -1,5 +1,7 @@
 package nu.studer.teamcity.buildscan.agent.maven.testutils
 
+import static nu.studer.teamcity.buildscan.agent.maven.testutils.VersionUtils.isAtLeast
+
 final class MavenProject {
 
     File pom
@@ -25,8 +27,8 @@ final class MavenProject {
             setProjectDefinedDevelocityConfiguration(dotMvn, develocityUrl)
 
             return new MavenProject(
-                pom: setPomFile(pomDir, 'pom.xml'),
-                dotMvn: dotMvn
+                    pom: setPomFile(pomDir, 'pom.xml'),
+                    dotMvn: dotMvn
             )
         }
 
@@ -41,12 +43,21 @@ final class MavenProject {
             extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
 
             if (develocityExtensionVersion) {
-                extensionsXml << """
+                if (isAtLeast(develocityExtensionVersion, '1.21')) {
+                    extensionsXml << """
             <extension>
                 <groupId>com.gradle</groupId>
                 <artifactId>develocity-maven-extension</artifactId>
                 <version>$develocityExtensionVersion</version>
             </extension>"""
+                } else {
+                    extensionsXml << """
+            <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>gradle-enterprise-maven-extension</artifactId>
+                <version>$develocityExtensionVersion</version>
+            </extension>"""
+                }
             }
 
             if (ccudExtensionVersion) {

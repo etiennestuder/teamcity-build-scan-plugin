@@ -6,7 +6,23 @@ import nu.studer.teamcity.buildscan.agent.maven.testutils.MavenProject
 
 import static org.junit.Assume.assumeTrue
 
-class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
+abstract class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
+
+    abstract String getExtensionVersion()
+
+    static class DevelocityMavenExtension_Latest extends DevelocityExtensionApplicationTest {
+        @Override
+        String getExtensionVersion() {
+            DEVELOCITY_EXTENSION_VERSION
+        }
+    }
+
+    static class GradleEnterpriseMavenExtension_V1_20_1 extends DevelocityExtensionApplicationTest {
+        @Override
+        String getExtensionVersion() {
+            '1.20.1'
+        }
+    }
 
     def "does not apply Develocity / CCUD extensions when not defined in project and not requested via TC config (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
@@ -43,14 +59,14 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         and:
         def develocityPluginConfig = new TcPluginConfig(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         )
 
         when:
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
-        1 * extensionApplicationListener.develocityExtensionApplied(DEVELOCITY_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(extensionVersion)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -68,13 +84,13 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         given:
         def mvnProject = new MavenProject.Configuration(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         ).buildIn(checkoutDir)
 
         and:
         def develocityPluginConfig = new TcPluginConfig(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         )
 
         when:
@@ -102,7 +118,7 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         and:
         def develocityPluginConfig = new TcPluginConfig(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         )
 
         and:
@@ -114,7 +130,7 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig, mvnBuildStepConfig)
 
         then:
-        1 * extensionApplicationListener.develocityExtensionApplied(DEVELOCITY_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(extensionVersion)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -132,13 +148,13 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         given:
         def mvnProject = new MavenProject.Configuration(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         ).buildIn(checkoutDir)
 
         and:
         def develocityPluginConfig = new TcPluginConfig(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         )
 
         and:
@@ -172,7 +188,7 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         and:
         def develocityPluginConfig = new TcPluginConfig(
             develocityUrl: DEVELOCITY_URL,
-            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionVersion: extensionVersion,
         )
 
         and:
@@ -184,7 +200,7 @@ class DevelocityExtensionApplicationTest extends BaseExtensionApplicationTest {
         def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig, mvnBuildStepConfig)
 
         then:
-        1 * extensionApplicationListener.develocityExtensionApplied(DEVELOCITY_EXTENSION_VERSION)
+        1 * extensionApplicationListener.develocityExtensionApplied(extensionVersion)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
