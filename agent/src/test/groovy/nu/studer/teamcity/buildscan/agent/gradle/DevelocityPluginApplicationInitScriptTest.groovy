@@ -6,14 +6,14 @@ import org.gradle.util.GradleVersion
 
 import static org.junit.Assume.assumeTrue
 
-class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
+class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
 
-    private static final String GE_PLUGIN_VERSION = '3.16.1'
+    private static final String DEVELOCITY_PLUGIN_VERSION = '3.16.2'
     private static final String CCUD_PLUGIN_VERSION = '1.12.1'
 
     private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
 
-    def "does not apply GE / CCUD plugins when not defined in project and not requested via TC config (#jdkCompatibleGradleVersion)"() {
+    def "does not apply Develocity / CCUD plugins when not defined in project and not requested via TC config (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
@@ -21,7 +21,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -31,15 +31,15 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "applies GE plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies Develocity plugin via init script when not defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -50,18 +50,18 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "applies GE plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies Develocity plugin via project when defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+        declareDevelocityPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -72,15 +72,15 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "applies CCUD plugin via init script when not defined in project where GE plugin not defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies CCUD plugin via init script when not defined in project where Develocity plugin not defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -91,18 +91,18 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
-    def "applies CCUD plugin via init script when not defined in project where GE plugin defined in project (#jdkCompatibleGradleVersion)"() {
+    def "applies CCUD plugin via init script when not defined in project where Develocity plugin defined in project (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+        declareDevelocityPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -117,14 +117,14 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        declareGePluginAndCcudPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+        declareDevelocityPluginAndCcudPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -135,18 +135,18 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
-    def "ignores GE URL and allowUntrustedServer requested via TC config when GE plugin is not applied by the init script (#jdkCompatibleGradleVersion)"() {
+    def "ignores Develocity URL and allowUntrustedServer requested via TC config when Develocity plugin is not applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion)
+        declareDevelocityPluginApplication(jdkCompatibleGradleVersion.gradleVersion)
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: URI.create('https://ge-server.invalid'), develocityAllowUntrustedServer: true, develocityPluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: URI.create('https://ge-server.invalid'), develocityAllowUntrustedServer: true, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -157,16 +157,16 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "configures GE URL and allowUntrustedServer requested via TC config when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
+    def "configures Develocity URL and allowUntrustedServer requested via TC config when Develocity plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityAllowUntrustedServer: true, develocityPluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityAllowUntrustedServer: true, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
-        outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), true)
+        outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsDevelocityConnectionInfo(result, mockScansServer.address.toString(), true)
         outputMissesCcudPluginApplicationViaInitScript(result)
         outputContainsPluginRepositoryInfo(result, 'https://plugins.gradle.org/m2')
 
@@ -178,22 +178,22 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "enforces GE URL and allowUntrustedServer in project if enforce url parameter is enabled (#jdkCompatibleGradleVersion)"() {
+    def "enforces Develocity URL and allowUntrustedServer in project if enforce url parameter is enabled (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         given:
-        declareGePluginApplication(jdkCompatibleGradleVersion.gradleVersion, URI.create('https://ge-server.invalid'))
+        declareDevelocityPluginApplication(jdkCompatibleGradleVersion.gradleVersion, URI.create('https://ge-server.invalid'))
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityAllowUntrustedServer: true, develocityPluginVersion: GE_PLUGIN_VERSION, develocityEnforceUrl: true)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityAllowUntrustedServer: true, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, develocityEnforceUrl: true)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
-        outputEnforcesGeUrl(result, mockScansServer.address.toString(), true)
+        outputEnforcesDevelocityUrl(result, mockScansServer.address.toString(), true)
 
         and:
         outputContainsTeamCityServiceMessageBuildStarted(result)
@@ -203,16 +203,16 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "can configure alternative repository for plugins when GE plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
+    def "can configure alternative repository for plugins when Develocity plugin is applied by the init script (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(gradlePluginRepositoryUrl: new URI('https://plugins.grdev.net/m2'), develocityUrl: mockScansServer.address, develocityAllowUntrustedServer: false, develocityPluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(gradlePluginRepositoryUrl: new URI('https://plugins.grdev.net/m2'), develocityUrl: mockScansServer.address, develocityAllowUntrustedServer: false, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION)
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
-        outputContainsGeConnectionInfo(result, mockScansServer.address.toString(), false)
+        outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsDevelocityConnectionInfo(result, mockScansServer.address.toString(), false)
         outputMissesCcudPluginApplicationViaInitScript(result)
         outputContainsPluginRepositoryInfo(result, 'https://plugins.grdev.net/m2')
 
@@ -224,11 +224,11 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: '1.6.6')
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, ccudPluginVersion: '1.6.6')
         def result = run(jdkCompatibleGradleVersion.gradleVersion, gePluginConfig)
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
         result.output.contains('Common Custom User Data Gradle plugin must be at least 1.7. Configured version is 1.6.6.')
 
@@ -236,18 +236,18 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "can configure GE via CCUD system property overrides when CCUD plugin is inject via init script"() {
+    def "can configure Develocity via CCUD system property overrides when CCUD plugin is inject via init script"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: URI.create('https://ge-server.invalid'), develocityPluginVersion: GE_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: URI.create('https://ge-server.invalid'), develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, ccudPluginVersion: CCUD_PLUGIN_VERSION)
         def result = run(new BuildConfig(
             gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
             tcPluginConfig: gePluginConfig,
             additionalJvmArgs: ["-Dgradle.enterprise.url=$mockScansServer.address".toString()]))
 
         then:
-        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputContainsCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -258,36 +258,36 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_4_AND_HIGHER
     }
 
-    def "does not apply GE plugin via init script for command-line runner without opt-in parameter (#jdkCompatibleGradleVersion)"() {
+    def "does not apply Develocity plugin via init script for command-line runner without opt-in parameter (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION, enableCommandLineRunner: false)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, enableCommandLineRunner: false)
         def result = run(new BuildConfig(
             gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
             tcPluginConfig: gePluginConfig,
             runType: 'simpleRunner'))
 
         then:
-        outputMissesGePluginApplicationViaInitScript(result)
+        outputMissesDevelocityPluginApplicationViaInitScript(result)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         where:
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_3_0_AND_HIGHER
     }
 
-    def "applies GE plugin via init script for command-line runner (#jdkCompatibleGradleVersion)"() {
+    def "applies Develocity plugin via init script for command-line runner (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION, enableCommandLineRunner: true)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION, enableCommandLineRunner: true)
         def result = run(new BuildConfig(
             gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
             tcPluginConfig: gePluginConfig,
             runType: 'simpleRunner'))
 
         then:
-        outputContainsGePluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
+        outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
         outputMissesCcudPluginApplicationViaInitScript(result)
 
         and:
@@ -302,7 +302,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
 
         when:
-        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: GE_PLUGIN_VERSION)
+        def gePluginConfig = new TcPluginConfig(develocityUrl: mockScansServer.address, develocityPluginVersion: DEVELOCITY_PLUGIN_VERSION)
         def config = new BuildConfig(
                 gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
                 tcPluginConfig: gePluginConfig,
@@ -325,7 +325,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_CONFIGURATION_CACHE_COMPATIBLE.findAll { it.gradleVersion >= GradleVersion.version('7.2') }
     }
 
-    void outputContainsGePluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
+    void outputContainsDevelocityPluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
         def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
         def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
         if (gradleVersion < GRADLE_6) {
@@ -339,7 +339,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         }
     }
 
-    void outputMissesGePluginApplicationViaInitScript(BuildResult result) {
+    void outputMissesDevelocityPluginApplicationViaInitScript(BuildResult result) {
         def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
         def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
         assert !result.output.contains(pluginApplicationLogMsgGradle4And5)
@@ -357,7 +357,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         assert !result.output.contains(pluginApplicationLogMsg)
     }
 
-    void outputContainsGeConnectionInfo(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
+    void outputContainsDevelocityConnectionInfo(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
         def geConnectionInfo = "Connection to Develocity: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
         assert result.output.contains(geConnectionInfo)
         assert 1 == result.output.count(geConnectionInfo)
@@ -369,7 +369,7 @@ class GEPluginApplicationInitScriptTest extends BaseInitScriptTest {
         assert 1 == result.output.count(repositoryInfo)
     }
 
-    void outputEnforcesGeUrl(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
+    void outputEnforcesDevelocityUrl(BuildResult result, String geUrl, boolean geAllowUntrustedServer) {
         def enforceUrl = "Enforcing Develocity: $geUrl, allowUntrustedServer: $geAllowUntrustedServer"
         assert result.output.contains(enforceUrl)
         assert 1 == result.output.count(enforceUrl)

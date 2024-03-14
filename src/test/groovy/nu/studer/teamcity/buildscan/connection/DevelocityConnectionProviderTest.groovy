@@ -6,15 +6,15 @@ import jetbrains.buildServer.web.openapi.PluginDescriptor
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.*
+import static DevelocityConnectionConstants.*
 
 @Unroll
-class GradleEnterpriseConnectionProviderTest extends Specification {
+class DevelocityConnectionProviderTest extends Specification {
 
     OAuthProvider connectionProvider
 
     void setup() {
-        connectionProvider = new GradleEnterpriseConnectionProvider(Stub(PluginDescriptor))
+        connectionProvider = new DevelocityConnectionProvider(Stub(PluginDescriptor))
     }
 
     def "default version of #key is set"() {
@@ -26,7 +26,7 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
 
         where:
         key << [
-                GE_PLUGIN_VERSION,
+                DEVELOCITY_PLUGIN_VERSION,
                 CCUD_PLUGIN_VERSION,
                 DEVELOCITY_EXTENSION_VERSION,
                 CCUD_EXTENSION_VERSION
@@ -47,13 +47,13 @@ class GradleEnterpriseConnectionProviderTest extends Specification {
         where:
         parameter                          | value                           | text
         GRADLE_PLUGIN_REPOSITORY_URL       | 'https://plugins.example.com'   | 'Gradle Plugin Repository URL'
-        GRADLE_ENTERPRISE_URL              | 'https://ge.example.com'        | 'Develocity Server URL'
+        DEVELOCITY_URL | 'https://ge.example.com' | 'Develocity Server URL'
         ALLOW_UNTRUSTED_SERVER             | 'true'                          | 'Allow Untrusted Server'
-        GE_PLUGIN_VERSION                  | '3.16.1'                        | 'Develocity Gradle Plugin Version'
+        DEVELOCITY_PLUGIN_VERSION | '3.16.1' | 'Develocity Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                | '1.12.1'                        | 'Common Custom User Data Gradle Plugin Version'
         DEVELOCITY_EXTENSION_VERSION       | '1.20.1'                        | 'Develocity Maven Extension Version'
         CCUD_EXTENSION_VERSION             | '1.12.5'                        | 'Common Custom User Data Maven Extension Version'
-        CUSTOM_GE_EXTENSION_COORDINATES    | 'com.company:my-ge-extension'   | 'Develocity Maven Extension Custom Coordinates'
+        CUSTOM_DEVELOCITY_EXTENSION_COORDINATES | 'com.company:my-ge-extension' | 'Develocity Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES  | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP | 'true'                          | 'Instrument Command Line Build Steps'
     }

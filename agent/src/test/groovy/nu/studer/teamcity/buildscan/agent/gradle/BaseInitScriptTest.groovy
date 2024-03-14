@@ -139,12 +139,12 @@ class BaseInitScriptTest extends Specification {
         buildFile << ''
     }
 
-    def declareGePluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
+    def declareDevelocityPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
         settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl)
         buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl)
     }
 
-    def declareGePluginAndCcudPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
+    def declareDevelocityPluginAndCcudPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
         settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl, '1.12.1')
         buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl, '1.12.1')
     }

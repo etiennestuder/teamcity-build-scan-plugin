@@ -2,7 +2,7 @@ import org.gradle.util.GradleVersion
 
 // note that there is no mechanism to share code between the initscript{} block and the main script, so some logic is duplicated
 
-// conditionally apply the GE / Build Scan plugin to the classpath so it can be applied to the build further down in this script
+// conditionally apply the Develocity / Build Scan plugin to the classpath so it can be applied to the build further down in this script
 initscript {
     def isTopLevelBuild = !gradle.parent
     if (!isTopLevelBuild) {
@@ -105,7 +105,7 @@ def buildScanPublishedAction = { def buildScan ->
     }
 }
 
-// register buildScanPublished listener and optionally apply the GE / Build Scan plugin
+// register buildScanPublished listener and optionally apply the Develocity / Build Scan plugin
 if (GradleVersion.current() < GradleVersion.version('6.0')) {
     //noinspection GroovyAssignabilityCheck
     rootProject {
