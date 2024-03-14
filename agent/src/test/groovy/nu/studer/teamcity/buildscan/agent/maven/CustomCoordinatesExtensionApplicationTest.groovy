@@ -15,7 +15,7 @@ class CustomCoordinatesExtensionApplicationTest extends BaseExtensionApplication
         given:
         def mvnProject = new MavenProject.Configuration(
             develocityUrl: DEVELOCITY_URL,
-            // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
+            // using Guava as surrogate since we do not have a custom extension at hand that pulls in the Develocity Maven extension transitively
             customExtension: new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
         ).buildIn(checkoutDir)
 

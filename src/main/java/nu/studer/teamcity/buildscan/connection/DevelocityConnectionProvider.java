@@ -17,21 +17,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ALLOW_UNTRUSTED_SERVER;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_EXTENSION_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CCUD_PLUGIN_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.CUSTOM_GE_EXTENSION_COORDINATES;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.ENFORCE_GRADLE_ENTERPRISE_URL;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.DEVELOCITY_EXTENSION_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GE_PLUGIN_VERSION;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_URL;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.ALLOW_UNTRUSTED_SERVER;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.CCUD_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.CCUD_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.CUSTOM_CCUD_EXTENSION_COORDINATES;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.CUSTOM_DEVELOCITY_EXTENSION_COORDINATES;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.ENFORCE_DEVELOCITY_URL;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.DEVELOCITY_EXTENSION_VERSION;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.DEVELOCITY_PLUGIN_VERSION;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.DEVELOCITY_CONNECTION_PROVIDER;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.DEVELOCITY_URL;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.GRADLE_PLUGIN_REPOSITORY_URL;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.INSTRUMENT_COMMAND_LINE_BUILD_STEP;
 
-public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
+public final class DevelocityConnectionProvider extends OAuthProvider {
 
     private static final Logger LOGGER = Logger.getLogger("jetbrains.buildServer.BUILDSCAN");
 
@@ -39,14 +39,14 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
     private final PluginDescriptor descriptor;
 
-    public GradleEnterpriseConnectionProvider(PluginDescriptor pluginDescriptor) {
+    public DevelocityConnectionProvider(PluginDescriptor pluginDescriptor) {
         this.descriptor = pluginDescriptor;
     }
 
     @NotNull
     @Override
     public String getType() {
-        return GRADLE_ENTERPRISE_CONNECTION_PROVIDER;
+        return DEVELOCITY_CONNECTION_PROVIDER;
     }
 
     @NotNull
@@ -68,7 +68,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
 
         String description = "Develocity Connection Settings:\n";
 
-        String geUrl = params.get(GRADLE_ENTERPRISE_URL);
+        String geUrl = params.get(DEVELOCITY_URL);
         if (geUrl != null) {
             description += String.format("* Develocity Server URL: %s\n", geUrl);
         }
@@ -83,14 +83,14 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Develocity Access Key: %s\n", "******");
         }
 
-        String enforceGeUrl = params.get(ENFORCE_GRADLE_ENTERPRISE_URL);
+        String enforceGeUrl = params.get(ENFORCE_DEVELOCITY_URL);
         if (enforceGeUrl != null) {
             description += String.format("* Enforce Develocity Server URL: %s\n", enforceGeUrl);
         }
 
         description += "\nGradle Settings:\n";
 
-        String gePluginVersion = params.get(GE_PLUGIN_VERSION);
+        String gePluginVersion = params.get(DEVELOCITY_PLUGIN_VERSION);
         if (gePluginVersion != null) {
             description += String.format("* Develocity Gradle Plugin Version: %s\n", gePluginVersion);
         }
@@ -117,7 +117,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
             description += String.format("* Common Custom User Data Maven Extension Version: %s\n", ccudExtensionVersion);
         }
 
-        String customGeExtensionCoordinates = params.get(CUSTOM_GE_EXTENSION_COORDINATES);
+        String customGeExtensionCoordinates = params.get(CUSTOM_DEVELOCITY_EXTENSION_COORDINATES);
         if (customGeExtensionCoordinates != null) {
             description += String.format("* Develocity Maven Extension Custom Coordinates: %s\n", customGeExtensionCoordinates);
         }
@@ -173,7 +173,7 @@ public final class GradleEnterpriseConnectionProvider extends OAuthProvider {
         return properties -> {
             List<InvalidProperty> errors = new ArrayList<>();
             String accessKey = properties.get(GRADLE_ENTERPRISE_ACCESS_KEY);
-            if (accessKey != null && !GradleEnterpriseAccessKeyValidator.isValid(accessKey)) {
+            if (accessKey != null && !DevelocityAccessKeyValidator.isValid(accessKey)) {
                 errors.add(new InvalidProperty(GRADLE_ENTERPRISE_ACCESS_KEY, "Invalid access key"));
             }
             return errors;

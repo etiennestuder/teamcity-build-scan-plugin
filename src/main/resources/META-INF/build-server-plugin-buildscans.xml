@@ -63,15 +63,15 @@
     </bean>
 
     <bean id="gradleEnterpriseConnectionProvider"
-          class="nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionProvider">
+          class="nu.studer.teamcity.buildscan.connection.DevelocityConnectionProvider">
     </bean>
 
     <bean id="gradleEnterpriseParametersProvider"
-          class="nu.studer.teamcity.buildscan.connection.GradleEnterpriseParametersProvider">
+          class="nu.studer.teamcity.buildscan.connection.DevelocityParametersProvider">
     </bean>
 
     <bean id="gradleEnterprisePasswordProvider"
-          class="nu.studer.teamcity.buildscan.connection.GradleEnterprisePasswordProvider">
+          class="nu.studer.teamcity.buildscan.connection.DevelocityPasswordProvider">
     </bean>
 
 </beans>

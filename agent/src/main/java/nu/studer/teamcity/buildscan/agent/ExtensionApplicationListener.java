@@ -14,7 +14,7 @@ public interface ExtensionApplicationListener {
 
         @Override
         public void develocityExtensionApplied(String version) {
-            LOG.info("Adding gradle-enterprise-maven-extension to Maven extensions classpath");
+            LOG.info("Adding develocity-maven-extension to Maven extensions classpath");
         }
 
         @Override

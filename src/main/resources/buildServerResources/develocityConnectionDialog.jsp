@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="/include-internal.jsp" %>
 
-<jsp:useBean id="keys" class="nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants"/>
+<jsp:useBean id="keys" class="nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants"/>
 <jsp:useBean id="project" type="jetbrains.buildServer.serverSide.SProject" scope="request"/>
 
 <tr>
@@ -18,9 +18,9 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterpriseUrl}">Develocity Server URL:</label></td>
+    <td><label for="${keys.develocityUrl}">Develocity Server URL:</label></td>
     <td>
-        <props:textProperty name="${keys.gradleEnterpriseUrl}" className="longField"/>
+        <props:textProperty name="${keys.develocityUrl}" className="longField"/>
         <span class="smallNote">The URL of the Develocity server.</span>
     </td>
 </tr>
@@ -43,9 +43,9 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.enforceGradleEnterpriseUrl}">Enforce Develocity Server URL:</label></td>
+    <td><label for="${keys.enforceDevelocityUrl}">Enforce Develocity Server URL:</label></td>
     <td>
-        <props:checkboxProperty name="${keys.enforceGradleEnterpriseUrl}"/>
+        <props:checkboxProperty name="${keys.enforceDevelocityUrl}"/>
         <span class="smallNote">Whether to enforce the Develocity Server URL configured in this connection over a URL configured in the project's build.</span>
     </td>
 </tr>
@@ -61,9 +61,9 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterprisePluginVersion}">Develocity Gradle Plugin Version:</label></td>
+    <td><label for="${keys.develocityPluginVersion}">Develocity Gradle Plugin Version:</label></td>
     <td>
-        <props:textProperty name="${keys.gradleEnterprisePluginVersion}" className="longField"/>
+        <props:textProperty name="${keys.develocityPluginVersion}" className="longField"/>
         <span class="smallNote">The version of the Develocity Gradle Plugin to apply to Gradle builds.</span>
     </td>
 </tr>
@@ -90,9 +90,9 @@
 </tr>
 
 <tr>
-    <td><label for="${keys.gradleEnterpriseExtensionVersion}">Develocity Maven Extension Version:</label></td>
+    <td><label for="${keys.develocityExtensionVersion}">Develocity Maven Extension Version:</label></td>
     <td>
-        <props:textProperty name="${keys.gradleEnterpriseExtensionVersion}" className="longField"/>
+        <props:textProperty name="${keys.develocityExtensionVersion}" className="longField"/>
         <span class="smallNote">The version of the Develocity Maven Extension to apply to Maven builds.</span>
     </td>
 </tr>
@@ -106,9 +106,9 @@
 </tr>
 
 <tr class="advancedSetting">
-    <td><label for="${keys.customGradleEnterpriseExtensionCoordinates}">Develocity Maven Extension Custom Coordinates:</label></td>
+    <td><label for="${keys.customDevelocityExtensionCoordinates}">Develocity Maven Extension Custom Coordinates:</label></td>
     <td>
-        <props:textProperty name="${keys.customGradleEnterpriseExtensionCoordinates}" className="longField"/>
+        <props:textProperty name="${keys.customDevelocityExtensionCoordinates}" className="longField"/>
         <span class="smallNote">The coordinates of a custom extension that has a transitive dependency on the Develocity Maven Extension.</span>
     </td>
 </tr>
