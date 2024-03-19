@@ -25,7 +25,7 @@ import java.util.Map;
  * In the presence of certain configuration parameters, this class will also inject Develocity and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
-@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored", "Convert2Diamond"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final Logger LOG = Logger.getInstance("jetbrains.buildServer.BUILDSCAN");
@@ -215,8 +215,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
-        List<File> extensionJars = new ArrayList<>();
-        List<String> sysProps = new ArrayList<>();
+        List<File> extensionJars = new ArrayList<File>();
+        List<String> sysProps = new ArrayList<String>();
 
         // add extension to capture build scan URL
         extensionJars.add(getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner));
@@ -288,7 +288,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
             return MavenExtensions.empty();
         }
 
-        final List<File> searchLocations = new ArrayList<>();
+        final List<File> searchLocations = new ArrayList<File>();
 
         // in TC, the pomLocation is always relative to the checkout dir, even if a specific working dir has been configured
         if (pomLocationParam != null) {
