@@ -19,7 +19,7 @@ configurations {
 
 dependencies {
     mvnExtensions project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
-    mvnExtensions 'com.gradle:develocity-maven-extension:1.21-rc-3'
+    mvnExtensions 'com.gradle:develocity-maven-extension:1.21-rc-4'
     mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:1.12.5'
 
     testImplementation gradleTestKit()
