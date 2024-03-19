@@ -226,7 +226,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         String develocityExtensionVersion = getOptionalConfigParam(DEVELOCITY_EXTENSION_VERSION_CONFIG_PARAM, runner);
         if (develocityExtensionVersion != null) {
             String develocityUrl = getOptionalConfigParam(DEVELOCITY_URL_CONFIG_PARAM, runner);
-            if (hasNoDevelocityExtensionApplied(runner, extensions)) {
+            if (hasNoDevelocityOrGradleEnterpriseExtensionsApplied(runner, extensions)) {
                 extensionApplicationListener.develocityExtensionApplied(develocityExtensionVersion);
                 extensionJars.add(getExtensionJar(DEVELOCITY_EXT_MAVEN, runner));
                 addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, DEVELOCITY_URL_MAVEN_PROPERTY, sysProps, runner);
@@ -254,11 +254,11 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
     }
 
-    private static boolean hasNoDevelocityExtensionApplied(BuildRunnerContext runner, MavenExtensions extensions) {
-        MavenCoordinates customGeExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_DEVELOCITY_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
+    private static boolean hasNoDevelocityOrGradleEnterpriseExtensionsApplied(BuildRunnerContext runner, MavenExtensions extensions) {
+        MavenCoordinates customDevelocityExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_DEVELOCITY_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
         return !extensions.hasExtension(DEVELOCITY_EXTENSION_MAVEN_COORDINATES) &&
                !extensions.hasExtension(GRADLE_ENTERPRISE_EXTENSION_MAVEN_COORDINATES) &&
-               !extensions.hasExtension(customGeExtensionCoords);
+               !extensions.hasExtension(customDevelocityExtensionCoords);
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {
