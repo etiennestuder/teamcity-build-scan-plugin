@@ -69,13 +69,15 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     // Environment variables set to instrument the Gradle build
 
-    private static final String GRADLE_PLUGIN_REPOSITORY_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL";
-    private static final String DEVELOCITY_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
-    private static final String DEVELOCITY_ALLOW_UNTRUSTED_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
-    private static final String DEVELOCITY_ENFORCE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ENFORCE_URL";
-    private static final String DEVELOCITY_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
-    private static final String CCUD_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION";
-    private static final String INIT_SCRIPT_NAME_VAR = "TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME";
+    private static final String GRADLE_PLUGIN_REPOSITORY_VAR = "GRADLE_PLUGIN_REPOSITORY_URL";
+    private static final String DEVELOCITY_URL_VAR = "DEVELOCITY_URL";
+    private static final String DEVELOCITY_ALLOW_UNTRUSTED_VAR = "DEVELOCITY_ALLOW_UNTRUSTED_SERVER";
+    private static final String DEVELOCITY_ENFORCE_URL_VAR = "DEVELOCITY_ENFORCE_URL";
+    private static final String DEVELOCITY_PLUGIN_VERSION_VAR = "DEVELOCITY_PLUGIN_VERSION";
+    private static final String CCUD_PLUGIN_VERSION_VAR = "DEVELOCITY_CCUD_PLUGIN_VERSION";
+    private static final String DEVELOCITY_INJECTION_ENABLED_VAR = "DEVELOCITY_INJECTION_ENABLED";
+    private static final String INIT_SCRIPT_NAME_VAR = "DEVELOCITY_INJECTION_INIT_SCRIPT_NAME";
+    private static final String DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE_VAR = "DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE";
 
     // Maven system properties passed on the CLI to a Maven build
 
@@ -164,6 +166,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
         // the init-script is inactive by default, supply the script name env var to activate it
         addEnvVar(INIT_SCRIPT_NAME_VAR, initScript.getName(), runner);
+        addEnvVar(DEVELOCITY_INJECTION_ENABLED_VAR, "true", runner);
+        addEnvVar(DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE_VAR, "TeamCity", runner);
     }
 
     private File getInitScriptInAgentTempDir(BuildRunnerContext runner) {

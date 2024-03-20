@@ -273,13 +273,15 @@ class BaseInitScriptTest extends Specification {
     // for TestKit versions that don't support environment variables, map those vars to system properties
     private static List<String> mapEnvVarsToSystemProps(Map<String, String> envVars) {
         def mapping = [
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL                     : "teamCityBuildScanPlugin.gradle-enterprise.url",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER  : "teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ENFORCE_URL             : "teamCityBuildScanPlugin.gradle-enterprise.enforce-url",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION          : "teamCityBuildScanPlugin.gradle-enterprise.plugin.version",
-            TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION                       : "teamCityBuildScanPlugin.ccud.plugin.version",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL              : "teamCityBuildScanPlugin.gradle.plugin-repository.url",
-            TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME                          : "teamCityBuildScanPlugin.init-script.name"
+            DEVELOCITY_URL                        : "develocity.url",
+            DEVELOCITY_ALLOW_UNTRUSTED_SERVER     : "develocity.allow-untrusted-server",
+            DEVELOCITY_ENFORCE_URL                : "develocity.enforce-url",
+            DEVELOCITY_PLUGIN_VERSION             : "develocity.plugin.version",
+            DEVELOCITY_CCUD_PLUGIN_VERSION        : "develocity.ccud-plugin.version",
+            GRADLE_PLUGIN_REPOSITORY_URL          : "gradle.plugin-repository.url",
+            DEVELOCITY_INJECTION_INIT_SCRIPT_NAME : "develocity.injection.init-script-name",
+            DEVELOCITY_INJECTION_ENABLED          : "develocity.injection-enabled",
+            DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE: "develocity.auto-injection.custom-value"
         ]
 
         return envVars.entrySet().stream().map(e -> {
