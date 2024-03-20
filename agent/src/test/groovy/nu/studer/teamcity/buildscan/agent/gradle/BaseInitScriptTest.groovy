@@ -74,6 +74,8 @@ class BaseInitScriptTest extends Specification {
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'
 
+    static final String DEVELOCITY_PLUGIN_VERSION = '3.17'
+
     File initScriptFile
     File settingsFile
     File buildFile
@@ -157,15 +159,10 @@ class BaseInitScriptTest extends Specification {
         } else {
             """
               plugins {
-                id 'com.gradle.enterprise' version '3.16.1'
+                id 'com.gradle.develocity' version '${DEVELOCITY_PLUGIN_VERSION}'
                 ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
-              gradleEnterprise {
-                server = '$geUrl'
-                buildScan {
-                  publishAlways()
-                }
-              }
+              develocity.server = '$geUrl'
             """
         }
     }
@@ -185,15 +182,10 @@ class BaseInitScriptTest extends Specification {
         } else if (gradleVersion < GradleVersion.version('6.0')) {
             """
               plugins {
-                id 'com.gradle.build-scan' version '3.16.1'
+                id 'com.gradle.develocity' version '${DEVELOCITY_PLUGIN_VERSION}'
                 ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
-              gradleEnterprise {
-                server = '$geUrl'
-                buildScan {
-                  publishAlways()
-                }
-              }
+              develocity.server = '$geUrl'
             """
         } else {
             '' // applied in settings.gradle

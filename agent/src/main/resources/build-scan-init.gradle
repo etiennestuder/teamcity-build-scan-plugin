@@ -1,5 +1,7 @@
 import org.gradle.util.GradleVersion
 
+import java.util.concurrent.atomic.AtomicBoolean
+
 // note that there is no mechanism to share code between the initscript{} block and the main script, so some logic is duplicated
 
 // conditionally apply the Develocity plugin to the classpath so it can be applied to the build further down in this script
@@ -150,10 +152,13 @@ def buildScanLifeCycleLogger = new BuildScanLifeCycleLogger(logger)
 buildScanLifeCycleLogger.log('BUILD_STARTED')
 
 // define a buildScanPublished listener that captures the build scan URL and sends it in a message to the server
+def actionRunMarker = new AtomicBoolean(false)
 def buildScanPublishedAction = { def buildScan ->
-    if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
-        buildScan.buildScanPublished { scan ->
-            buildScanLifeCycleLogger.log("BUILD_SCAN_URL:${scan.buildScanUri.toString()}")
+    if (actionRunMarker.compareAndSet(false, true)) {
+        if (buildScan.metaClass.respondsTo(buildScan, 'buildScanPublished', Action)) {
+            buildScan.buildScanPublished { scan ->
+                buildScanLifeCycleLogger.log("BUILD_SCAN_URL:${scan.buildScanUri.toString()}")
+            }
         }
     }
 }

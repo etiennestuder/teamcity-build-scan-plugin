@@ -8,10 +8,9 @@ import static org.junit.Assume.assumeTrue
 
 class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
 
-    private static final String DEVELOCITY_PLUGIN_VERSION = '3.16.2'
     private static final String CCUD_PLUGIN_VERSION = '1.12.1'
 
-    private static final GradleVersion GRADLE_6 = GradleVersion.version('6.0')
+    private static final GradleVersion GRADLE_5 = GradleVersion.version('5.0')
 
     def "does not apply Develocity / CCUD plugins when not defined in project and not requested via TC config (#jdkCompatibleGradleVersion)"() {
         assumeTrue jdkCompatibleGradleVersion.isJvmVersionCompatible()
@@ -326,24 +325,20 @@ class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
     }
 
     void outputContainsDevelocityPluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
-        def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
-        def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
-        if (gradleVersion < GRADLE_6) {
-            assert result.output.contains(pluginApplicationLogMsgGradle4And5)
-            assert 1 == result.output.count(pluginApplicationLogMsgGradle4And5)
-            assert !result.output.contains(pluginApplicationLogMsgGradle6AndHigher)
+        def pluginApplicationLogMsgGradle4 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
+        def pluginApplicationLogMsgDevelocity = "Applying com.gradle.develocity.agent.gradle.DevelocityPlugin via init script"
+        if (gradleVersion < GRADLE_5) {
+            assert 1 == result.output.count(pluginApplicationLogMsgGradle4)
+            assert !result.output.contains(pluginApplicationLogMsgDevelocity)
         } else {
-            assert result.output.contains(pluginApplicationLogMsgGradle6AndHigher)
-            assert 1 == result.output.count(pluginApplicationLogMsgGradle6AndHigher)
-            assert !result.output.contains(pluginApplicationLogMsgGradle4And5)
+            assert 1 == result.output.count(pluginApplicationLogMsgDevelocity)
+            assert !result.output.contains(pluginApplicationLogMsgGradle4)
         }
     }
 
     void outputMissesDevelocityPluginApplicationViaInitScript(BuildResult result) {
-        def pluginApplicationLogMsgGradle4And5 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
-        def pluginApplicationLogMsgGradle6AndHigher = "Applying com.gradle.enterprise.gradleplugin.GradleEnterprisePlugin via init script"
-        assert !result.output.contains(pluginApplicationLogMsgGradle4And5)
-        assert !result.output.contains(pluginApplicationLogMsgGradle6AndHigher)
+        def pluginApplicationLogMsgDevelocity = "Applying com.gradle.develocity.agent.gradle.DevelocityPlugin via init script"
+        assert !result.output.contains(pluginApplicationLogMsgDevelocity)
     }
 
     void outputContainsCcudPluginApplicationViaInitScript(BuildResult result) {
