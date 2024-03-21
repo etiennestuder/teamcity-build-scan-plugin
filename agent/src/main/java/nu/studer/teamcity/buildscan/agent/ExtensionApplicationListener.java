@@ -4,7 +4,7 @@ import com.intellij.openapi.diagnostic.Logger;
 
 public interface ExtensionApplicationListener {
 
-    void geExtensionApplied(String version);
+    void develocityExtensionApplied(String version);
 
     void ccudExtensionApplied(String version);
 
@@ -13,8 +13,8 @@ public interface ExtensionApplicationListener {
         private static final Logger LOG = Logger.getInstance(LoggingExtensionApplicationListener.class.getName());
 
         @Override
-        public void geExtensionApplied(String version) {
-            LOG.info("Adding gradle-enterprise-maven-extension to Maven extensions classpath");
+        public void develocityExtensionApplied(String version) {
+            LOG.info("Adding develocity-maven-extension to Maven extensions classpath");
         }
 
         @Override

@@ -2,7 +2,7 @@ package nu.studer.teamcity.buildscan.connection;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-public final class GradleEnterpriseAccessKeyValidator {
+public final class DevelocityAccessKeyValidator {
 
     public static boolean isValid(String value) {
         if (isNullOrEmpty(value)) {
@@ -34,7 +34,7 @@ public final class GradleEnterpriseAccessKeyValidator {
         return true;
     }
 
-    private GradleEnterpriseAccessKeyValidator() {
+    private DevelocityAccessKeyValidator() {
     }
 
 }

@@ -9,9 +9,9 @@ teamcity-build-scan-plugin
 
 # Overview
 
-[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with the Build Scan service and more generally with Gradle Enterprise for Gradle and Maven builds run via TeamCity. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Gradle Enterprise](https://gradle.com/enterprise).
+[TeamCity](https://www.jetbrains.com/teamcity/) plugin that integrates with the Build Scan service and more generally with Develocity for Gradle and Maven builds run via TeamCity. Build scans are available as a free service on [scans.gradle.com](https://scans.gradle.com/) and commercially via [Develocity](https://gradle.com/enterprise).
 
-For each Gradle and Maven build that is run from TeamCity, this plugin exposes the links to the created build scans in the TeamCity UI. The plugin can also be configured to ad-hoc connect Gradle and Maven builds to an existing Gradle Enterprise instance such that a Build Scan is published each time a build is run from TeamCity.
+For each Gradle and Maven build that is run from TeamCity, this plugin exposes the links to the created build scans in the TeamCity UI. The plugin can also be configured to ad-hoc connect Gradle and Maven builds to an existing Develocity instance such that a Build Scan is published each time a build is run from TeamCity.
 
 The plugin is available from the [JetBrains Marketplace](https://plugins.jetbrains.com/plugin/9326-integration-for-gradle-and-maven-build-scans).
 
@@ -57,23 +57,23 @@ If you use TeamCity's _Command Line_ runner to launch your Maven builds, you can
 
 If the first two mechanisms will not work for your Maven build configurations, you can still get integration with build scans, but it requires your build logs being parsed for build scan links. In case of huge build logs, this can put a significant toll on the performance of your TeamCity instance. You can enable the parsing of the build logs by setting the `buildScanPlugin.log-parsing.enabled` configuration parameter to _true_.
 
-## Gradle Enterprise connectivity
+## Develocity connectivity
 
-You can ad-hoc connect Gradle and Maven builds to an existing Gradle Enterprise instance by automatically injecting the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) when these builds are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to, too. If a given build is already connected to Gradle Enterprise, the auto-injection is skipped.
+You can ad-hoc connect Gradle and Maven builds to an existing Develocity instance by automatically injecting the [Develocity Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) and the [Develocity Maven extension](https://docs.gradle.com/enterprise/maven-extension/) when these builds are run via TeamCity's _Gradle_ or _Maven_ runner. If a Gradle or Maven build is run via TeamCity's _Command Line_ runner the auto-injection can be opted in to, too. If a given build is already connected to Develocity, the auto-injection is skipped.
 
 The same auto-injection behavior is available for the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) and the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension).
 
 The higher in TeamCity's project hierarchy the required configuration parameters are applied, the more widely they apply since the configuration parameters are passed on to all child projects. Child projects can override the configuration parameters of their parent projects and even disable the auto-injection by setting the appropriate configuration parameters to empty values.
 
-For convenience, the configuration parameter values can be defined through a form describing a Gradle Enterprise connection. Alternatively, the configuration parameter values can be defined as TeamCity configuration parameters.
+For convenience, the configuration parameter values can be defined through a form describing a Develocity connection. Alternatively, the configuration parameter values can be defined as TeamCity configuration parameters.
 
 ### Configuration via TeamCity connection
 
-A Gradle Enterprise connection can be created in the Connections section of the configuration of a given project. In the Add Connection dropdown, select the Gradle Enterprise connection type.
+A Develocity connection can be created in the Connections section of the configuration of a given project. In the Add Connection dropdown, select the Develocity connection type.
 
-Fill out the Add Connection dialog with the URL for the Gradle Enterprise instance, the plugin and extension versions to be applied, and any other fields as needed. Some values, such as the plugin and extension versions, will be pre-populated.
+Fill out the Add Connection dialog with the URL for the Develocity instance, the plugin and extension versions to be applied, and any other fields as needed. Some values, such as the plugin and extension versions, will be pre-populated.
 
-A Gradle Enterprise connection can be created on any project and is automatically inherited by all its child projects.
+A Develocity connection can be created on any project and is automatically inherited by all its child projects.
 
 <details>
 
@@ -95,18 +95,18 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 #### Gradle Builds
 
-1. In TeamCity, on the build configuration for which you want to apply Gradle Enterprise, create three configuration parameters:
+1. In TeamCity, on the build configuration for which you want to apply Develocity, create three configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish build scans
-   - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Gradle Enterprise Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Develocity instance to which to publish build scans
+   - `buildScanPlugin.gradle-enterprise.plugin.version` - the version of the [Develocity Gradle plugin](https://docs.gradle.com/enterprise/gradle-plugin/) to apply
    - `buildScanPlugin.ccud.plugin.version` - the version of the [Common Custom User Data Gradle plugin](https://github.com/gradle/common-custom-user-data-gradle-plugin) to apply (optional)
 
 2. If required, provide additional configuration parameters for your environment (optional):
 
-    - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Gradle Enterprise URL
-    - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the GE and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
-    - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
+    - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Develocity instance is using a self-signed certificate
+    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Develocity URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Develocity URL
+    - `buildScanPlugin.gradle.plugin-repository.url` - the URL of the repository to use when resolving the Develocity and CCUD plugins; required if your TeamCity agents are not able to access the Gradle Plugin Portal
+    - `buildScanPlugin.command-line-build-step.enabled` - enable Develocity integration for _Command Line_ build steps; by default only steps using the _Gradle_ runner are enabled
 
 ##### Example Gradle Configuration
 
@@ -114,19 +114,19 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 #### Maven Builds
 
-1. In TeamCity, on the build configuration for which you want to integrate Gradle Enterprise, create three configuration parameters:
+1. In TeamCity, on the build configuration for which you want to integrate Develocity, create three configuration parameters:
 
-   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Gradle Enterprise instance to which to publish build scans
-   - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Gradle Enterprise Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
+   - `buildScanPlugin.gradle-enterprise.url` - the URL of the Develocity instance to which to publish build scans
+   - `buildScanPlugin.gradle-enterprise.extension.version` - the version of the [Develocity Maven extension](https://docs.gradle.com/enterprise/maven-extension/) to apply
    - `buildScanPlugin.ccud.extension.version` - the version of the [Common Custom User Data Maven extension](https://github.com/gradle/common-custom-user-data-maven-extension) to apply (optional)
 
 2. If required, provide additional configuration parameters for your environment (optional):
 
-    - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Gradle Enterprise instance is using a self-signed certificate
-    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Gradle Enterprise URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Gradle Enterprise URL
-    - `buildScanPlugin.gradle-enterprise.extension.custom.coordinates` - the coordinates of a custom extension that has a transitive dependency on the Gradle Enterprise Maven Extension
+    - `buildScanPlugin.gradle-enterprise.allow-untrusted-server` - allow communication with an untrusted server; set to _true_ if your Develocity instance is using a self-signed certificate
+    - `buildScanPlugin.gradle-enterprise.enforce-url` - enforce the configured Develocity URL over a URL configured in the project's build; set to _true_ to enforce publication of build scans to the configured Develocity URL
+    - `buildScanPlugin.gradle-enterprise.extension.custom.coordinates` - the coordinates of a custom extension that has a transitive dependency on the Develocity Maven Extension
     - `buildScanPlugin.ccud.extension.custom.coordinates` - the coordinates of a custom Common Custom User Data Maven Extension or of a custom extension that has a transitive dependency on it
-    - `buildScanPlugin.command-line-build-step.enabled` - enable Gradle Enterprise integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled
+    - `buildScanPlugin.command-line-build-step.enabled` - enable Develocity integration for _Command Line_ build steps; by default only steps using the _Maven_ runner are enabled
 
 ##### Example Maven Configuration
 
@@ -148,43 +148,43 @@ The TeamCity configuration parameters can be set on any project and are automati
 
 ## Build Scan links surfacing
 
-The version of the Gradle Enterprise Gradle plugin and the Gradle Enterprise Maven extension that are applied to a build must meet a minimum version requirement for the link surfacing to work.
+The version of the Develocity Gradle plugin and the Develocity Maven extension that are applied to a build must meet a minimum version requirement for the link surfacing to work.
 
-| TC Build Scan plugin version | Minimum supported GE Maven extension version | Minimum supported GE Gradle plugin version |
-|------------------------------|----------------------------------------------|--------------------------------------------|
-| 0.23+                        | 1.11                                         | 3.0  (or Gradle Build Scan plugin 1.8)     |
-| 0.22                         | 1.0                                          | 3.0  (or Gradle Build Scan plugin 1.8)     |
+| TC Build Scan plugin version | Minimum supported Develocity Maven extension version | Minimum supported Develocity Gradle plugin version |
+|------------------------------|------------------------------------------------------|----------------------------------------------------|
+| 0.23+                        | 1.11                                                 | 3.0  (or Gradle Build Scan plugin 1.8)             |
+| 0.22                         | 1.0                                                  | 3.0  (or Gradle Build Scan plugin 1.8)             |
 
-## Gradle Enterprise connectivity
+## Develocity connectivity
 
-The configured version of the Gradle Enterprise Gradle plugin and the Gradle Enterprise Maven extension that get automatically applied by the TeamCity Build Scan plugin must be compatbile with the version of the Gradle Enterprise server that the build is connecting to.
+The configured version of the Develocity Gradle plugin and the Develocity Maven extension that get automatically applied by the TeamCity Build Scan plugin must be compatible with the version of the Develocity server that the build is connecting to.
 
 ### Gradle builds
 
-The compatibility of the specified version of the Gradle Enterprise Gradle plugin with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin). The compatibility of the optionally specified version of the Common Custom User Data Gradle plugin with the Gradle Enterprise Gradle plugin can be found [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
+The compatibility of the specified version of the Develocity Gradle plugin with Develocity can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_gradle_plugin). The compatibility of the optionally specified version of the Common Custom User Data Gradle plugin with the Develocity Gradle plugin can be found [here](https://github.com/gradle/common-custom-user-data-gradle-plugin#version-compatibility).
 
 ### Maven builds
 
-The compatibility of the specified version of the Gradle Enterprise Maven extension with Gradle Enterprise can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_compatibility_2). The compatibility of the optionally specified version of the Common Custom User Data Maven extension with the Gradle Enterprise Maven extension can be found [here](https://github.com/gradle/common-custom-user-data-maven-extension#version-compatibility).
+The compatibility of the specified version of the Develocity Maven extension with Develocity can be found [here](https://docs.gradle.com/enterprise/compatibility/#gradle_enterprise_compatibility_2). The compatibility of the optionally specified version of the Common Custom User Data Maven extension with the Develocity Maven extension can be found [here](https://github.com/gradle/common-custom-user-data-maven-extension#version-compatibility).
 
-For Maven builds, the version of the Gradle Enterprise Maven extension automatically applied by the TeamCity Build Scan plugin is currently bundled by the plugin and cannot be configured. This will change in a future version of this plugin.
+For Maven builds, the version of the Develocity Maven extension automatically applied by the TeamCity Build Scan plugin is currently bundled by the plugin and cannot be configured. This will change in a future version of this plugin.
 
 <details>
 
 <summary>Click for an overview of what Maven extension versions are bundled and injected.</summary>
 
-| TC Build Scan plugin version | Injected GE Maven extension version | Injected Common CCUD Maven extension version |
-|------------------------------|-------------------------------------|----------------------------------------------|
-| Next                         | 1.20                                | 1.12.5                                       |
-| 0.35                         | 1.18.1                              | 1.12.2                                       |
-| 0.34                         | 1.18                                | 1.12.2                                       |
-| 0.33                         | 1.16.1                              | 1.11.1                                       |
-| 0.32                         | 1.15.4                              | 1.11.1                                       |
-| 0.31                         | 1.15.3                              | 1.11.1                                       |
-| 0.30                         | 1.15.1                              | 1.11                                         |
-| 0.27 - 0.29                  | 1.14.3                              | 1.10.1                                       |
-| 0.25 - 0.26                  | 1.14.2                              | 1.10.1                                       |
-| 0.23 - 0.24                  | 1.14.1                              | 1.10.1                                       |
+| TC Build Scan plugin version | Injected Develocity Maven extension version | Injected Common CCUD Maven extension version |
+|------------------------------|---------------------------------------------|----------------------------------------------|
+| Next                         | 1.21                                        | 1.12.5                                       |
+| 0.35                         | 1.18.1                                      | 1.12.2                                       |
+| 0.34                         | 1.18                                        | 1.12.2                                       |
+| 0.33                         | 1.16.1                                      | 1.11.1                                       |
+| 0.32                         | 1.15.4                                      | 1.11.1                                       |
+| 0.31                         | 1.15.3                                      | 1.11.1                                       |
+| 0.30                         | 1.15.1                                      | 1.11                                         |
+| 0.27 - 0.29                  | 1.14.3                                      | 1.10.1                                       |
+| 0.25 - 0.26                  | 1.14.2                                      | 1.10.1                                       |
+| 0.23 - 0.24                  | 1.14.1                                      | 1.10.1                                       |
 
 </details>
 
@@ -193,17 +193,17 @@ For Maven builds, the version of the Gradle Enterprise Maven extension automatic
 Both feedback and contributions are very welcome.
 
 # Acknowledgements
-+ [bigdaz](https://github.com/bigdaz) (several prs related to the Gradle Enterprise integration)
-+ [clayburn](https://github.com/clayburn) (several prs related to the Gradle Enterprise integration)
-+ [marcphilipp](https://github.com/marcphilipp) (pr #53 that adds Gradle 4/5 compatibility to the Gradle Enterprise integration)
-+ [ldaley](https://github.com/ldaley) (pr #53 that adds Gradle 4/5 compatibility to the Gradle Enterprise integration)
++ [bigdaz](https://github.com/bigdaz) (several prs related to the Develocity integration)
++ [clayburn](https://github.com/clayburn) (several prs related to the Develocity integration)
++ [marcphilipp](https://github.com/marcphilipp) (pr #53 that adds Gradle 4/5 compatibility to the Develocity integration)
++ [ldaley](https://github.com/ldaley) (pr #53 that adds Gradle 4/5 compatibility to the Develocity integration)
 + [madlexa](https://github.com/madlexa) (pr #47 that adds TeamCity 2022.04 compatibility)
 + [facewindu](https://github.com/facewindu) (pr #21 that includes init script test coverage)
 + [dmitry-treskunov](https://github.com/dmitry-treskunov) (bug report and proposed fix)
 + [pbielicki](https://github.com/pbielicki) (pr #17 that adds a hint to the BuildScanServiceMessageMavenExtension @Component)
 + [jonnybbb](https://github.com/jonnybbb) (pr #14 and #15 that store build scan links under artifacts and clean up legacy data)
 + [davidburstromspotify](https://github.com/davidburstromspotify) (bug report and proposed fix)
-+ [guylabs](https://github.com/guylabs) (pr #10 that provides support for the Gradle Enterprise Gradle plugin)
++ [guylabs](https://github.com/guylabs) (pr #10 that provides support for the Develocity Gradle plugin)
 + [autonomousapps](https://github.com/autonomousapps) (pr #9 that provides build scans for Maven builds)
 + [mark-vieira](https://github.com/mark-vieira) (pr #6 that provides message service functionality)
 + [pavelsher](https://github.com/pavelsher) (several code pointers)

@@ -10,18 +10,18 @@ class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionAppli
 
     def "publishes build scan when pom is in a subdirectory and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             pomDirName: 'subdir'
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         )
 
         and:
@@ -31,7 +31,7 @@ class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionAppli
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -46,18 +46,18 @@ class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionAppli
 
     def "publishes build scan when pom is in a subdirectory and subdirectory is specified as pom path and extensions.xml is in project root directory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             pomDirName: 'subdir'
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         )
 
         and:
@@ -67,7 +67,7 @@ class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionAppli
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
@@ -82,19 +82,19 @@ class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionAppli
 
     def "publishes build scan when pom is in a subdirectory and extensions.xml is in a higher subdirectory (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             pomDirName: 'subdir1/subdir2',
             dotMvnParentDirName: 'subdir1',
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geExtensionVersion: GE_EXTENSION_VERSION,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
         )
 
         and:
@@ -104,7 +104,7 @@ class UnusualProjectStructureExtensionApplicationTest extends BaseExtensionAppli
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig, mvnBuildStepConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig, mvnBuildStepConfig)
 
         then:
         outputContainsBuildSuccess(output)
