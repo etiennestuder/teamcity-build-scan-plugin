@@ -247,7 +247,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                         develocity.buildScan.termsOfUseAgree = buildScanTermsOfUseAgree
                     }
 
-                    develocity.buildScan.capture.fileFingerprints = develocityCaptureFileFingerprints
+                    develocity.buildScan.capture.fileFingerprints.set(develocityCaptureFileFingerprints)
                 }
             }
 
