@@ -11,7 +11,7 @@ public final class DevelocityConnectionConstants {
     public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
     public static final String DEVELOCITY_PLUGIN_VERSION = "gradleEnterprisePluginVersion";
     public static final String CCUD_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
-    public static final String DEVELOCITY_EXTENSION_VERSION = "develocityExtensionVersion";
+    public static final String DEVELOCITY_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";
     public static final String CCUD_EXTENSION_VERSION = "commonCustomUserDataExtensionVersion";
     public static final String CUSTOM_DEVELOCITY_EXTENSION_COORDINATES = "customGradleEnterpriseExtensionCoordinates";
     public static final String CUSTOM_CCUD_EXTENSION_COORDINATES = "customCommonCustomUserDataExtensionCoordinates";
