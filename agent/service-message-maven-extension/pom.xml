@@ -41,7 +41,7 @@
         <dependency>
             <groupId>com.gradle</groupId>
             <artifactId>develocity-maven-extension</artifactId>
-            <version>1.21-rc-4</version>
+            <version>1.21</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

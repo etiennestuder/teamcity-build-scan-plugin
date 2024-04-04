@@ -38,7 +38,7 @@ abstract class BaseExtensionApplicationTest extends Specification {
 
     static final String DEVELOCITY_URL_STR = System.getenv('DEVELOCITY_TEST_INSTANCE')
     static final URI DEVELOCITY_URL = DEVELOCITY_URL_STR ? new URI(DEVELOCITY_URL_STR) : null
-    static final String DEVELOCITY_EXTENSION_VERSION = '1.21-rc-4'
+    static final String DEVELOCITY_EXTENSION_VERSION = '1.21'
     static final String CCUD_EXTENSION_VERSION = '1.12.5'
 
     @TempDir
