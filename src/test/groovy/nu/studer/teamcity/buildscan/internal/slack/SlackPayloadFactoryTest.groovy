@@ -25,7 +25,7 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
-  "username": "Gradle Enterprise",
+  "username": "Develocity",
   "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> succeeded. 1 build scan published:",
   "attachments": [
     {
@@ -59,7 +59,7 @@ class SlackPayloadFactoryTest extends Specification {
 
         then:
         json == """{
-  "username": "Gradle Enterprise",
+  "username": "Develocity",
   "text": "TeamCity <http://tc.server.org/viewLog.html?buildId=23|[My Configuration]> failed. 2 build scans published:",
   "attachments": [
     {

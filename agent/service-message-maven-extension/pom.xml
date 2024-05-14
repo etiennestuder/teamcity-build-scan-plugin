@@ -28,8 +28,19 @@
         <dependency>
             <groupId>com.gradle</groupId>
             <artifactId>gradle-enterprise-maven-extension</artifactId>
-            <version>1.20</version>
+            <version>1.20.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gradle</groupId>
+            <artifactId>develocity-maven-extension</artifactId>
+            <version>1.21</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.gradle</groupId>
+            <artifactId>develocity-maven-extension-adapters</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 
@@ -64,6 +75,19 @@
                     <execution>
                         <goals>
                             <goal>generate-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>

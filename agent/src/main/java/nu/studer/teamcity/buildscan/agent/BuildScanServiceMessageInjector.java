@@ -22,10 +22,10 @@ import java.util.Map;
  * This class is responsible for injecting a Gradle init script into all Gradle build runners. This init script itself registers a callback on the build scan plugin for any
  * published build scans and emits a TeamCity {@link jetbrains.buildServer.messages.serviceMessages.ServiceMessage} containing the scan URL.
  * <p>
- * In the presence of certain configuration parameters, this class will also inject Gradle Enterprise and Common Custom User Data plugins and extensions into Gradle and Maven
+ * In the presence of certain configuration parameters, this class will also inject Develocity and Common Custom User Data plugins and extensions into Gradle and Maven
  * builds.
  */
-@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored"})
+@SuppressWarnings({"SameParameterValue", "ResultOfMethodCallIgnored", "Convert2Diamond"})
 public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final Logger LOG = Logger.getInstance("jetbrains.buildServer.BUILDSCAN");
@@ -42,7 +42,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
-    private static final String GRADLE_ENTERPRISE_EXT_MAVEN = "gradle-enterprise-maven-extension-1.20.jar";
+    private static final String DEVELOCITY_EXT_MAVEN = "develocity-maven-extension-1.21.jar";
     private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-1.12.5.jar";
 
     // TeamCity Command-line runner
@@ -53,36 +53,41 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private static final String GRADLE_BUILDSCAN_TEAMCITY_PLUGIN = "GRADLE_BUILDSCAN_TEAMCITY_PLUGIN";
 
-    // TeamCity GE configuration parameters
+    // TeamCity Develocity configuration parameters
 
     private static final String GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM = "buildScanPlugin.gradle.plugin-repository.url";
-    private static final String GE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";
-    private static final String GE_ALLOW_UNTRUSTED_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
-    private static final String GE_ENFORCE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.enforce-url";
-    private static final String GE_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.plugin.version";
+    private static final String DEVELOCITY_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.url";
+    private static final String DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.allow-untrusted-server";
+    private static final String DEVELOCITY_ENFORCE_URL_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.enforce-url";
+    private static final String DEVELOCITY_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.plugin.version";
     private static final String CCUD_PLUGIN_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.plugin.version";
-    private static final String GE_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
+    private static final String DEVELOCITY_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.version";
     private static final String CCUD_EXTENSION_VERSION_CONFIG_PARAM = "buildScanPlugin.ccud.extension.version";
-    private static final String CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
+    private static final String CUSTOM_DEVELOCITY_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.gradle-enterprise.extension.custom.coordinates";
     private static final String CUSTOM_CCUD_EXTENSION_COORDINATES_CONFIG_PARAM = "buildScanPlugin.ccud.extension.custom.coordinates";
     private static final String INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM = "buildScanPlugin.command-line-build-step.enabled";
 
     // Environment variables set to instrument the Gradle build
 
-    private static final String GRADLE_PLUGIN_REPOSITORY_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL";
-    private static final String GE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL";
-    private static final String GE_ALLOW_UNTRUSTED_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER";
-    private static final String GE_ENFORCE_URL_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ENFORCE_URL";
-    private static final String GE_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION";
-    private static final String CCUD_PLUGIN_VERSION_VAR = "TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION";
-    private static final String INIT_SCRIPT_NAME_VAR = "TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME";
+    private static final String GRADLE_PLUGIN_REPOSITORY_VAR = "GRADLE_PLUGIN_REPOSITORY_URL";
+    private static final String DEVELOCITY_URL_VAR = "DEVELOCITY_URL";
+    private static final String DEVELOCITY_ALLOW_UNTRUSTED_VAR = "DEVELOCITY_ALLOW_UNTRUSTED_SERVER";
+    private static final String DEVELOCITY_ENFORCE_URL_VAR = "DEVELOCITY_ENFORCE_URL";
+    private static final String DEVELOCITY_PLUGIN_VERSION_VAR = "DEVELOCITY_PLUGIN_VERSION";
+    private static final String CCUD_PLUGIN_VERSION_VAR = "DEVELOCITY_CCUD_PLUGIN_VERSION";
+    private static final String DEVELOCITY_INJECTION_ENABLED_VAR = "DEVELOCITY_INJECTION_ENABLED";
+    private static final String INIT_SCRIPT_NAME_VAR = "DEVELOCITY_INJECTION_INIT_SCRIPT_NAME";
+    private static final String DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE_VAR = "DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE";
 
     // Maven system properties passed on the CLI to a Maven build
 
-    private static final String GE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
-    private static final String GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allowUntrustedServer";
-    private static final String GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY = "gradle.scan.uploadInBackground";
-    private static final MavenCoordinates GE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
+    private static final String DEVELOCITY_URL_MAVEN_PROPERTY = "develocity.url";
+    private static final String DEVELOCITY_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "develocity.allowUntrustedServer";
+    private static final String DEVELOCITY_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY = "develocity.uploadInBackground";
+    private static final String GRADLE_ENTERPRISE_URL_MAVEN_PROPERTY = "gradle.enterprise.url";
+    private static final String GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_MAVEN_PROPERTY = "gradle.enterprise.allowUntrustedServer";
+    private static final MavenCoordinates DEVELOCITY_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "develocity-maven-extension");
+    private static final MavenCoordinates GRADLE_ENTERPRISE_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "gradle-enterprise-maven-extension");
     private static final MavenCoordinates CCUD_EXTENSION_MAVEN_COORDINATES = new MavenCoordinates("com.gradle", "common-custom-user-data-maven-extension");
 
     @NotNull
@@ -102,14 +107,14 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     @Override
     public void beforeRunnerStart(@NotNull BuildRunnerContext runner) {
         if (runner.getRunType().equalsIgnoreCase(GRADLE_RUNNER)) {
-            LOG.info("Attempt to instrument Gradle build with Gradle Enterprise");
+            LOG.info("Attempt to instrument Gradle build with Develocity");
             instrumentGradleRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(MAVEN_RUNNER)) {
-            LOG.info("Attempt to instrument Maven build with Gradle Enterprise");
+            LOG.info("Attempt to instrument Maven build with Develocity");
             instrumentMavenRunner(runner);
         } else if (runner.getRunType().equalsIgnoreCase(COMMAND_LINE_RUNNER)) {
             if (getBooleanConfigParam(INSTRUMENT_COMMAND_LINE_RUNNER_CONFIG_PARAM, runner)) {
-                LOG.info("Attempt to instrument command line build with Gradle Enterprise");
+                LOG.info("Attempt to instrument command line build with Develocity");
                 instrumentCommandLineRunner(runner);
             }
         }
@@ -153,14 +158,16 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
 
     private void addGradleInitScriptEnvVars(@NotNull File initScript, @NotNull BuildRunnerContext runner) {
         addEnvVarIfSet(GRADLE_PLUGIN_REPOSITORY_CONFIG_PARAM, GRADLE_PLUGIN_REPOSITORY_VAR, runner);
-        addEnvVarIfSet(GE_URL_CONFIG_PARAM, GE_URL_VAR, runner);
-        addEnvVarIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_VAR, runner);
-        addEnvVarIfSet(GE_ENFORCE_URL_CONFIG_PARAM, GE_ENFORCE_URL_VAR, runner);
-        addEnvVarIfSet(GE_PLUGIN_VERSION_CONFIG_PARAM, GE_PLUGIN_VERSION_VAR, runner);
+        addEnvVarIfSet(DEVELOCITY_URL_CONFIG_PARAM, DEVELOCITY_URL_VAR, runner);
+        addEnvVarIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, DEVELOCITY_ALLOW_UNTRUSTED_VAR, runner);
+        addEnvVarIfSet(DEVELOCITY_ENFORCE_URL_CONFIG_PARAM, DEVELOCITY_ENFORCE_URL_VAR, runner);
+        addEnvVarIfSet(DEVELOCITY_PLUGIN_VERSION_CONFIG_PARAM, DEVELOCITY_PLUGIN_VERSION_VAR, runner);
         addEnvVarIfSet(CCUD_PLUGIN_VERSION_CONFIG_PARAM, CCUD_PLUGIN_VERSION_VAR, runner);
 
         // the init-script is inactive by default, supply the script name env var to activate it
         addEnvVar(INIT_SCRIPT_NAME_VAR, initScript.getName(), runner);
+        addEnvVar(DEVELOCITY_INJECTION_ENABLED_VAR, "true", runner);
+        addEnvVar(DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE_VAR, "TeamCity", runner);
     }
 
     private File getInitScriptInAgentTempDir(BuildRunnerContext runner) {
@@ -207,8 +214,8 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     protected File getGradleUserHome() {
         String gradleUserHomeOverride = System.getProperty("gradle.user.home", System.getenv("GRADLE_USER_HOME"));
         return gradleUserHomeOverride == null
-                ? new File(System.getProperty("user.home", System.getenv("USER_HOME")), ".gradle")
-                : new File(gradleUserHomeOverride);
+            ? new File(System.getProperty("user.home", System.getenv("USER_HOME")), ".gradle")
+            : new File(gradleUserHomeOverride);
     }
 
     private String getMavenInvocationArgs(BuildRunnerContext runner) {
@@ -218,21 +225,24 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         // add extension to capture build scan URL
         extensionJars.add(getExtensionJar(BUILD_SCAN_EXT_MAVEN, runner));
 
-        // optionally add extensions that connect the Maven build with Gradle Enterprise
+        // optionally add extensions that connect the Maven build with Develocity
         MavenExtensions extensions = getMavenExtensions(runner);
-        String geExtensionVersion = getOptionalConfigParam(GE_EXTENSION_VERSION_CONFIG_PARAM, runner);
-        if (geExtensionVersion != null) {
-            MavenCoordinates customGeExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_GE_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
-            String geUrl = getOptionalConfigParam(GE_URL_CONFIG_PARAM, runner);
-            if (!extensions.hasExtension(GE_EXTENSION_MAVEN_COORDINATES) && !extensions.hasExtension(customGeExtensionCoords)) {
-                extensionApplicationListener.geExtensionApplied(geExtensionVersion);
-                extensionJars.add(getExtensionJar(GRADLE_ENTERPRISE_EXT_MAVEN, runner));
-                addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
-                addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
-                addSysProp(GE_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
-            } else if (geUrl != null && Boolean.parseBoolean(getOptionalConfigParam(GE_ENFORCE_URL_CONFIG_PARAM, runner))) {
-                addSysPropIfSet(GE_URL_CONFIG_PARAM, GE_URL_MAVEN_PROPERTY, sysProps, runner);
-                addSysPropIfSet(GE_ALLOW_UNTRUSTED_CONFIG_PARAM, GE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+        String develocityExtensionVersion = getOptionalConfigParam(DEVELOCITY_EXTENSION_VERSION_CONFIG_PARAM, runner);
+        if (develocityExtensionVersion != null) {
+            String develocityUrl = getOptionalConfigParam(DEVELOCITY_URL_CONFIG_PARAM, runner);
+            if (hasNoDevelocityOrGradleEnterpriseExtensionsApplied(runner, extensions)) {
+                extensionApplicationListener.develocityExtensionApplied(develocityExtensionVersion);
+                extensionJars.add(getExtensionJar(DEVELOCITY_EXT_MAVEN, runner));
+                addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, DEVELOCITY_URL_MAVEN_PROPERTY, sysProps, runner);
+                addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, DEVELOCITY_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+                addSysProp(DEVELOCITY_EXTENSION_UPLOAD_IN_BACKGROUND_MAVEN_PROPERTY, "false", sysProps);
+            } else if (develocityUrl != null && Boolean.parseBoolean(getOptionalConfigParam(DEVELOCITY_ENFORCE_URL_CONFIG_PARAM, runner))) {
+                // set Develocity properties for extensions 1.21+
+                addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, DEVELOCITY_URL_MAVEN_PROPERTY, sysProps, runner);
+                addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, DEVELOCITY_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
+                // set GE properties for extensions 1.20.1 and below
+                addSysPropIfSet(DEVELOCITY_URL_CONFIG_PARAM, GRADLE_ENTERPRISE_URL_MAVEN_PROPERTY, sysProps, runner);
+                addSysPropIfSet(DEVELOCITY_ALLOW_UNTRUSTED_CONFIG_PARAM, GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_MAVEN_PROPERTY, sysProps, runner);
             }
         }
 
@@ -246,6 +256,13 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
         }
 
         return "-Dmaven.ext.class.path=" + asClasspath(extensionJars) + " " + asArgs(sysProps);
+    }
+
+    private static boolean hasNoDevelocityOrGradleEnterpriseExtensionsApplied(BuildRunnerContext runner, MavenExtensions extensions) {
+        MavenCoordinates customDevelocityExtensionCoords = parseCoordinates(getOptionalConfigParam(CUSTOM_DEVELOCITY_EXTENSION_COORDINATES_CONFIG_PARAM, runner));
+        return !extensions.hasExtension(DEVELOCITY_EXTENSION_MAVEN_COORDINATES) &&
+               !extensions.hasExtension(GRADLE_ENTERPRISE_EXTENSION_MAVEN_COORDINATES) &&
+               !extensions.hasExtension(customDevelocityExtensionCoords);
     }
 
     private File getExtensionJar(String name, BuildRunnerContext runner) {

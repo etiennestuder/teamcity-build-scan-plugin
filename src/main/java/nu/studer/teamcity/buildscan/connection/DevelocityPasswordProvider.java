@@ -9,13 +9,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static nu.studer.teamcity.buildscan.connection.GradleEnterpriseConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR;
+import static nu.studer.teamcity.buildscan.connection.DevelocityConnectionConstants.GRADLE_ENTERPRISE_ACCESS_KEY_ENV_VAR;
 
 /**
  * This class implements {@link PasswordsProvider} in order to hide the env.GRADLE_ENTERPRISE_ACCESS_KEY secret in the
  * parameters output screen
  */
-public final class GradleEnterprisePasswordProvider implements PasswordsProvider {
+public final class DevelocityPasswordProvider implements PasswordsProvider {
 
     @NotNull
     @Override

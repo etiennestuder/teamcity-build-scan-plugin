@@ -8,29 +8,29 @@ import static org.junit.Assume.assumeTrue
 
 class CustomCoordinatesExtensionApplicationTest extends BaseExtensionApplicationTest {
 
-    def "does not inject GE extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
+    def "does not inject Develocity extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
+            develocityUrl: DEVELOCITY_URL,
+            // using Guava as surrogate since we do not have a custom extension at hand that pulls in the Develocity Maven extension transitively
             customExtension: new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
-            geExtensionCustomCoordinates: 'com.google.guava:guava',
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
+            develocityExtensionCustomCoordinates: 'com.google.guava:guava',
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:
@@ -43,28 +43,28 @@ class CustomCoordinatesExtensionApplicationTest extends BaseExtensionApplication
 
     def "does not inject CCUD extension when not defined in project but matching custom coordinates defined in project (#jdkCompatibleMavenVersion)"() {
         assumeTrue jdkCompatibleMavenVersion.isJvmVersionCompatible()
-        assumeTrue GE_URL != null
+        assumeTrue DEVELOCITY_URL != null
 
         given:
         def mvnProject = new MavenProject.Configuration(
-            geUrl: GE_URL,
-            geExtensionVersion: GE_EXTENSION_VERSION,
+            develocityUrl: DEVELOCITY_URL,
+            develocityExtensionVersion: DEVELOCITY_EXTENSION_VERSION,
             // using Guava as surrogate since we do not have a custom extension at hand that pulls in the GE Maven extension transitively
             customExtension: new GroupArtifactVersion(group: 'com.google.guava', artifact: 'guava', version: '31.1-jre')
         ).buildIn(checkoutDir)
 
         and:
-        def gePluginConfig = new TcPluginConfig(
-            geUrl: GE_URL,
+        def develocityPluginConfig = new TcPluginConfig(
+            develocityUrl: DEVELOCITY_URL,
             ccudExtensionVersion: CCUD_EXTENSION_VERSION,
             ccudExtensionCustomCoordinates: 'com.google.guava:guava',
         )
 
         when:
-        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, gePluginConfig)
+        def output = run(jdkCompatibleMavenVersion.mavenVersion, mvnProject, develocityPluginConfig)
 
         then:
-        0 * extensionApplicationListener.geExtensionApplied(_)
+        0 * extensionApplicationListener.develocityExtensionApplied(_)
         0 * extensionApplicationListener.ccudExtensionApplied(_)
 
         and:

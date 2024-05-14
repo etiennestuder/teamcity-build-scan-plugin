@@ -74,6 +74,8 @@ class BaseInitScriptTest extends Specification {
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'
 
+    static final String DEVELOCITY_PLUGIN_VERSION = '3.17'
+
     File initScriptFile
     File settingsFile
     File buildFile
@@ -139,12 +141,12 @@ class BaseInitScriptTest extends Specification {
         buildFile << ''
     }
 
-    def declareGePluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
+    def declareDevelocityPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
         settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl)
         buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl)
     }
 
-    def declareGePluginAndCcudPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
+    def declareDevelocityPluginAndCcudPluginApplication(GradleVersion gradleVersion, URI geUrl = mockScansServer.address) {
         settingsFile << maybeAddPluginsToSettings(gradleVersion, geUrl, '1.12.1')
         buildFile << maybeAddPluginsToRootProject(gradleVersion, geUrl, '1.12.1')
     }
@@ -157,15 +159,10 @@ class BaseInitScriptTest extends Specification {
         } else {
             """
               plugins {
-                id 'com.gradle.enterprise' version '3.16.1'
+                id 'com.gradle.develocity' version '${DEVELOCITY_PLUGIN_VERSION}'
                 ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
-              gradleEnterprise {
-                server = '$geUrl'
-                buildScan {
-                  publishAlways()
-                }
-              }
+              develocity.server = '$geUrl'
             """
         }
     }
@@ -185,15 +182,10 @@ class BaseInitScriptTest extends Specification {
         } else if (gradleVersion < GradleVersion.version('6.0')) {
             """
               plugins {
-                id 'com.gradle.build-scan' version '3.16.1'
+                id 'com.gradle.develocity' version '${DEVELOCITY_PLUGIN_VERSION}'
                 ${ccudPluginVersion ? "id 'com.gradle.common-custom-user-data-gradle-plugin' version '$ccudPluginVersion'" : ""}
               }
-              gradleEnterprise {
-                server = '$geUrl'
-                buildScan {
-                  publishAlways()
-                }
-              }
+              develocity.server = '$geUrl'
             """
         } else {
             '' // applied in settings.gradle
@@ -273,13 +265,15 @@ class BaseInitScriptTest extends Specification {
     // for TestKit versions that don't support environment variables, map those vars to system properties
     private static List<String> mapEnvVarsToSystemProps(Map<String, String> envVars) {
         def mapping = [
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_URL                     : "teamCityBuildScanPlugin.gradle-enterprise.url",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ALLOW_UNTRUSTED_SERVER  : "teamCityBuildScanPlugin.gradle-enterprise.allow-untrusted-server",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_ENFORCE_URL             : "teamCityBuildScanPlugin.gradle-enterprise.enforce-url",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_ENTERPRISE_PLUGIN_VERSION          : "teamCityBuildScanPlugin.gradle-enterprise.plugin.version",
-            TEAMCITYBUILDSCANPLUGIN_CCUD_PLUGIN_VERSION                       : "teamCityBuildScanPlugin.ccud.plugin.version",
-            TEAMCITYBUILDSCANPLUGIN_GRADLE_PLUGIN_REPOSITORY_URL              : "teamCityBuildScanPlugin.gradle.plugin-repository.url",
-            TEAMCITYBUILDSCANPLUGIN_INIT_SCRIPT_NAME                          : "teamCityBuildScanPlugin.init-script.name"
+            DEVELOCITY_URL                        : "develocity.url",
+            DEVELOCITY_ALLOW_UNTRUSTED_SERVER     : "develocity.allow-untrusted-server",
+            DEVELOCITY_ENFORCE_URL                : "develocity.enforce-url",
+            DEVELOCITY_PLUGIN_VERSION             : "develocity.plugin.version",
+            DEVELOCITY_CCUD_PLUGIN_VERSION        : "develocity.ccud-plugin.version",
+            GRADLE_PLUGIN_REPOSITORY_URL          : "gradle.plugin-repository.url",
+            DEVELOCITY_INJECTION_INIT_SCRIPT_NAME : "develocity.injection.init-script-name",
+            DEVELOCITY_INJECTION_ENABLED          : "develocity.injection-enabled",
+            DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE: "develocity.auto-injection.custom-value"
         ]
 
         return envVars.entrySet().stream().map(e -> {
