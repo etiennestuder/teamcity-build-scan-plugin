@@ -199,7 +199,7 @@ if (GradleVersion.current() < GradleVersion.version('6.0')) {
                     buildScanExtension.value CI_AUTO_INJECTION_CUSTOM_VALUE_NAME, ciAutoInjectionCustomValueValue
                     if (isAtLeast(develocityPluginVersion, '2.1') && atLeastGradle5) {
                         if (isAtLeast(develocityPluginVersion, '3.17')) {
-                            buildScanExtension.capture.fileFingerprints = develocityCaptureFileFingerprints
+                            buildScanExtension.capture.fileFingerprints.set(develocityCaptureFileFingerprints)
                         } else if (isAtLeast(develocityPluginVersion, '3.7')) {
                             buildScanExtension.capture.taskInputFiles = develocityCaptureFileFingerprints
                         } else {
