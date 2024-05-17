@@ -7,6 +7,8 @@ final class MavenProject {
     File pom
     File dotMvn
 
+    static def FIRST_DEVELOCITY_EXTENSION_VERSION = '1.21'
+
     static final class Configuration {
 
         String develocityExtensionVersion
@@ -43,7 +45,7 @@ final class MavenProject {
             extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
 
             if (develocityExtensionVersion) {
-                if (isAtLeast(develocityExtensionVersion, '1.21')) {
+                if (isAtLeast(develocityExtensionVersion, FIRST_DEVELOCITY_EXTENSION_VERSION)) {
                     extensionsXml << """
             <extension>
                 <groupId>com.gradle</groupId>
