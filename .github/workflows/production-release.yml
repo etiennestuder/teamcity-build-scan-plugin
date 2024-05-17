@@ -33,16 +33,19 @@ jobs:
                 env:
                     DEVELOCITY_TEST_INSTANCE: https://etiennestuder.gradle-enterprise.cloud
                     GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
+                    DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
             -   name: Create GitHub release
                 run: ./gradlew githubRelease -PRELEASE
                 env:
                     TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                     GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
+                    DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
             -   name: Publish plugin
                 run: ./gradlew publishPlugin -PRELEASE
                 env:
                     TEAMCITY_PLUGIN_PUBLISH_TOKEN: ${{ secrets.TEAMCITY_PLUGIN_PUBLISH_TOKEN }}
                     GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
+                    DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
             -   name: Upload plugin artifact
                 uses: actions/upload-artifact@v3
                 with:

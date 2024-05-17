@@ -32,3 +32,4 @@ jobs:
                 env:
                     DEVELOCITY_TEST_INSTANCE: ${{ secrets.GE_ACCESS_TOKEN != null && 'https://etiennestuder.gradle-enterprise.cloud' || '' }}
                     GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN != null && secrets.GE_ACCESS_TOKEN || 'dummy.server=dummy_value' }}
+                    DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN != null && secrets.GE_ACCESS_TOKEN || 'dummy.server=dummy_value' }}
