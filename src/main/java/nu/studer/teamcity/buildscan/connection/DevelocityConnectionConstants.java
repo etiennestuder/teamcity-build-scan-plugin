@@ -8,7 +8,7 @@ public final class DevelocityConnectionConstants {
 
     public static final String GRADLE_PLUGIN_REPOSITORY_URL = "gradlePluginRepositoryUrl";
     public static final String DEVELOCITY_URL = "gradleEnterpriseUrl";
-    public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServer";
+    public static final String ALLOW_UNTRUSTED_SERVER = "allowUntrustedServzer";
     public static final String DEVELOCITY_PLUGIN_VERSION = "gradleEnterprisePluginVersion";
     public static final String CCUD_PLUGIN_VERSION = "commonCustomUserDataPluginVersion";
     public static final String DEVELOCITY_EXTENSION_VERSION = "gradleEnterpriseExtensionVersion";

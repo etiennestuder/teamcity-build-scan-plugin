@@ -8,8 +8,6 @@ import static org.junit.Assume.assumeTrue
 
 class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
 
-    private static final String CCUD_PLUGIN_VERSION = '1.12.1'
-
     private static final GradleVersion GRADLE_5 = GradleVersion.version('5.0')
 
     def "does not apply Develocity / CCUD plugins when not defined in project and not requested via TC config (#jdkCompatibleGradleVersion)"() {
@@ -243,7 +241,7 @@ class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
         def result = run(new BuildConfig(
             gradleVersion: jdkCompatibleGradleVersion.gradleVersion,
             tcPluginConfig: develocityPluginConfig,
-            additionalJvmArgs: ["-Dgradle.enterprise.url=$mockScansServer.address".toString()]))
+            additionalJvmArgs: ["-Ddevelocity.url=$mockScansServer.address".toString()]))
 
         then:
         outputContainsDevelocityPluginApplicationViaInitScript(result, jdkCompatibleGradleVersion.gradleVersion)
