@@ -28,8 +28,22 @@ dependencies {
     testImplementation('org.spockframework:spock-junit4:2.3-groovy-3.0')
 }
 
+def generateInitScript = tasks.register('generateInitScript') {
+    def referenceInitScript = file('src/main/resources/init-scripts/develocity-injection.init.gradle')
+    def buildScanCollector = file('src/main/resources/init-scripts/build-scan-collector.groovy')
+    def generatedInitScript = project.layout.buildDirectory.file('generated-resources/build-scan-init.gradle')
+    inputs.file(referenceInitScript)
+    inputs.file(buildScanCollector)
+    outputs.file(generatedInitScript)
+    doLast {
+        generatedInitScript.get().asFile.text =
+            referenceInitScript.text.replace("class BuildScanCollector {}", buildScanCollector.text)
+    }
+}
+
 processResources {
     from configurations.mvnExtensions
+    from generateInitScript
 }
 
 java {
