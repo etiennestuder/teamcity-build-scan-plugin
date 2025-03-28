@@ -3,8 +3,8 @@ import java.text.SimpleDateFormat
 plugins {
     id 'java'
     id 'groovy'
-    id 'io.github.rodm.teamcity-server' version '1.5.3' // see https://github.com/rodm/gradle-teamcity-plugin
-    id 'io.github.rodm.teamcity-environments' version '1.5.3'
+    id 'io.github.rodm.teamcity-server' version '1.5.5' // see https://github.com/rodm/gradle-teamcity-plugin
+    id 'io.github.rodm.teamcity-environments' version '1.5.5'
     id 'com.github.breadmoirai.github-release' version '2.5.2'
     id 'org.nosphere.gradle.github.actions' version '1.4.0'
 }
@@ -25,8 +25,8 @@ version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 def teamCityApiVersion = '2020.1'
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.10.1'
-    implementation 'com.google.guava:guava:33.2.0-jre'
+    implementation 'com.google.code.gson:gson:2.12.1'
+    implementation 'com.google.guava:guava:33.4.6-jre'
 
     provided "org.jetbrains.teamcity:oauth:$teamCityApiVersion"
 
