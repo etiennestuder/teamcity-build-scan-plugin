@@ -16,14 +16,14 @@ configurations {
 
 dependencies {
     mvnExtensions project(path: ':agent:service-message-maven-extension', configuration: 'mvnExtension')
-    mvnExtensions 'com.gradle:develocity-maven-extension:1.21.4'
-    mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:2.0'
+    mvnExtensions 'com.gradle:develocity-maven-extension:1.23.2'
+    mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:2.0.1'
 
     testImplementation gradleTestKit()
-    testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-10') {
+    testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-38') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.17.1'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.18.3'
     testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
     testImplementation('org.spockframework:spock-junit4:2.3-groovy-3.0')
 }

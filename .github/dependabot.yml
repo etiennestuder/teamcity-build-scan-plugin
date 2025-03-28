@@ -1,18 +1,38 @@
 version: 2
+
 registries:
   gradle-plugin-portal:
     type: maven-repository
     url: https://plugins.gradle.org/m2
     username: dummy # Required by dependabot
     password: dummy # Required by dependabot
+
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
     registries:
       - gradle-plugin-portal
     schedule:
-      interval: "daily"
+      interval: "weekly"
+    groups:
+      gradle-dependencies:
+        patterns:
+          - "*"
+
   - package-ecosystem: "maven"
     directory: "agent/service-message-maven-extension"
     schedule:
-      interval: "monthly"
+      interval: "weekly"
+    groups:
+      maven-dependencies:
+        patterns:
+          - "*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
