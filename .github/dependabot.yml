@@ -15,7 +15,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      gradle:
+      gradle-dependencies:
         patterns:
           - "*"
 
@@ -24,7 +24,7 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      maven:
+      maven-dependencies:
         patterns:
           - "*"
 
