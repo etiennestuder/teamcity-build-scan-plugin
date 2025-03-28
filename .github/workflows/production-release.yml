@@ -27,7 +27,7 @@ jobs:
                     java-version: '11'
                     distribution: 'liberica'
             -   name: Setup Gradle
-                uses: gradle/actions/setup-gradle@v3
+                uses: gradle/actions/setup-gradle@v4
             -   name: Build and bundle plugin artifact
                 run: ./gradlew clean build -PRELEASE -Porg.gradle.java.installations.fromEnv=JAVA_HOME_6_0_119_X64 -PjavaCompilerVersion=6
                 env:
