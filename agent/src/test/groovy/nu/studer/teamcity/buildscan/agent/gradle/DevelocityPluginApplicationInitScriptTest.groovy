@@ -322,9 +322,9 @@ class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
         jdkCompatibleGradleVersion << GRADLE_VERSIONS_CONFIGURATION_CACHE_COMPATIBLE.findAll { it.gradleVersion >= GradleVersion.version('7.2') }
     }
 
-    void outputContainsDevelocityPluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion) {
-        def pluginApplicationLogMsgGradle4 = "Applying com.gradle.scan.plugin.BuildScanPlugin via init script"
-        def pluginApplicationLogMsgDevelocity = "Applying com.gradle.develocity.agent.gradle.DevelocityPlugin via init script"
+    void outputContainsDevelocityPluginApplicationViaInitScript(BuildResult result, GradleVersion gradleVersion, String pluginVersion = DEVELOCITY_PLUGIN_VERSION) {
+        def pluginApplicationLogMsgGradle4 = "Applying com.gradle.scan.plugin.BuildScanPlugin with version 1.16 via init script"
+        def pluginApplicationLogMsgDevelocity = "Applying com.gradle.develocity.agent.gradle.DevelocityPlugin with version ${pluginVersion} via init script"
         if (gradleVersion < GRADLE_5) {
             assert 1 == result.output.count(pluginApplicationLogMsgGradle4)
             assert !result.output.contains(pluginApplicationLogMsgDevelocity)
@@ -335,18 +335,18 @@ class DevelocityPluginApplicationInitScriptTest extends BaseInitScriptTest {
     }
 
     void outputMissesDevelocityPluginApplicationViaInitScript(BuildResult result) {
-        def pluginApplicationLogMsgDevelocity = "Applying com.gradle.develocity.agent.gradle.DevelocityPlugin via init script"
+        def pluginApplicationLogMsgDevelocity = "Applying com.gradle.develocity.agent.gradle.DevelocityPlugin"
         assert !result.output.contains(pluginApplicationLogMsgDevelocity)
     }
 
-    void outputContainsCcudPluginApplicationViaInitScript(BuildResult result) {
-        def pluginApplicationLogMsg = "Applying com.gradle.CommonCustomUserDataGradlePlugin via init script"
+    void outputContainsCcudPluginApplicationViaInitScript(BuildResult result, String ccudPluginVersion = CCUD_PLUGIN_VERSION) {
+        def pluginApplicationLogMsg = "Applying com.gradle.CommonCustomUserDataGradlePlugin with version ${ccudPluginVersion} via init script"
         assert result.output.contains(pluginApplicationLogMsg)
         assert 1 == result.output.count(pluginApplicationLogMsg)
     }
 
     void outputMissesCcudPluginApplicationViaInitScript(BuildResult result) {
-        def pluginApplicationLogMsg = "Applying com.gradle.CommonCustomUserDataGradlePlugin via init script"
+        def pluginApplicationLogMsg = "Applying com.gradle.CommonCustomUserDataGradlePlugin"
         assert !result.output.contains(pluginApplicationLogMsg)
     }
 
