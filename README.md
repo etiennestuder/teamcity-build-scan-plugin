@@ -175,7 +175,7 @@ For Maven builds, the version of the Develocity Maven extension automatically ap
 
 | TC Build Scan plugin version | Injected Develocity Maven extension version | Injected Common CCUD Maven extension version |
 |------------------------------|---------------------------------------------|----------------------------------------------|
-| Next                         | 1.21.4                                      | 2.0                                          |
+| Next                         | 1.21.4                                      | 2.0.1                                        |
 | 0.35                         | 1.18.1                                      | 1.12.2                                       |
 | 0.34                         | 1.18                                        | 1.12.2                                       |
 | 0.33                         | 1.16.1                                      | 1.11.1                                       |

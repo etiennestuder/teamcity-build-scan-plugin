@@ -52,7 +52,7 @@ class DevelocityConnectionProviderTest extends Specification {
         DEVELOCITY_PLUGIN_VERSION               | '3.17.4'                        | 'Develocity Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                     | '2.2.1'                         | 'Common Custom User Data Gradle Plugin Version'
         DEVELOCITY_EXTENSION_VERSION            | '1.21.4'                        | 'Develocity Maven Extension Version'
-        CCUD_EXTENSION_VERSION                  | '2.0'                           | 'Common Custom User Data Maven Extension Version'
+        CCUD_EXTENSION_VERSION                  | '2.0.1'                         | 'Common Custom User Data Maven Extension Version'
         CUSTOM_DEVELOCITY_EXTENSION_COORDINATES | 'com.company:my-ge-extension'   | 'Develocity Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES       | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
         INSTRUMENT_COMMAND_LINE_BUILD_STEP      | 'true'                          | 'Instrument Command Line Build Steps'
