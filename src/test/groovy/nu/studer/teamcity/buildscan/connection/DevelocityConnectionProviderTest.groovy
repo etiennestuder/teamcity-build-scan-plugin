@@ -51,7 +51,7 @@ class DevelocityConnectionProviderTest extends Specification {
         ALLOW_UNTRUSTED_SERVER                  | 'true'                          | 'Allow Untrusted Server'
         DEVELOCITY_PLUGIN_VERSION               | '3.19.2'                        | 'Develocity Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                     | '2.2.1'                         | 'Common Custom User Data Gradle Plugin Version'
-        DEVELOCITY_EXTENSION_VERSION            | '1.21.4'                        | 'Develocity Maven Extension Version'
+        DEVELOCITY_EXTENSION_VERSION            | '1.23.2'                        | 'Develocity Maven Extension Version'
         CCUD_EXTENSION_VERSION                  | '2.0.1'                         | 'Common Custom User Data Maven Extension Version'
         CUSTOM_DEVELOCITY_EXTENSION_COORDINATES | 'com.company:my-ge-extension'   | 'Develocity Maven Extension Custom Coordinates'
         CUSTOM_CCUD_EXTENSION_COORDINATES       | 'com.company:my-ccud-extension' | 'Common Custom User Data Maven Extension Custom Coordinates'
