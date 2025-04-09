@@ -74,7 +74,7 @@ class BaseInitScriptTest extends Specification {
     static final String PUBLIC_BUILD_SCAN_ID = 'i2wepy2gr7ovw'
     static final String DEFAULT_SCAN_UPLOAD_TOKEN = 'scan-upload-token'
 
-    static final String DEVELOCITY_PLUGIN_VERSION = '3.19.2'
+    static final String DEVELOCITY_PLUGIN_VERSION = '4.0'
     static final String CCUD_PLUGIN_VERSION = '2.2.1'
 
     File initScriptFile
