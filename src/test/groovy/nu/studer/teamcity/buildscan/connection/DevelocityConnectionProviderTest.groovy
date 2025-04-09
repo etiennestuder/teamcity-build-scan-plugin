@@ -49,7 +49,7 @@ class DevelocityConnectionProviderTest extends Specification {
         GRADLE_PLUGIN_REPOSITORY_URL            | 'https://plugins.example.com'   | 'Gradle Plugin Repository URL'
         DEVELOCITY_URL                          | 'https://ge.example.com'        | 'Develocity Server URL'
         ALLOW_UNTRUSTED_SERVER                  | 'true'                          | 'Allow Untrusted Server'
-        DEVELOCITY_PLUGIN_VERSION               | '3.19.2'                        | 'Develocity Gradle Plugin Version'
+        DEVELOCITY_PLUGIN_VERSION               | '4.0'                           | 'Develocity Gradle Plugin Version'
         CCUD_PLUGIN_VERSION                     | '2.2.1'                         | 'Common Custom User Data Gradle Plugin Version'
         DEVELOCITY_EXTENSION_VERSION            | '1.23.2'                        | 'Develocity Maven Extension Version'
         CCUD_EXTENSION_VERSION                  | '2.0.1'                         | 'Common Custom User Data Maven Extension Version'
