@@ -42,7 +42,7 @@ public class BuildScanServiceMessageInjector extends AgentLifeCycleAdapter {
     private static final String MAVEN_RUNNER = "Maven2";
     private static final String MAVEN_CMD_PARAMS = "runnerArgs";
     private static final String BUILD_SCAN_EXT_MAVEN = "service-message-maven-extension-1.0.jar";
-    private static final String DEVELOCITY_EXT_MAVEN = "develocity-maven-extension-1.23.2.jar";
+    private static final String DEVELOCITY_EXT_MAVEN = "develocity-maven-extension-2.0.jar";
     private static final String COMMON_CUSTOM_USER_DATA_EXT_MAVEN = "common-custom-user-data-maven-extension-2.0.1.jar";
 
     // TeamCity Command-line runner
