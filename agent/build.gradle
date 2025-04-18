@@ -20,7 +20,7 @@ dependencies {
     mvnExtensions 'com.gradle:common-custom-user-data-maven-extension:2.0.1'
 
     testImplementation gradleTestKit()
-    testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-38') {
+    testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-39') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.18.3'
