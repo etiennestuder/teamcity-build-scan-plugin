@@ -28,23 +28,20 @@ jobs:
                     distribution: 'liberica'
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v4
+                with:
+                    develocity-access-key: ${{ secrets.DV_ACCESS_KEY }}
             -   name: Build and bundle plugin artifact
                 run: ./gradlew clean build -PRELEASE -Porg.gradle.java.installations.fromEnv=JAVA_HOME_6_0_119_X64 -PjavaCompilerVersion=6
                 env:
                     DEVELOCITY_TEST_INSTANCE: https://etiennestuder.gradle-enterprise.cloud
-                    DEVELOCITY_ACCESS_KEY: ${{ secrets.DV_ACCESS_KEY }}
             -   name: Create GitHub release
                 run: ./gradlew githubRelease -PRELEASE
                 env:
                     TEAMCITY_PLUGIN_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                    DEVELOCITY_ACCESS_KEY: ${{ secrets.DV_ACCESS_KEY }}
-                    GITHUB_DEPENDENCY_GRAPH_ENABLED: false
             -   name: Publish plugin
                 run: ./gradlew publishPlugin -PRELEASE
                 env:
                     TEAMCITY_PLUGIN_PUBLISH_TOKEN: ${{ secrets.TEAMCITY_PLUGIN_PUBLISH_TOKEN }}
-                    DEVELOCITY_ACCESS_KEY: ${{ secrets.DV_ACCESS_KEY }}
-                    GITHUB_DEPENDENCY_GRAPH_ENABLED: false
             -   name: Upload plugin artifact
                 uses: actions/upload-artifact@v4
                 with:
