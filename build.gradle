@@ -52,7 +52,7 @@ teamcity {
     server {
         descriptor {
             name = 'GradleBuildScanIntegration'
-            displayName = 'Develocity Build Scan integration for Gradle and Maven builds'
+            displayName = 'Develocity Build Scan integration'
             description = 'Provides Develocity Build Scan integration for Gradle and Maven builds'
             version = project.version
             vendorName = 'Etienne Studer'
