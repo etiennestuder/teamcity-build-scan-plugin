@@ -26,7 +26,6 @@ class ServiceMessageExtensionApplicationTest extends BaseExtensionApplicationTes
         outputContainsBuildSuccess(output)
         outputMissesTeamCityServiceMessageBuildStarted(output)
         outputMissesTeamCityServiceMessageBuildScanUrl(output)
-        2 == 2
 
         where:
         jdkCompatibleMavenVersion << SUPPORTED_MAVEN_VERSIONS
