@@ -39,7 +39,6 @@ class BuildScanReferencesTest extends Specification {
 
         then:
         !buildScanReferences.isEmpty()
-        !buildScanReferences.isEmpty()
     }
 
     def "can get number of elements"() {
