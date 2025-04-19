@@ -1,5 +1,5 @@
 - [FIX] Build scans tab not present for projects using Develocity Plugin 4.0-rc-2
-- [FIX] No deprecation warnings are emitted when injecting Gradle Plugin v3.17 and later
+- [FIX] Deprecation warnings are emitted when injecting Gradle Plugin v3.17 and later
 - [NEW] Update to use reference init-script for Develocity injection into Gradle
 - [NEW] Update default to new Develocity Maven Extension `v1.23.2`
 - [NEW] Update default to new Develocity Gradle Plugin `v3.19.2`
