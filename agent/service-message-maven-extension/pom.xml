@@ -27,14 +27,8 @@
         </dependency>
         <dependency>
             <groupId>com.gradle</groupId>
-            <artifactId>gradle-enterprise-maven-extension</artifactId>
-            <version>1.23.2</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.gradle</groupId>
             <artifactId>develocity-maven-extension</artifactId>
-            <version>1.23.2</version>
+            <version>1.23.2</version><!-- v2.x removes the required `GradleEnterpriseListener` -->
             <scope>provided</scope>
         </dependency>
         <dependency>
