@@ -26,7 +26,7 @@ final class MavenProject {
             [pomDir, dotMvn].each { it.mkdirs() }
 
             setProjectDefinedExtensions(dotMvn, develocityExtensionVersion, ccudExtensionVersion, customExtension)
-            setProjectDefinedDevelocityConfiguration(dotMvn, develocityUrl)
+            setProjectDefinedDevelocityConfiguration(dotMvn, develocityUrl, develocityExtensionVersion)
 
             return new MavenProject(
                     pom: setPomFile(pomDir, 'pom.xml'),
@@ -45,18 +45,18 @@ final class MavenProject {
             extensionsXml << """<?xml version="1.0" encoding="UTF-8"?><extensions>"""
 
             if (develocityExtensionVersion) {
-                if (isAtLeast(develocityExtensionVersion, FIRST_DEVELOCITY_EXTENSION_VERSION)) {
+                if (isGradleEnterprise(develocityExtensionVersion)) {
                     extensionsXml << """
             <extension>
                 <groupId>com.gradle</groupId>
-                <artifactId>develocity-maven-extension</artifactId>
+                <artifactId>gradle-enterprise-maven-extension</artifactId>
                 <version>$develocityExtensionVersion</version>
             </extension>"""
                 } else {
                     extensionsXml << """
             <extension>
                 <groupId>com.gradle</groupId>
-                <artifactId>gradle-enterprise-maven-extension</artifactId>
+                <artifactId>develocity-maven-extension</artifactId>
                 <version>$develocityExtensionVersion</version>
             </extension>"""
                 }
@@ -83,16 +83,32 @@ final class MavenProject {
             extensionsXml << """</extensions>"""
         }
 
-        private static void setProjectDefinedDevelocityConfiguration(File directory, String geUrl) {
+        private static void setProjectDefinedDevelocityConfiguration(File directory, String geUrl, String develocityExtensionVersion) {
             if (geUrl) {
-                def geConfig = new File(directory, 'gradle-enterprise.xml')
-                geConfig << """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
-            <develocity>
-              <server>
-                <url>$geUrl</url>
-              </server>
-            </develocity>"""
+                if (isGradleEnterprise(develocityExtensionVersion)) {
+                    new File(directory, 'gradle-enterprise.xml') <<
+                        """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+                            <gradleEnterprise>
+                              <server>
+                                <url>$geUrl</url>
+                              </server>
+                            </gradleEnterprise>"""
+
+                } else {
+                    new File(directory, 'develocity.xml') <<
+                        """<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+                            <develocity>
+                              <server>
+                                <url>$geUrl</url>
+                              </server>
+                            </develocity>"""
+                }
             }
+        }
+
+        private static boolean isGradleEnterprise(String develocityExtensionVersion) {
+            return develocityExtensionVersion != null
+                && !isAtLeast(develocityExtensionVersion, FIRST_DEVELOCITY_EXTENSION_VERSION)
         }
 
     }
