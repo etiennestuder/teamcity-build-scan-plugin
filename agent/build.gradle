@@ -23,7 +23,7 @@ dependencies {
     testImplementation ('io.ratpack:ratpack-groovy-test:1.10.0-milestone-39') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.18.3'
+    testImplementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-smile:2.19.0'
     testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
     testImplementation('org.spockframework:spock-junit4:2.3-groovy-3.0')
 }
