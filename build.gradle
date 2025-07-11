@@ -25,7 +25,7 @@ version = baseVersion + (snapshotVersion ? "-$snapshotVersion" : '')
 def teamCityApiVersion = '2020.1'
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.13.0'
+    implementation 'com.google.code.gson:gson:2.13.1'
     implementation 'com.google.guava:guava:33.4.8-jre'
 
     provided "org.jetbrains.teamcity:oauth:$teamCityApiVersion"
